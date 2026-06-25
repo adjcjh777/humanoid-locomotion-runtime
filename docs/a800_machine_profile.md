@@ -25,7 +25,7 @@
 | Path alias observed | Some sessions may display `/mnt/nvme0n1/zhangzy/projects/humanoid-locomotion-runtime`; `readlink -f .` resolves to `/mnt/nvme0n1p1/zhangzy/projects/humanoid-locomotion-runtime`. |
 | Git remote | `https://github.com/adjcjh777/humanoid-locomotion-runtime.git` |
 | Current branch | `feature/supervisory-rl-prd` |
-| Current commit | `55004bb Add ARIS experiment execution plan` |
+| Current commit at verification | `55004bb Add ARIS experiment execution plan` |
 
 ## Hardware Snapshot
 
