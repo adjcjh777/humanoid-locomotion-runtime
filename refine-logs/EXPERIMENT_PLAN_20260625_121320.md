@@ -66,6 +66,18 @@
 - 论文位置：Methods table + Appendix protocol table。
 - 优先级：MUST-RUN。
 
+**B1 可确认清单**
+
+- [ ] R010: failure family 操作定义和 protocol doc/config 冻结，且看结果前完成。
+- [ ] R016: train/val/test seed split 文件确定并提交 config。
+- [ ] R011: transient/instant negative-control pilot 完成并记录 trigger reproducibility。
+- [ ] R012: long-horizon pilot 完成并记录 trigger consistency。
+- [ ] R013: cumulative drift pilot 完成并记录 trigger consistency。
+- [ ] R014: sensor/localization degradation pilot 完成并记录 trigger consistency。
+- [ ] R015: all-family severity calibration 完成，主报告 severity 不全 0/不全 100。
+- [ ] R017: Episode Data Package validation 完成，valid episode 和 schema completeness 达标。
+- [ ] B1 gate: failure families reproducible、non-saturated，negative-control 预注册清晰。
+
 ### B2: Baseline 阶段
 
 - 测试 claim：C2, A2。
@@ -83,6 +95,16 @@
 - 论文位置：Main Table 1 baseline ladder。
 - 优先级：MUST-RUN。
 
+**B2 可确认清单**
+
+- [ ] R020: controller-native baseline 完成，作为外部下界。
+- [ ] R021: tuned rule baseline 完成，规则输入不包含 privileged signals，且不是 strawman。
+- [ ] R022: oracle upper bound pilot 完成，只使用 evaluation-only privileged signals。
+- [ ] R023: instant-state bandit sanity 完成，确认 action selector 基本可学习。
+- [ ] R024: full-memory bandit sanity 完成，判断 memory signal 是否存在。
+- [ ] R025: baseline summary 完成，形成 PPO / pivot 前 gate 证据。
+- [ ] B2 gate: tuned heuristic 与 oracle 之间存在可解释 gap；若 gap 不存在，记录 pivot 决策。
+
 ### B3: Memory-value 反事实实验
 
 - 测试 claim：C1, A1。
@@ -99,6 +121,16 @@
 - 失败解释：若平均成功涨但 flip 解释不了，不能写 causality；若 negative-control 也涨，说明协议或特征泄漏。
 - 论文位置：Main Figure 1 + Table 2。
 - 优先级：MUST-RUN。
+
+**B3 可确认清单**
+
+- [ ] R030: no-memory / instant-state supervisor 在 matched held-out seeds 上完成。
+- [ ] R031: window-memory supervisor 在相同 seeds/action set/controller 上完成。
+- [ ] R032: full-event-body-memory supervisor 在相同 seeds/action set/controller 上完成。
+- [ ] R033: shuffled-memory negative-control 完成，确认不应提升。
+- [ ] R034: decision-flip analysis 完成，输出 flip rate、flip gain 和 per-action diagnostics。
+- [ ] R035: paired statistics 完成，包含 bootstrap CI、McNemar / paired tests。
+- [ ] B3 gate: expected families 中 full memory 有 flip-conditioned recovery gain，negative-control 不显著提升。
 
 ### B4: 输入和 Horizon 消融
 
@@ -120,6 +152,15 @@
 - 论文位置：Main Figure 2 或 Appendix Table。
 - 优先级：B3 pilot 通过后 MUST-RUN。
 
+**B4 可确认清单**
+
+- [ ] R040: event-only ablation 完成，隔离 event trace contribution。
+- [ ] R041: body-trend-only ablation 完成，隔离 body trend contribution。
+- [ ] R042: language-context ablation 完成，若无效则弱化 language claim。
+- [ ] R043: memory horizon scan 完成，输出 short/medium/long horizon curve。
+- [ ] R044: 3-action compression 完成或明确 deferred reason。
+- [ ] B4 gate: 能定位 memory 有效成分，并记录 over-history / over-conservatism 风险。
+
 ### B5: VLM-prompt supervisor 与简洁性检查
 
 - 测试 claim：A3 和 simplicity。
@@ -137,6 +178,14 @@
 - 论文位置：Main Table 3 或 Appendix。
 - 优先级：投稿前 MUST-RUN，但不是 first pilot 前置项。
 
+**B5 可确认清单**
+
+- [ ] VLM prompt 输入规范完成，明确只读合法状态摘要，不读 MuJoCo privileged ground truth。
+- [ ] R045: VLM-prompt supervisor 在相同 8-action space、相同 seeds、相同 summaries 下完成。
+- [ ] R046: VLM vs learned summary 完成，输出 family-wise win/loss。
+- [ ] 简洁性检查完成：compressed action set 若未跑，必须写明 deferred reason。
+- [ ] B5 gate: 记录 VLM 是否推翻 learned/lightweight supervisor 主线；如推翻，写 pivot 决策。
+
 ### B6: 稳健性、证据打包与论文图表
 
 - 测试 claim：C1/C2 presentation robustness。
@@ -149,6 +198,16 @@
 - 失败解释：如果图无法复现，停止写作先修 analysis pipeline。
 - 论文位置：全部 main/appendix figures。
 - 优先级：写作周 MUST-RUN。
+
+**B6 可确认清单**
+
+- [ ] R060: main table generation 完成，csv/md/source paths 可复现。
+- [ ] R061: Figure 1 generation 完成，per-family success CI 可追溯到 run ids。
+- [ ] R062: Figure 2 generation 完成，memory-value / horizon diagnostics 可复现。
+- [ ] R063: case study selection 完成，包含成功、失败和 limitation cases，避免 cherry picking。
+- [ ] R064: limitation audit 完成，失败案例与正文 limitations 一致。
+- [ ] R070: paper evidence package audit 完成，检查 artifact completeness、missing seeds、failed jobs。
+- [ ] B6 gate: 每个 main claim 都有表/图/summary 证据，无法复现的图表先修 analysis pipeline。
 
 ## 运行顺序与里程碑
 

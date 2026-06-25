@@ -64,7 +64,9 @@
 
 ## 可确认待办规则
 
-- `refine-logs/DAILY_EXPERIMENT_TIMELINE.md` 和 `refine-logs/EXPERIMENT_PLAN.md` 中的可执行事项必须使用 checklist：未完成写 `- [ ]`，已完成写 `- [x]`。
+- 所有计划、时间线、实验执行、handoff、gate、验收和检查清单类文档中的可执行事项必须使用 checklist：未完成写 `- [ ]`，已完成写 `- [x]`。
+- `refine-logs/DAILY_EXPERIMENT_TIMELINE.md` 必须让每一天的“白天人工 / 晚上 ARIS / 次日验收”都可逐项确认。
+- `refine-logs/EXPERIMENT_PLAN.md` 必须让每个实验块 B0-B6 都有块级可确认清单。
 - 只有同时满足“有证据”和“有可复查位置”的事项才能打勾。证据可以是 commit id、run id、tracker 行、机器 profile、summary 文件、配置文件或命令结果摘要。
 - 不允许只用叙述性文字表示进度；计划、timeline、tracker 三者必须能互相对上。
 - `refine-logs/EXPERIMENT_TRACKER.md` 是 run-level 状态源；timeline 和 experiment plan 是人可读 checklist。修改任一处状态时，检查另外两处是否需要同步。
@@ -74,13 +76,13 @@
 
 ## 首批实现顺序
 
-1. Core schemas：`LocomotionCommand`、`LocomotionStatus`、`MemoryTarget`、`BodyMemoryState`、`FailureEvent`、`RecoveryActionRecord`。
-2. Event logger 和 Episode Data Package writer。
-3. MuJoCo + G1 backend smoke test。
-4. Temporary object memory 和 RGB-D grounding adapter。
-5. NavigatorV0 local planner 和 SafetySupervisor。
-6. Body memory、rule-based recovery fallback、bandit sanity check、supervisory RL recovery selector。
-7. Seeded benchmark runner、controller-native baseline、Viser dashboard。
+1. [ ] Core schemas：`LocomotionCommand`、`LocomotionStatus`、`MemoryTarget`、`BodyMemoryState`、`FailureEvent`、`RecoveryActionRecord`。
+2. [ ] Event logger 和 Episode Data Package writer。
+3. [ ] MuJoCo + G1 backend smoke test。
+4. [ ] Temporary object memory 和 RGB-D grounding adapter。
+5. [ ] NavigatorV0 local planner 和 SafetySupervisor。
+6. [ ] Body memory、rule-based recovery fallback、bandit sanity check、supervisory RL recovery selector。
+7. [ ] Seeded benchmark runner、controller-native baseline、Viser dashboard。
 
 <!-- ARIS-CODEX:BEGIN -->
 ## ARIS Codex 本机资源

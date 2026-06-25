@@ -49,13 +49,13 @@
 
 V0 通过的条件：
 
-1. runtime 能在 MuJoCo 中用 Unitree G1 或 fallback humanoid backend 执行语言条件 local locomotion task。
-2. benchmark 覆盖 seeded failure family，并且包含 negative-control failure。
-3. 实验包含 controller-native baseline、tuned rule baseline、instant/window/full memory ablations、oracle upper bound。
-4. 每个 episode 写出完整 Episode Data Package：manifest、event logs、metrics、timeseries、artifacts。
-5. Viser dashboard 能查看 live/replay episode、grounding、route、status、body memory、recovery decision 和 benchmark metrics。
-6. WebUI 和未来 agent 只能发 high-level typed command，不能绕过 `RuntimeManager` 或 `SafetySupervisor`。
-7. learned recovery 是 low-frequency task-level component；locomotion controller、SafetySupervisor 和 hard stop path 保持 non-learned。
+1. [ ] runtime 能在 MuJoCo 中用 Unitree G1 或 fallback humanoid backend 执行语言条件 local locomotion task。
+2. [ ] benchmark 覆盖 seeded failure family，并且包含 negative-control failure。
+3. [ ] 实验包含 controller-native baseline、tuned rule baseline、instant/window/full memory ablations、oracle upper bound。
+4. [ ] 每个 episode 写出完整 Episode Data Package：manifest、event logs、metrics、timeseries、artifacts。
+5. [ ] Viser dashboard 能查看 live/replay episode、grounding、route、status、body memory、recovery decision 和 benchmark metrics。
+6. [ ] WebUI 和未来 agent 只能发 high-level typed command，不能绕过 `RuntimeManager` 或 `SafetySupervisor`。
+7. [ ] learned recovery 是 low-frequency task-level component；locomotion controller、SafetySupervisor 和 hard stop path 保持 non-learned。
 
 ---
 
@@ -107,11 +107,11 @@ humanoid-specific 的部分来自 task progress 与 body dynamics 的耦合：ba
 
 验收：
 
-- instruction 转为 structured locomotion command；
-- target grounding 使用 RGB-D 和 detector-like output，不使用 MuJoCo privileged object id；
-- temporary object memory 记录 target evidence 和 safe stop pose；
-- locomotion skill 通过成熟 G1 controller backend 执行；
-- 关键事件写入 Episode Data Package。
+- [ ] instruction 转为 structured locomotion command；
+- [ ] target grounding 使用 RGB-D 和 detector-like output，不使用 MuJoCo privileged object id；
+- [ ] temporary object memory 记录 target evidence 和 safe stop pose；
+- [ ] locomotion skill 通过成熟 G1 controller backend 执行；
+- [ ] 关键事件写入 Episode Data Package。
 
 ### 3.3 Story 2：从 runtime failures 中恢复
 
@@ -119,9 +119,9 @@ benchmark runner 需要系统检测 path blockage、localization drift、velocit
 
 验收：
 
-- failure mode taxonomy 覆盖 V0 failure families；
-- recovery action taxonomy 明确 V0 允许选择的动作；
-- V0 RL action set 限定为：
+- [ ] failure mode taxonomy 覆盖 V0 failure families；
+- [ ] recovery action taxonomy 明确 V0 允许选择的动作；
+- [ ] V0 RL action set 限定为：
   - `continue`
   - `slow_down`
   - `safe_stop`
@@ -130,9 +130,9 @@ benchmark runner 需要系统检测 path blockage、localization drift、velocit
   - `refresh_target_grounding`
   - `relocalize`
   - `abort_task`
-- rule-based recovery 作为 baseline、fallback、debugging oracle，不作为主贡献；
-- recovery decision 记录 pre-status、post-status、latency、success、fallback；
-- repeated failures 通过 body memory event records 可见。
+- [ ] rule-based recovery 作为 baseline、fallback、debugging oracle，不作为主贡献；
+- [ ] recovery decision 记录 pre-status、post-status、latency、success、fallback；
+- [ ] repeated failures 通过 body memory event records 可见。
 
 ### 3.4 Story 3：比较 ablations
 
@@ -147,11 +147,11 @@ benchmark runner 需要系统检测 path blockage、localization drift、velocit
 
 验收：
 
-- 所有方法使用相同 scenario definitions、held-out seeds 和 logging pipeline；
-- metrics 包括 task success、recovery success、collision count、fall/unstable count、stop latency、path efficiency、repeated failure count、human intervention count；
-- batch runner 生成 run-level summary tables；
-- episode-level artifacts 可用于 failure diagnosis；
-- 报告必须包含 per-family breakdown 和 confidence intervals。
+- [ ] 所有方法使用相同 scenario definitions、held-out seeds 和 logging pipeline；
+- [ ] metrics 包括 task success、recovery success、collision count、fall/unstable count、stop latency、path efficiency、repeated failure count、human intervention count；
+- [ ] batch runner 生成 run-level summary tables；
+- [ ] episode-level artifacts 可用于 failure diagnosis；
+- [ ] 报告必须包含 per-family breakdown 和 confidence intervals。
 
 ### 3.5 Story 4：用 WebUI 调试
 
@@ -159,11 +159,11 @@ debug operator 需要用 Viser dashboard 查看 live/replay scene，理解 episo
 
 验收：
 
-- dashboard 显示 robot pose、target pose、safe stop pose、obstacles、route、replan points、blocked regions；
-- dashboard 显示 camera/grounding outputs；
-- dashboard 显示 body memory traces 和 recovery events；
-- dashboard 只能通过 `RuntimeManager` 发 high-level typed UI commands；
-- dashboard 不能直接控制 low-level controller、velocity、joint targets 或 safety override。
+- [ ] dashboard 显示 robot pose、target pose、safe stop pose、obstacles、route、replan points、blocked regions；
+- [ ] dashboard 显示 camera/grounding outputs；
+- [ ] dashboard 显示 body memory traces 和 recovery events；
+- [ ] dashboard 只能通过 `RuntimeManager` 发 high-level typed UI commands；
+- [ ] dashboard 不能直接控制 low-level controller、velocity、joint targets 或 safety override。
 
 ### 3.6 V0 非目标
 
@@ -650,15 +650,15 @@ Opus 4.8 rerun 后，当前最稳论文主线调整为：
 
 这些问题留给实现期验证：
 
-1. 哪个 Unitree G1 controller backend 能通过 week-3 smoke gate？
-2. G1 gate 失败时，具体使用哪个 MuJoCo Playground humanoid environment？
-3. NavigatorV0 使用哪个 MPC / optimization library？
-4. 第一版 `balance_margin` 如何数值化？
-5. 如果 backend 不暴露 confidence，`controller_confidence` 如何估计？
-6. `rl_instant_state`、`rl_window_memory`、`rl_full_body_memory` 包含哪些 observation features？
-7. A800 上 bandit/PPO 可承受多少 seeds？
-8. 每次 held-out evaluation run 可接受的 artifact 磁盘预算是多少？
-9. `bxi_elf3` 哪些内容可以公开描述？
+1. [ ] 哪个 Unitree G1 controller backend 能通过 week-3 smoke gate？
+2. [ ] G1 gate 失败时，具体使用哪个 MuJoCo Playground humanoid environment？
+3. [ ] NavigatorV0 使用哪个 MPC / optimization library？
+4. [ ] 第一版 `balance_margin` 如何数值化？
+5. [ ] 如果 backend 不暴露 confidence，`controller_confidence` 如何估计？
+6. [ ] `rl_instant_state`、`rl_window_memory`、`rl_full_body_memory` 包含哪些 observation features？
+7. [ ] A800 上 bandit/PPO 可承受多少 seeds？
+8. [ ] 每次 held-out evaluation run 可接受的 artifact 磁盘预算是多少？
+9. [ ] `bxi_elf3` 哪些内容可以公开描述？
 
 ---
 
