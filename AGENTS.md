@@ -62,6 +62,16 @@
 - 每次 overnight run 次日必须有 Morning Acceptance Check：状态、失败 jobs、artifact paths、metrics、gate decision、next action。
 - generated runs、raw logs、replay artifacts、checkpoints、model weights 不得进入 git，除非被明确整理成很小的文档示例。
 
+## 可确认待办规则
+
+- `refine-logs/DAILY_EXPERIMENT_TIMELINE.md` 和 `refine-logs/EXPERIMENT_PLAN.md` 中的可执行事项必须使用 checklist：未完成写 `- [ ]`，已完成写 `- [x]`。
+- 只有同时满足“有证据”和“有可复查位置”的事项才能打勾。证据可以是 commit id、run id、tracker 行、机器 profile、summary 文件、配置文件或命令结果摘要。
+- 不允许只用叙述性文字表示进度；计划、timeline、tracker 三者必须能互相对上。
+- `refine-logs/EXPERIMENT_TRACKER.md` 是 run-level 状态源；timeline 和 experiment plan 是人可读 checklist。修改任一处状态时，检查另外两处是否需要同步。
+- 涉及 A800/5090 的本机资源时，必须分别记录每台机器状态；`.agents/` 和 `.aris/installed-skills-codex.txt` 只在本机初始化，不进 git。
+- 跨机器工作前先 `git pull --ff-only`，工作后用 `git status --short --branch` 确认干净；需要同步给其他机器时 commit/push。
+- 修改 fixed latest copy 后，如果同一份活跃 artifact 有 timestamped companion，必须同步更新 companion，或新建 timestamped copy 并更新 `MANIFEST.md`。
+
 ## 首批实现顺序
 
 1. Core schemas：`LocomotionCommand`、`LocomotionStatus`、`MemoryTarget`、`BodyMemoryState`、`FailureEvent`、`RecoveryActionRecord`。

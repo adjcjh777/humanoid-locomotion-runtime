@@ -4,6 +4,7 @@
 **方法主张**：论文应组织为 counterfactual diagnostic study：用 seeded typed failure protocol 和 matched-seed decision-flip analysis 证明 memory 的收益只在 long-horizon / cumulative / degradation failure 中成立。
 **日期**：2026-06-25
 **执行主机策略**：尽量单机执行。默认 `A800_SINGLE_HOST` 为唯一主实验机；5090 只作紧急备用，不进入日常实验主线。
+**待办规则**：所有可执行事项必须使用 `- [ ]` / `- [x]`；打勾必须有 tracker、profile、commit、run id、summary 或配置文件作为证据。
 
 ## Claim 映射
 
@@ -39,6 +40,18 @@
 - 失败解释：不能进入实验；先修 SSH/env/path。
 - 论文位置：不进论文。
 - 优先级：MUST-RUN。
+
+**B0 可确认清单**
+
+- [x] R000: A800/5090 公共安全机器档案已记录；证据：`docs/a800_machine_profile.md`、`docs/rtx5090_machine_profile.md`、`refine-logs/EXPERIMENT_TRACKER.md`。
+- [x] ARIS Codex skills 改为每台机器本机初始化资源；证据：`AGENTS.md`、`.gitignore`。
+- [x] A800 本机已按 `--no-doc` 重新初始化 ARIS skills，且 `.agents/` / `.aris/installed-skills-codex.txt` 不再被 git 跟踪。
+- [x] repo sync 基线已在 A800 上验证到当前分支，工作树保持干净。
+- [x] generated runs/logs/artifacts/checkpoints/weights/datasets 已由 `.gitignore` 排除。
+- [ ] R001: 夜间 repo sync dry-run 产出 summary。
+- [ ] R002: 夜间 environment smoke 记录 Python/MuJoCo/import/GPU 版本与结果。
+- [ ] R003: 夜间 artifact write smoke 证明 EDP skeleton 可写，且 generated outputs 不进 git。
+- [ ] R005: 夜间 handoff dry-run 能从 tracker 生成 morning summary。
 
 ### B1: Seeded typed failure protocol 冻结
 
@@ -180,11 +193,13 @@
 
 ## 最终检查清单
 
-- [ ] A800 single-host execution path documented
+- [x] A800 single-host execution path documented；证据：`docs/a800_machine_profile.md`、`refine-logs/EXPERIMENT_TRACKER.md`。
+- [x] machine-local ARIS resources documented；证据：`AGENTS.md`、`.gitignore`、`docs/a800_machine_profile.md`、`docs/rtx5090_machine_profile.md`。
+- [x] experiment plan / timeline use checkable todos；证据：`refine-logs/EXPERIMENT_PLAN.md`、`refine-logs/DAILY_EXPERIMENT_TIMELINE.md`。
 - [ ] main paper tables covered
 - [ ] novelty isolated through matched-seed counterfactual
 - [ ] simplicity defended against tuned heuristic and compressed action set
 - [ ] VLM baseline run or explicitly deferred with reason
-- [ ] nice-to-have runs separated from must-run runs
+- [x] nice-to-have runs separated from must-run runs；证据：`refine-logs/EXPERIMENT_TRACKER.md` 中 `Priority` 字段。
 - [ ] every night job has a morning acceptance checklist
 - [ ] no runtime decision uses MuJoCo privileged ground truth

@@ -4,6 +4,7 @@
 **主机策略**: A800 单机主线。5090 只作为备用，不主动分裂实验环境。
 **工作节奏**: 白天由人完成设计、实现、审查、gate 决策；晚上交给 ARIS 做可自动化的 smoke / queue / monitor / summarize。
 **核心规则**: 每个晚上只能跑“白天已经冻结输入、验收标准和回滚条件”的任务。没有白天 handoff，不跑夜间自动实验。
+**待办规则**: 可执行事项使用 `- [ ]` / `- [x]`；完成项必须附带可复查证据路径、run id、commit id 或 tracker 记录。
 
 ## 每日固定节奏
 
@@ -38,24 +39,29 @@
 
 **白天人工**
 
-- 确认 A800 SSH、repo path、conda/uv 环境、Python 版本、CUDA/GPU 可见性。
-- 在私有/安全位置记录 A800 连接方式；不要把密钥或 token 写进 repo。
-- 在 A800 上 clone/pull 当前 branch。
-- 确认 `.gitignore` 覆盖 runs/logs/checkpoints/weights。
-- 更新 `refine-logs/EXPERIMENT_TRACKER.md` 中 R000-R005 的实际路径和阻塞项。
+- [x] 记录公共安全机器档案：`docs/a800_machine_profile.md` 和 `docs/rtx5090_machine_profile.md`。
+- [x] 确认 A800 canonical repo path、当前分支、Python、conda/uv、GPU 可见性；证据见 `docs/a800_machine_profile.md`。
+- [x] 在 A800 上 pull 到当前 branch，并保持 `git status` 干净。
+- [x] 将 `.agents/` 和 `.aris/installed-skills-codex.txt` 改为本机资源，不进 git；规则见 `AGENTS.md` 和 `.gitignore`。
+- [x] 在 A800 本机用 `--no-doc` 重新初始化 ARIS Codex skills；本机 manifest 被 `.gitignore` 忽略。
+- [x] 确认 `.gitignore` 覆盖 `runs/`、`logs/`、`artifacts/`、`checkpoints/`、`weights/`、`datasets/` 和 ARIS 本机资源。
+- [x] 更新 `refine-logs/EXPERIMENT_TRACKER.md` 中 R000 状态为 `DONE`。
+- [ ] 在私有/安全位置记录 A800 公司网络访问方式；不要把 SSH、IP、token、jump-host 细节写进 repo。
+- [ ] 为 R001/R002/R003/R005 补齐 night handoff 的输入路径、成功标准、失败处理和输出 summary 路径。
+- [ ] 白天结束前 commit/push tracker、timeline、plan、handoff 相关文档。
 
 **晚上 ARIS**
 
-- R001: repo sync dry-run。
-- R002: environment smoke。
-- R003: artifact write smoke。
-- R005: nightly handoff dry-run。
+- [ ] R001: repo sync dry-run。
+- [ ] R002: environment smoke。
+- [ ] R003: artifact write smoke。
+- [ ] R005: nightly handoff dry-run。
 
 **次日验收**
 
-- A800 上 `git status` 干净。
-- ARIS summary 能写回指定 summary 文件。
-- 若 env 不通，Day 2 不进入代码实验，先修 A800。
+- [ ] A800 上 `git status` 干净。
+- [ ] ARIS summary 能写回指定 summary 文件。
+- [ ] 若 env 不通，Day 2 不进入代码实验，先修 A800。
 
 ### 第 2 天：Schema-first scaffolding 与 throughput 估算
 
