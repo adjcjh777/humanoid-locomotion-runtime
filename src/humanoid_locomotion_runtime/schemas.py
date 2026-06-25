@@ -333,8 +333,23 @@ class ReplayArtifactRecord(StrictSchema):
     @field_validator("relative_path")
     @classmethod
     def _relative_path_must_be_local(cls, value: str) -> str:
-        if value.startswith("/") or ".." in value.split("/"):
+        path_parts = value.split("/")
+        if (
+            not value
+            or value.startswith("/")
+            or "\\" in value
+            or any(part in {"", ".", ".."} for part in path_parts)
+        ):
             raise ValueError("replay artifact paths must be relative to the EDP root")
+        return value
+
+    @field_validator("sha256")
+    @classmethod
+    def _sha256_must_be_hex_digest(cls, value: str | None) -> str | None:
+        if value is not None and (
+            len(value) != 64 or any(character not in "0123456789abcdef" for character in value)
+        ):
+            raise ValueError("sha256 must be a lowercase 64-character hex digest")
         return value
 
     @field_validator("metadata")
