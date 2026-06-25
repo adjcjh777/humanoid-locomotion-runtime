@@ -93,8 +93,8 @@
 
 ## 首批实现顺序
 
-1. [ ] Core schemas：`LocomotionCommand`、`LocomotionStatus`、`MemoryTarget`、`BodyMemoryState`、`FailureEvent`、`RecoveryActionRecord`。
-2. [ ] Event logger 和 Episode Data Package writer。
+1. [x] Core schemas：`LocomotionCommand`、`LocomotionStatus`、`MemoryTarget`、`BodyMemoryState`、`FailureEvent`、`RecoveryActionRecord`。证据：`src/humanoid_locomotion_runtime/schemas.py`、`tests/test_gate_b_schemas.py`。
+2. [x] Event logger 和 Episode Data Package writer。证据：`src/humanoid_locomotion_runtime/edp.py`、`tests/test_gate_b_edp.py`。
 3. [ ] MuJoCo + G1 backend smoke test。
 4. [ ] Temporary object memory 和 RGB-D grounding adapter。
 5. [ ] NavigatorV0 local planner 和 SafetySupervisor。

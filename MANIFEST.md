@@ -27,3 +27,4 @@
 | 2026-06-25 12:13 | /experiment-plan | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260625_121320.md | implementation | A800 single-host workflow 的 28 天游/夜实验时间线 |
 | 2026-06-25 12:13 | /experiment-plan | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | 最新副本 |
 | 2026-06-25 07:57 | manual | docs/gate_a_foundation.md | implementation | Gate A repo foundation、environment lock、artifact retention 和 CI 证据记录 |
+| 2026-06-25 08:43 | manual | docs/gate_b_schema_edp.md | implementation | Gate B schema/leakage boundary、policy serializer 和 Episode Data Package 证据记录 |

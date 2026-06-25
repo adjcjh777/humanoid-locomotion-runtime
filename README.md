@@ -6,6 +6,7 @@
 
 - [研究计划 / PRD](docs/research_plan_prd.md)
 - [Gate A 工程地基记录](docs/gate_a_foundation.md)
+- [Gate B schema / EDP 记录](docs/gate_b_schema_edp.md)
 - [实验计划](refine-logs/EXPERIMENT_PLAN.md)
 - [每日实验时间线](refine-logs/DAILY_EXPERIMENT_TIMELINE.md)
 - [实验跟踪表](refine-logs/EXPERIMENT_TRACKER.md)

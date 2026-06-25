@@ -36,7 +36,7 @@
 | Gate | 目标 | 必须完成 | 不通过时 |
 |------|------|----------|----------|
 | Gate A | repo foundation + environment lock | `pyproject.toml`、`uv.lock`、`src/`、`tests/`、CI、LICENSE、public/private ops 分离、`.aris/traces` 不入库 | DONE；证据见 `docs/gate_a_foundation.md`、R007、R008 |
-| Gate B | schema + leakage boundary + EDP | `PolicyObservation`、`RuntimeEvent`、`OracleAnnotation` 隔离；policy serializer 测试；EDP writer/validator | 不接入 controller |
+| Gate B | schema + leakage boundary + EDP | `PolicyObservation`、`RuntimeEvent`、`OracleAnnotation` 隔离；policy serializer 测试；EDP writer/validator | DONE；证据见 `docs/gate_b_schema_edp.md`、R003、R009 |
 | Gate C | option/SMDP + snapshot/restore | recovery option contracts、decision epoch、snapshot/restore、common random numbers、branch metadata | 不写 counterfactual，不训练 supervisor |
 | Gate D | failure protocol calibration/freeze | cause × temporal-profile taxonomy、seed split、severity calibration、negative-control equivalence plan | 不启动 baseline ladder |
 | Gate E | core baselines | controller_native、tuned_rule、instant_mlp、frame_stack_mlp、GRU_raw_history、typed_event_body_memory、branch_oracle | 不跑 PPO/大规模 |
@@ -69,9 +69,10 @@
 - [x] R007: environment lock scaffold 完成；证据：`.python-version`、`pyproject.toml`、`uv.lock`、`configs/environment.lock.toml`。
 - [x] R008: repo foundation scaffold 完成；证据：`src/`、`tests/`、`configs/`、`.github/workflows/ci.yml`、`LICENSE`、`uv run ruff check .`、`uv run pytest`。
 - [x] Gate A: repo foundation + environment lock 完成；证据：`docs/gate_a_foundation.md`。
+- [x] R009: Gate B schema/leakage boundary 和 EDP writer/validator 完成；证据：`docs/gate_b_schema_edp.md`、`src/humanoid_locomotion_runtime/schemas.py`、`src/humanoid_locomotion_runtime/edp.py`、`tests/test_gate_b_schemas.py`、`tests/test_gate_b_edp.py`。
 - [ ] R001: 夜间 repo sync dry-run 产出 summary。
 - [ ] R002: 夜间 environment smoke 记录 Python/MuJoCo/import/GPU 版本与结果。
-- [ ] R003: 夜间 artifact write smoke 证明 EDP skeleton 可写，且 generated outputs 不进 git。
+- [x] R003: artifact write smoke 证明 EDP skeleton 可写，且 generated outputs 不进 git；证据：`write_sample_episode_data_package()`、`tests/test_gate_b_edp.py`，执行位置为 tmp-path 单元测试。
 - [ ] R005: 夜间 handoff dry-run 能从 tracker 生成 morning summary。
 
 ### B1: Seeded typed failure protocol 冻结
@@ -102,7 +103,7 @@
 - [ ] R013: cumulative drift pilot 完成并记录 trigger consistency。
 - [ ] R014: sensor/localization degradation pilot 完成并记录 trigger consistency。
 - [ ] R015: all-family severity calibration 完成，主报告 severity 不全 0/不全 100。
-- [ ] R017: Episode Data Package validation 完成，valid episode 和 schema completeness 达标。
+- [ ] R017: Episode Data Package validation 完成，valid episode 和 schema completeness 达标；validator 已由 R009 实现，但 all pilot families validation 等待 B1 artifacts。
 - [ ] B1 gate: selected failure cells reproducible、non-saturated，negative-control 预注册清晰。
 
 ### B2: Baseline 阶段

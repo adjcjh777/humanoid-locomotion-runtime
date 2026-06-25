@@ -19,10 +19,10 @@
 
 ### Gate B: schema + leakage boundary + EDP
 
-- [ ] 实现 `PolicyObservation`、`RuntimeEvent`、`OracleAnnotation` 三套隔离类型。
-- [ ] 加测试保证 policy serializer 永远不能访问 oracle fields。
-- [ ] 实现 Episode Data Package writer 和 validator。
-- [ ] 明确 raw logs、replay、sensor artifacts 的 retention 分层策略。
+- [x] 实现 `PolicyObservation`、`RuntimeEvent`、`OracleAnnotation` 三套隔离类型；证据：`src/humanoid_locomotion_runtime/schemas.py`、R009。
+- [x] 加测试保证 policy serializer 永远不能访问 oracle fields；证据：`tests/test_gate_b_schemas.py`。
+- [x] 实现 Episode Data Package writer 和 validator；证据：`src/humanoid_locomotion_runtime/edp.py`、`tests/test_gate_b_edp.py`。
+- [x] 明确 raw logs、replay、sensor artifacts 的 retention 分层策略；证据：`configs/artifact_retention.toml`。
 
 ### Gate C: option/SMDP + snapshot/restore
 
@@ -109,14 +109,14 @@
 - [x] 更新 `refine-logs/EXPERIMENT_TRACKER.md` 中 R000 状态为 `DONE`。
 - [x] 完成 Gate A repo foundation + environment lock；证据：`docs/gate_a_foundation.md`、`pyproject.toml`、`uv.lock`、`configs/environment.lock.toml`、`configs/artifact_retention.toml`、`src/`、`tests/`、`.github/workflows/ci.yml`、`LICENSE`。
 - [ ] 在私有/安全位置记录 A800 公司网络访问方式；不要把 SSH、IP、token、jump-host 细节写进 repo。
-- [ ] 为 R001/R002/R003/R005 补齐 night handoff 的输入路径、成功标准、失败处理和输出 summary 路径。
+- [ ] 为 R001/R002/R005 补齐 night handoff 的输入路径、成功标准、失败处理和输出 summary 路径；R003 已由白天 tmp-path 单元测试替代完成。
 - [ ] 白天结束前 commit/push tracker、timeline、plan、handoff 相关文档。
 
 **晚上 ARIS**
 
 - [ ] R001: repo sync dry-run。
 - [ ] R002: environment smoke。
-- [ ] R003: artifact write smoke。
+- [x] R003: artifact write smoke；证据：`write_sample_episode_data_package()`、`tests/test_gate_b_edp.py`，本次由白天 tmp-path 单元测试完成，不提交 generated outputs。
 - [ ] R005: nightly handoff dry-run。
 
 **次日验收**
@@ -129,15 +129,15 @@
 
 **白天人工**
 
-- [ ] 实现或规划核心 schema：command/status/failure/recovery/memory/episode metadata。
-- [ ] 写最小 serialization test。
-- [ ] 明确 Episode Data Package 的最小字段和目录结构。
+- [x] 实现核心 schema：command/status/failure/recovery/memory/episode metadata；证据：`src/humanoid_locomotion_runtime/schemas.py`、`docs/gate_b_schema_edp.md`。
+- [x] 写最小 serialization test；证据：`tests/test_gate_b_schemas.py`。
+- [x] 明确 Episode Data Package 的最小字段和目录结构；证据：`src/humanoid_locomotion_runtime/edp.py`、`docs/gate_b_schema_edp.md`。
 - [ ] 设计 synthetic rollout loop，用于估算 steps/sec 和 MB/episode。
 
 **晚上 ARIS**
 
 - [ ] R004: throughput microbenchmark。
-- [ ] R003 repeat: sample Episode Data Package skeleton 写入检查。
+- [x] R003 repeat: sample Episode Data Package skeleton 写入检查；证据：`tests/test_gate_b_edp.py`。
 - [ ] 自动生成一份 disk budget estimate。
 
 **次日验收**
@@ -149,10 +149,10 @@
 
 **白天人工**
 
-- [ ] 实现 event logger / run manifest skeleton。
+- [x] 实现 event logger / run manifest skeleton；证据：`RuntimeEventLogger`、`EpisodeManifest`、`EpisodeDataPackageWriter`。
 - [ ] 固定 run id 命名：日期、run group、variant、seed。
 - [ ] 定义夜间 ARIS summary 模板：status、failed jobs、metrics、artifact paths、gate decision。
-- [ ] 写 schema roundtrip tests。
+- [x] 写 schema roundtrip tests；证据：`tests/test_gate_b_schemas.py::test_policy_observation_round_trips_as_structured_schema`。
 
 **晚上 ARIS**
 
