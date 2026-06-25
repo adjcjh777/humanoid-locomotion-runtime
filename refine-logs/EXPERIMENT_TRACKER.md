@@ -2,7 +2,7 @@
 
 | Run ID | Milestone | Purpose | System / Variant | Split | Metrics | Priority | Day/Night Owner | Status | Notes |
 |--------|-----------|---------|------------------|-------|---------|----------|-----------------|--------|-------|
-| R000 | M0 | A800 server stanza / path check | A800_SINGLE_HOST | n/a | ssh/env/repo path | MUST | Day: human | DONE | Public-safe machine profile in `docs/a800_machine_profile.md`; company-network-only access, no public-internet direct connection; keep private SSH details outside repo |
+| R000 | M0 | A800 server stanza / path check | A800_SINGLE_HOST + RTX5090_BACKUP_HOST | n/a | ssh/env/repo path | MUST | Day: human | DONE | Public-safe machine profiles in `docs/a800_machine_profile.md` and `docs/rtx5090_machine_profile.md`; A800 remains canonical, 5090 is backup; keep private SSH details outside repo |
 | R001 | M0 | repo sync dry-run | current branch | n/a | clean git, pull ok | MUST | Night: ARIS | TODO | No experiment yet |
 | R002 | M0 | environment smoke | Python/MuJoCo/imports | n/a | import pass, GPU visible | MUST | Night: ARIS | TODO | Record exact package versions |
 | R003 | M0 | artifact write smoke | Episode Data Package skeleton | n/a | manifest/json/log write ok | MUST | Night: ARIS | TODO | No generated runs committed |

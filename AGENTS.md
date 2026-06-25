@@ -54,6 +54,7 @@
 ## Experiment Execution Rhythm
 
 - Prefer a single canonical experiment host for each run series. Current planning default is A800 as the main experiment host; 5090 is backup unless the user changes this.
+- Public-safe machine profiles are tracked in `docs/a800_machine_profile.md` and `docs/rtx5090_machine_profile.md`; keep private SSH, IP, token, and jump-host details outside the repo.
 - Daytime work is for human-visible decisions: code changes, protocol freezes, gate review, failure-case inspection, and commit/push.
 - Nighttime work is for ARIS-managed automation: queued smoke tests, pilot batches, multi-seed runs, monitoring, and result summaries.
 - Every overnight run must have a morning acceptance checklist: status, failed jobs, artifact locations, metrics, gate decision, and next action.
