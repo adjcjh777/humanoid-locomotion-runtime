@@ -18,7 +18,7 @@
 | 2026-06-25 11:58 | /idea-creator | idea-stage/IDEA_REPORT.md | idea-discovery | Claude Opus 4.8 重跑后的最新副本 |
 | 2026-06-25 11:58 | /novelty-check | idea-stage/NOVELTY_CHECK_20260625_115846.md | idea-discovery | Claude Opus 4.8 novelty audit；novelty 5.5/10，并建议 pivot 到 memory-value diagnostic |
 | 2026-06-25 11:58 | /novelty-check | idea-stage/NOVELTY_CHECK.md | idea-discovery | Claude Opus 4.8 重跑后的最新副本 |
-| 2026-06-25 11:58 | /research-review | idea-stage/RESEARCH_REVIEW_CLAUDE_OPUS48_20260625_115846.md | idea-discovery | Claude Opus 4.8 research review；建议走 counterfactual diagnostic paper |
+| 2026-06-25 11:58 | /research-review | idea-stage/RESEARCH_REVIEW_CLAUDE_OPUS48_20260625_115846.md | idea-discovery | Claude Opus 4.8 research review；建议走 snapshot-branching memory diagnostic paper |
 | 2026-06-25 11:58 | /research-review | idea-stage/RESEARCH_REVIEW_CLAUDE_GLM52.md | idea-discovery | 兼容旧文件名的最新副本，内容来自 Claude Opus 4.8 重跑 |
 | 2026-06-25 12:13 | /experiment-plan | refine-logs/EXPERIMENT_PLAN_20260625_121320.md | implementation | claim-driven 实验路线图，包含 A800 single-host 执行策略 |
 | 2026-06-25 12:13 | /experiment-plan | refine-logs/EXPERIMENT_PLAN.md | implementation | 最新副本 |

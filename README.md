@@ -17,4 +17,4 @@
 - V0 主实验使用 controlled detector-like grounding；真实 open-vocabulary detector 保留为 demo / V1+。
 - 使用 temporary object memory，但接口保持兼容未来 persistent 3D semantic memory。
 - 使用 MPC / optimization local planner + SafetySupervisor。
-- 论文主线转为诊断性研究：用 matched-seed counterfactual 证明 memory 在哪些 failure family 中真正改变决策并带来恢复收益。
+- 论文主线转为诊断性研究：优先用 decision-point snapshot branching 诊断 memory 在哪些 failure profile 中改变决策并改善恢复；snapshot 未实现前只能报告 paired matched-seed diagnostic。

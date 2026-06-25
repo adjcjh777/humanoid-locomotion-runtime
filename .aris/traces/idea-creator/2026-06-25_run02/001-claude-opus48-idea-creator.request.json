@@ -1,6 +1,0 @@
-{
-  "model": "claude-opus-4-8",
-  "permission_mode": "dontAsk",
-  "tools": [],
-  "prompt_summary": "Run ARIS idea-creator using current PRD direction plus local research-lit conclusions. Require 8+ candidate ideas, 2-3 mutually supporting core contributions, kill list, experiment order, and Go/No-Go gates."
-}

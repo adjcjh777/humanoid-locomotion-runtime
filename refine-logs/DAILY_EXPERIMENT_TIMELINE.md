@@ -5,6 +5,67 @@
 **工作节奏**: 白天由人完成设计、实现、审查、gate 决策；晚上交给 ARIS 做可自动化的 smoke / queue / monitor / summarize。
 **核心规则**: 每个晚上只能跑“白天已经冻结输入、验收标准和回滚条件”的任务。没有白天 handoff，不跑夜间自动实验。
 **待办规则**: 可执行事项使用 `- [ ]` / `- [x]`；完成项必须附带可复查证据路径、run id、commit id 或 tracker 记录。
+**审核后修正**: 下面的 28 天安排只是参考节奏；真实推进按 gate 执行。任何 gate 未通过，不进入下一阶段，也不启动 PPO、大规模实验或论文主结论。
+
+## Gate-driven 总时间线
+
+### Gate A: repo foundation + environment lock
+
+- [ ] 加入 `pyproject.toml`、`uv.lock`、`src/`、`tests/`、CI、LICENSE。
+- [ ] 锁定 Python、MuJoCo、JAX/JAXLIB、CUDA wheel、controller checkpoint、robot XML/MJCF 版本与 hash。
+- [ ] 清理 public repo：`.aris/meta/`、`.aris/traces/`、raw agent prompt/response 不进 git。
+- [ ] 机器 profile 保持匿名化；hostname、用户名、绝对路径、私有 SSH/IP/ARIS path 写入 private ops。
+- [ ] 配置 artifact retention policy；磁盘 microbenchmark 成为正式前置 gate。
+
+### Gate B: schema + leakage boundary + EDP
+
+- [ ] 实现 `PolicyObservation`、`RuntimeEvent`、`OracleAnnotation` 三套隔离类型。
+- [ ] 加测试保证 policy serializer 永远不能访问 oracle fields。
+- [ ] 实现 Episode Data Package writer 和 validator。
+- [ ] 明确 raw logs、replay、sensor artifacts 的 retention 分层策略。
+
+### Gate C: option/SMDP + snapshot/restore
+
+- [ ] 为每个 recovery action 定义 option contract：initiation、mask、implementation、duration、success/failure/termination、interruptibility、retry、cooldown。
+- [ ] 明确 decision epoch：failure trigger、active option termination、option timeout、重大 task event。
+- [ ] 实现 simulator/runtime snapshot 和 restore。
+- [ ] 使用 common random numbers 固定外部随机流。
+- [ ] EDP 增加 `base_snapshot_id`、`branch_id`、`decision_id`、`policy_training_seed`、`scenario_seed`、`exogenous_noise_seed`、`observation_hash`、`memory_hash`、`action`、`option_outcome`。
+
+### Gate D: failure protocol calibration and freeze
+
+- [ ] 将 failure taxonomy 重构为 cause × temporal profile。
+- [ ] 把 `user_interrupt` 从 failure family 改为 task-control event。
+- [ ] 至少构造一个 state-aliasing positive benchmark cell。
+- [ ] 冻结 seed split、severity band、negative-control equivalence interval 和 primary endpoint。
+
+### Gate E: core baselines
+
+- [ ] `controller_native`
+- [ ] `tuned_rule`
+- [ ] `instant_mlp`
+- [ ] `frame_stack_raw_history`
+- [ ] `GRU_raw_history`
+- [ ] `typed_event_body_memory`
+- [ ] `memory_mask / shuffled / stale`
+- [ ] `branch_oracle`
+- [ ] 每个 learned variant 共享 action set、reward、训练数据、调参预算、controller/planner 和 training seeds。
+
+### Gate F: memory intervention pilot
+
+- [ ] 分开报告模型/训练效应：不同 policy 之间的差异。
+- [ ] 分开报告 decision-time memory-content effect：同一 policy 输入 correct/null/shuffled/stale memory 的差异。
+- [ ] typed-memory policy 训练时加入 memory dropout 或 `memory_available` mask。
+- [ ] 同时报告 policy-only outcome、full-stack-with-fallback outcome、fallback invocation rate、safety override rate。
+
+### Gate G: final evaluation + evidence package
+
+- [ ] 至少 5 个独立 policy training seeds，或写明更小样本只用于 pilot。
+- [ ] 足量 paired base snapshots；同时建模 training-seed 与 scenario-seed 变异。
+- [ ] 使用 hierarchical / cluster bootstrap。
+- [ ] negative-control 使用 equivalence / TOST 风格证据，不把“不显著”写成“无效果”。
+- [ ] 所有 main table / figure 可从 artifacts 复现。
+- [ ] 逐篇核验 citation 的 title、authors、venue、abstract、BibTeX。
 
 ## 每日固定节奏
 
@@ -140,16 +201,16 @@
 - [ ] 无 failure 场景成功率应足够高，否则 runtime 地基未稳。
 - [ ] 若 no-failure 都不稳，暂停 recovery 研究，修 controller/backend。
 
-### 第 6 天：Failure family 预注册草案
+### 第 6 天：Failure protocol 预注册草案
 
 **白天人工**
 
-- [ ] 写定 4 个主 failure family 的操作定义：
-  - transient/instant negative-control
-  - long-horizon
-  - cumulative drift
-  - sensor/localization degradation
-- [ ] 为每类定义 trigger、severity、success/failure、预期 memory effect。
+- [ ] 将 failure taxonomy 写成 cause × temporal profile，而不是混合分类：
+  - cause：path blockage、localization degradation、tracking degradation、balance disturbance、target/task event。
+  - temporal profile：transient、persistent、recurrent、cumulative、progressive、impulse、change/loss/interruption。
+- [ ] 把 `user_interrupt` 明确写成 task-control event，不作为 failure family。
+- [ ] 为预注册 cells 定义 trigger、severity、success/failure、预期 memory effect 和 negative-control 角色。
+- [ ] 至少设计一个 state-aliasing positive cell：当前 observation 相近，但历史不同导致 oracle 最优动作不同。
 - [ ] 冻结初版 seed split 草案。
 
 **晚上 ARIS**
@@ -167,7 +228,7 @@
 **白天人工**
 
 - [ ] 审核 Day 6 feasibility。
-- [ ] 冻结 failure family、seed split、severity 选择规则。
+- [ ] 冻结 cause × temporal-profile cells、seed split、severity 选择规则。
 - [ ] 写入 protocol doc/config；标明 negative-control family。
 - [ ] 更新 tracker R010-R017 状态。
 
@@ -230,7 +291,7 @@
 
 **晚上 ARIS**
 
-- [ ] R022: oracle upper bound pilot。
+- [ ] R022: branch/evaluation oracle upper bound pilot。
 - [ ] 自动计算 oracle gap。
 
 **次日验收**
@@ -256,34 +317,39 @@
 - [ ] 如果 instant-state 学不动，先查 reward/action semantics。
 - [ ] 不直接上 PPO。
 
-### 第 12 天：Full-memory bandit sanity
+### 第 12 天：Raw-history 与 typed-memory bandit sanity
 
 **白天人工**
 
+- [ ] 实现或规划 `frame_stack_raw_history` baseline。
+- [ ] 实现或规划 `GRU_raw_history` baseline。
 - [ ] 实现 event/body memory summary。
 - [ ] 明确 memory horizon 初值。
-- [ ] 加 shuffled-memory negative-control 的数据管线入口。
+- [ ] 加 memory mask / shuffled / stale memory 的数据管线入口。
+- [ ] 确认所有 learned variants 共享合法输入源、action set、reward、训练数据、调参预算、controller/planner 和 training seeds。
 
 **晚上 ARIS**
 
-- [ ] R024: full-memory bandit sanity。
-- [ ] 初步比较 instant vs full-memory。
+- [ ] R026: frame-stack raw-history baseline sanity。
+- [ ] R027: GRU raw-history baseline sanity。
+- [ ] R024: typed event/body memory bandit sanity。
+- [ ] 初步比较 instant vs raw-history vs typed-memory。
 
 **次日验收**
 
 - [ ] 只看方向性，不写论文结论。
-- [ ] 若 full-memory 没有任何信号，先做 feature audit。
+- [ ] 若 typed memory 相对 ordinary history 没有任何信号，先做 feature audit 或 pivot。
 
 ### 第 13 天：Baseline gate review
 
 **白天人工**
 
-- [ ] 汇总 R020-R024。
+- [ ] 汇总 R020-R027。
 - [ ] 判断是否满足：
   - rule baseline 有效但不封顶
   - oracle gap 存在
-  - memory 有至少方向性信号
-- [ ] 决定 Week 3 是否进入 matched-seed counterfactual。
+  - typed memory 相对 instant、frame-stack、GRU 至少有方向性信号
+- [ ] 决定 Week 3 是否进入 snapshot branching；若 snapshot 未完成，只能进入 paired matched-seed diagnostic。
 
 **晚上 ARIS**
 
@@ -311,28 +377,33 @@
 
 - [ ] 主分支/feature branch 可从干净 clone 重现 baseline smoke。
 
-## 第 3 周：Matched-seed memory-value counterfactual
+## 第 3 周：Snapshot branching / memory intervention diagnostic
 
-### 第 15 天：Matched-seed runner
+### 第 15 天：Snapshot branching runner
 
 **白天人工**
 
-- [ ] 实现同一 seed 下多 variant replay/rollout 的 runner。
-- [ ] 确保只改变 observation memory，不改变 controller/planner/reward/action set。
+- [ ] 实现 decision-point snapshot/restore runner。
+- [ ] 固定 common random numbers，保证分支使用相同外部随机流。
+- [ ] Snapshot 至少包含 simulator/runtime state、RNG、planner/localization、temporary object memory、body memory、active option、option elapsed、controller recurrent state、failure injector state。
+- [ ] 如果 snapshot branching 未完成，只实现 paired matched-seed runner，并在所有文档中降级为 diagnostic，不写 counterfactual / ATE。
 
 **晚上 ARIS**
 
-- [ ] R030-R033 小规模 matched run。
+- [ ] R018: snapshot/restore 单元测试和 deterministic branch smoke。
+- [ ] R030-R033 小规模 branch 或 paired matched diagnostic run。
 
 **次日验收**
 
-- [ ] 每个 matched group 都有相同 seed、failure config、initial condition。
+- [ ] 每个 branch group 都有相同 base snapshot、decision id、scenario seed、exogenous noise seed。
+- [ ] 若只做到 matched group，记录相同 seed、failure config、initial condition，并标记为非因果诊断。
 
 ### 第 16 天：Decision logging and flip extraction
 
 **白天人工**
 
-- [ ] 记录每个 supervisor decision：timestamp、observation hash、action、confidence/logit、failure mode。
+- [ ] 记录每个 supervisor decision：timestamp、decision id、observation hash、memory hash、action、confidence/logit、option state。
+- [ ] 将 runtime event 与 evaluation-only oracle annotation 分开存储，避免 policy log 读取 privileged failure family。
 - [ ] 实现 decision pair matching。
 
 **晚上 ARIS**
@@ -355,12 +426,12 @@
 **晚上 ARIS**
 
 - [ ] R030-R033 扩到 first held-out subset。
-- [ ] R035 bootstrap/McNemar 初版。
+- [ ] R035 hierarchical/cluster bootstrap 与 negative-control equivalence / TOST 初版。
 
 **次日验收**
 
-- [ ] 看 long-horizon/cumulative/degradation 是否有方向性 memory gain。
-- [ ] 看 transient negative-control 是否无显著收益。
+- [ ] 看预注册 memory-positive cells 是否有方向性 memory gain。
+- [ ] 看 negative-control CI 是否落入预注册等效区间；不把“不显著”写成无效果。
 
 ### 第 18 天：Negative-control audit
 
@@ -368,10 +439,12 @@
 
 - [ ] 专门审查 transient/instant negative-control。
 - [ ] 查是否存在 feature leakage 或 severity bias。
+- [ ] 审核 rule fallback 是否污染 learned-policy success attribution。
 
 **晚上 ARIS**
 
 - [ ] 补跑 shuffled-memory negative-control。
+- [ ] 补跑 correct/null/masked/shuffled/stale memory-content intervention。
 - [ ] 生成 false gain report。
 
 **次日验收**
@@ -384,6 +457,7 @@
 
 - [ ] 审查 event trace、body trend、language context 是否各自合法。
 - [ ] 写 leave-one-out config。
+- [ ] 确认 typed-memory policy 训练中包含 memory dropout 或 `memory_available` mask，避免 test-time masking OOD。
 
 **晚上 ARIS**
 
@@ -413,9 +487,11 @@
 **白天人工**
 
 - [ ] 汇总 Week 3:
-  - decision flip rate
-  - flip-conditioned gain
-  - negative-control result
+  - branch outcome difference / ATE；若 snapshot 未完成，则只写 paired diagnostic
+  - action-value regret against branch oracle
+  - decision flip rate 和 flip-conditioned gain
+  - negative-control equivalence result
+  - policy-only outcome、full-stack-with-fallback outcome、fallback invocation rate、safety override rate
   - CI/effect size
 - [ ] 决定是否继续主打 memory-value diagnostic。
 
@@ -436,7 +512,7 @@
 
 - [ ] 写 VLM prompt 输入规范：只读合法状态摘要，不读 privileged ground truth。
 - [ ] 定义 invalid action、latency、cost per episode。
-- [ ] 选定要比较的 failure family。
+- [ ] 选定要比较的 failure cells。
 
 **晚上 ARIS**
 

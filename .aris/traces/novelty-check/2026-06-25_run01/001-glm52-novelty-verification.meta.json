@@ -1,9 +1,0 @@
-{
-  "call_number": 1,
-  "purpose": "glm52-novelty-verification",
-  "timestamp": "2026-06-25T03:04:58Z",
-  "thread_id": "local-claude-code-glm52-max",
-  "model": "glm-5.2[1M]",
-  "duration_ms": 207000,
-  "status": "ok"
-}

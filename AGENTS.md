@@ -42,6 +42,7 @@
 - 生成新 ARIS 产物后追加记录到 `MANIFEST.md`。
 - 保留 timestamped artifact 和 fixed latest copy 的双文件模式。
 - 不伪造论文证据；未验证的 run、citation、metric 必须标记为 pending 或 failed。
+- 原始 agent traces 不进公开仓库：`.aris/meta/`、`.aris/traces/`、prompt、request、response、model metadata 都视为本机/私有审计材料。只提交人工整理后的 summaries、tables、review decisions 和必要的小型配置。
 
 ## Reviewer 路由
 
@@ -61,6 +62,22 @@
 - 夜间交给 ARIS 自动化：queued smoke tests、pilot batches、multi-seed runs、monitoring、result summaries。
 - 每次 overnight run 次日必须有 Morning Acceptance Check：状态、失败 jobs、artifact paths、metrics、gate decision、next action。
 - generated runs、raw logs、replay artifacts、checkpoints、model weights 不得进入 git，除非被明确整理成很小的文档示例。
+- 执行顺序以 gate 为准，不以日历为准。固定 28 天 timeline 是参考节奏；任一 gate 未通过，不进入下一阶段。
+- 当前只允许 GO 到“最小代码脚手架和协议冻结”；PPO、大规模实验和论文主结论必须等 snapshot branching、baseline、统计和 EDP gate 通过后再启动。
+
+## 审核后新增硬边界
+
+- 不能把 matched-seed evaluation 直接称为 causal counterfactual。只有实现完整 simulator/runtime snapshot branching 后，才允许使用 counterfactual / ATE / branch oracle 等因果措辞；否则只能写 paired matched-seed diagnostic。
+- Snapshot branching 至少要覆盖 simulator state、随机数状态、planner/localization/memory/controller/failure-injector state、active option state、decision id、observation hash 和 memory hash。
+- Recovery actions 必须定义为 options / SMDP：initiation condition、action mask、execution implementation、min/max duration、success/failure/termination、interruptibility、retry budget、cooldown。
+- learned policy 结果必须拆分报告：policy-only outcome、full-stack-with-fallback outcome、fallback invocation rate、safety override rate。
+- `rule_recovery_tuned` 只能作为 deployable heuristic baseline / fallback，不再称为 debugging oracle；真正 oracle 必须是 evaluation-only privileged 或 snapshot branch oracle。
+- 主文 baseline 必须包含 ordinary history models：`frame_stack_raw_history` 和 `GRU_raw_history`。VLM baseline 可以作为附录或后续分支，不能替代 GRU baseline。
+- Memory effect 必须拆成两类 estimand：训练/模型效应（不同 policy）和决策时 memory-content 效应（同一 policy 的 correct/null/shuffled/stale memory intervention）。若做 test-time mask，训练时必须加入 memory dropout 或 `memory_available` mask。
+- Failure taxonomy 必须拆成 cause × temporal profile。`user_interrupt` 是 task-control event，不作为 failure family。
+- Negative control 的“无收益”必须用 smallest effect size of interest 和 equivalence / TOST 风格证据支持；不能把 p 值不显著写成没有效果。
+- final evaluation 必须预注册 primary endpoint、policy training seeds、scenario seeds、cluster/hierarchical bootstrap 和 multiplicity control。
+- 环境必须锁定 Python、MuJoCo、JAX/JAXLIB、CUDA wheel、controller checkpoint、robot XML/MJCF 版本与 hash；A800/5090 的 live ops 细节放 private ops，不进公开 repo。
 
 ## 可确认待办规则
 

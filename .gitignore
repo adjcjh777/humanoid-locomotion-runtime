@@ -22,6 +22,8 @@ env/
 .agents/
 .aris/installed-skills-codex.txt
 .aris/*.prev
+.aris/meta/
+.aris/traces/
 
 # Generated experiment data
 runs/
