@@ -1,14 +1,15 @@
-# Language-Conditioned Humanoid Locomotion Runtime with Body Memory and Recovery
+# Language-Conditioned Humanoid Locomotion Runtime with Supervisory RL Recovery
 
 ## 0. Project Record
 
 - **Project name**: Humanoid Locomotion Runtime
 - **Initial platform**: MuJoCo + Unitree G1 humanoid model
-- **Secondary platform**: `bxi_elf3` / `bxi_robotics` for later cross-embodiment validation
-- **Future platform**: company-developed humanoid body
-- **Primary goal**: build a practical, research-grade humanoid locomotion runtime that turns language-conditioned and open-vocabulary grounded goals into monitorable, recoverable humanoid locomotion skills.
+- **Fallback platform**: MuJoCo Playground humanoid locomotion backend if the G1 controller path cannot pass the early smoke gate.
+- **Secondary compatibility targets**: `bxi_elf3` / `bxi_robotics` and company-developed humanoid body for later validation, not V0 evidence.
+- **Primary goal**: build a practical, research-grade humanoid locomotion runtime that turns language-conditioned and open-vocabulary grounded goals into monitorable, recoverable humanoid locomotion skills, with a high-level learned recovery selector above a self-stabilizing controller.
 - **Non-claim**: this project does not train a foundation-scale end-to-end VLA that maps raw image/language directly to humanoid joint actions.
-- **V0 research stance**: system/runtime paper first, low-level controller innovation optional and only promoted if it produces clear evidence.
+- **Non-claim**: V0 does not claim cross-embodiment generalization; backend-replaceable interfaces are a design constraint, not an experimental result.
+- **V0 research stance**: system/runtime paper with one methods core: body-memory-conditioned supervisory RL recovery. Low-level controller innovation is out of scope.
 
 ---
 
@@ -22,20 +23,21 @@ For a language-conditioned humanoid agent, ordinary goal-reaching metrics hide m
 
 ### Proposed Solution
 
-Build a language-conditioned humanoid locomotion runtime around a mature Unitree G1 locomotion controller in MuJoCo. The runtime uses open-vocabulary target grounding, temporary object memory, an MPC/optimization-based local planner, typed locomotion skills, status monitoring, body memory, a rule-based recovery policy, and a Viser-based WebUI dashboard.
+Build a language-conditioned humanoid locomotion runtime around a mature Unitree G1 locomotion controller in MuJoCo, with MuJoCo Playground as the fallback humanoid backend. The runtime uses controlled open-vocabulary-style grounding in V0, temporary object memory, an MPC/optimization-based local planner, typed locomotion skills, status monitoring, body memory, a high-level RL recovery selector, deterministic safety fallback, and a Viser-based WebUI dashboard.
 
-The first implementation keeps the core runtime single-manager and deterministic, while exposing TaskRouter, AgentPort, EventStore, and typed command interfaces so it can later evolve into a multi-agent runtime. Real-time safety remains local to RuntimeManager and SafetySupervisor; Agent Bus is reserved for high-level asynchronous coordination, audit, and experiment analysis.
+The first implementation keeps the core runtime single-manager and keeps the locomotion controller frozen. RL is only used as a low-frequency supervisory recovery selector over typed failure/status/body-memory observations; it never outputs joint commands or replaces the self-stabilizing locomotion controller. Real-time safety remains local to RuntimeManager and SafetySupervisor; Agent Bus is reserved for high-level asynchronous coordination, audit, and experiment analysis.
 
 ### Success Criteria
 
 V0 is successful when all of the following are true:
 
-1. **Runtime completion**: the system can execute language-conditioned local locomotion tasks in MuJoCo with Unitree G1 through typed commands, open-vocabulary grounding, local planning, skill execution, status monitoring, and recovery.
-2. **Benchmark coverage**: the benchmark includes at least five failure families with at least 20 episodes each: dynamic obstacle, localization drift, velocity tracking failure, balance risk, and target change/user interruption.
-3. **Ablation evidence**: the five planned baselines run on the same benchmark: `controller_only`, `controller_local_planner`, `status_monitor_only`, `full_no_body_memory`, and `full_body_memory_recovery`.
+1. **Runtime completion**: the system can execute language-conditioned local locomotion tasks in MuJoCo with Unitree G1 or the fallback humanoid backend through typed commands, controlled grounding, local planning, skill execution, status monitoring, supervisory recovery, and safety fallback.
+2. **Benchmark coverage**: the benchmark includes five seeded failure families: dynamic obstacle, localization drift, velocity tracking failure, balance risk, and target change/user interruption.
+3. **External baseline and ablations**: V0 reports a controller-native external baseline, a deterministic recovery baseline, and RL ablations over instant state, window memory, and full body memory.
 4. **Data completeness**: every episode writes a complete Episode Data Package including manifests, event logs, metrics, timeseries, and artifacts.
 5. **Debuggability**: Viser dashboard can inspect live or replayed episodes with 3D scene state, camera/grounding output, runtime status, body memory, recovery decisions, and benchmark metrics.
 6. **Safety boundary**: WebUI and future agents can only issue high-level typed commands; they cannot directly bypass RuntimeManager or SafetySupervisor to control low-level humanoid actuators.
+7. **RL boundary**: learned recovery is low-frequency and task-level only; the locomotion controller, safety supervisor, and hard stop paths remain non-learned V0 components.
 
 ---
 
@@ -45,26 +47,31 @@ V0 is successful when all of the following are true:
 
 This project is not "a smaller HoloAgent" and not "a new humanoid foundation model." It is a focused humanoid locomotion runtime:
 
-> When a mature humanoid controller already provides basic locomotion, how can language-conditioned goals be grounded, executed, monitored, recovered, logged, and evaluated as reliable humanoid skills?
+> When a mature humanoid controller already provides self-stabilizing locomotion, how can a runtime learn task-level recovery decisions from body memory while preserving typed safety, logging, replay, and benchmark comparability?
+
+V0 is a single-embodiment evidence project. It uses Unitree G1 first, may fall back to MuJoCo Playground humanoids if G1 integration fails the early gate, and preserves replaceable backend interfaces for later `bxi_elf3` or company-body validation. It does not claim that the learned selector generalizes across humanoid bodies in V0.
+
+Humanoid specificity comes from the coupling between task progress and body dynamics: balance margin, contact state, slip, fall risk, velocity/orientation tracking error, controller confidence, and recovery latency. Unlike wheeled navigation, the runtime must decide when the body can continue, slow down, stop, recover balance, re-ground, re-localize, replan, or abort.
 
 ### V0 Research Hypotheses
 
 These are initial working hypotheses, not final locked paper claims.
 
-1. **Runtime hypothesis**: a structured humanoid locomotion runtime can convert language-conditioned goals into monitorable locomotion skills without requiring end-to-end VLA training.
-2. **Body memory hypothesis**: body memory improves recovery decisions beyond instant robot state by preserving short-window stability summaries and recovery history.
-3. **Benchmark hypothesis**: a failure-recovery benchmark reveals weaknesses hidden by ordinary goal-reaching metrics.
+1. **Supervisory recovery hypothesis**: a high-level RL recovery selector can improve task-level recovery above a self-stabilizing locomotion controller without learning low-level gait or joint control.
+2. **Body memory hypothesis**: recovery selectors conditioned on window summaries and event/recovery memory outperform selectors that only observe instant state.
+3. **Benchmark hypothesis**: seeded failure-recovery evaluation with external controller-native comparison reveals weaknesses hidden by ordinary goal-reaching metrics.
 
 ### Potential V1 / V2 Upgrades
 
 The system should preserve space for stronger claims if later evidence supports them:
 
-- adaptive learned recovery policy outperforming rule-based recovery;
+- parameterized recovery actions beyond discrete action selection;
+- residual or status-conditioned controller adaptation after a stable supervisory layer exists;
 - cross-embodiment transfer from Unitree G1 to `bxi_elf3` or company humanoid body;
 - persistent full 3D semantic memory replacing temporary object memory;
 - global navigation and active exploration;
 - multi-agent runtime manager with task router and auditable Agent Bus coordination;
-- residual or status-conditioned controller adaptation;
+- real open-vocabulary detector stack as the main perception path;
 - sim-to-real transfer and hardware evaluation.
 
 ---
@@ -98,26 +105,28 @@ Acceptance criteria:
 
 #### Story 2: Recover from Runtime Failures
 
-As a benchmark runner, I want the system to detect failure modes such as path blockage, localization drift, velocity tracking error, balance risk, target loss, or user interruption so that recovery actions can be selected and evaluated.
+As a benchmark runner, I want the system to detect failure modes such as path blockage, localization drift, velocity tracking error, balance risk, target loss, or user interruption so that a high-level recovery selector can choose typed recovery actions and be evaluated against controller-native and deterministic recovery baselines.
 
 Acceptance criteria:
 
 - Failure mode taxonomy supports the 16 V0 failure modes.
 - Recovery action taxonomy supports the 18 V0 actions.
-- First implementation supports the core 10 recovery actions.
+- First implementation exposes 8 discrete RL recovery actions: `continue`, `slow_down`, `safe_stop`, `local_replan`, `recover_balance`, `refresh_target_grounding`, `relocalize`, and `abort_task`.
+- Rule-based recovery exists as baseline, fallback, and debugging oracle, not as the main claimed method.
 - Recovery decisions are recorded with pre-status, post-status, latency, success, and fallback.
 - Repeated failures are visible through body memory event records.
 
 #### Story 3: Compare Ablations
 
-As a researcher, I want to run the same benchmark across `controller_only`, `controller_local_planner`, `status_monitor_only`, `full_no_body_memory`, and `full_body_memory_recovery` so that the contribution of body memory and recovery policy is measurable.
+As a researcher, I want to run the same benchmark across `controller_native`, `rule_recovery`, `rl_instant_state`, `rl_window_memory`, `rl_full_body_memory`, and an optional `oracle_upper_bound` so that the contribution of supervisory recovery and body memory is measurable.
 
 Acceptance criteria:
 
-- Each baseline runs through the same scenario definitions and logging pipeline.
+- Each method runs through the same scenario definitions, fixed held-out seeds, and logging pipeline.
 - Metrics include task success, recovery success, collision count, fall/unstable count, stop latency, path efficiency, repeated failure count, and human intervention count.
 - Batch runner produces run-level summary tables.
 - Episode-level artifacts are retained for failure diagnosis.
+- Reports include per-family breakdowns and confidence intervals, not only aggregate success rates.
 
 #### Story 4: Debug with WebUI Dashboard
 
@@ -161,7 +170,8 @@ Language instruction
   -> Mature Unitree G1 controller backend
   -> Status monitor
   -> Body memory
-  -> Rule-based recovery policy
+  -> Supervisory RL recovery selector
+  -> Rule/safety fallback
   -> Safety supervisor
   -> EventStore + Episode Data Package + Viser dashboard
 ```
@@ -180,7 +190,8 @@ RuntimeManager
   -> LocomotionSkillManager
   -> StatusMonitor
   -> BodyMemory
-  -> RuleBasedRecoveryPolicy
+  -> SupervisoryRecoverySelector
+  -> RuleRecoveryFallback
   -> SafetySupervisor
   -> BenchmarkLogger
   -> ViserDashboardPublisher
@@ -200,6 +211,7 @@ Rules:
 - Safety-critical execution does not wait for an LLM or Agent Bus response.
 - SafetySupervisor is local, synchronous, and has authority to stop or override unsafe execution.
 - Agent suggestions are typed recommendations, not final execution authority.
+- The learned recovery selector only chooses typed high-level recovery actions. It cannot issue joint commands, direct actuator commands, or direct low-level velocity commands that bypass RuntimeManager.
 - Every agent task carries `task_id`, `correlation_id`, `source`, `target_role`, `deadline_ms`, `priority`, and fallback.
 
 ---
@@ -255,11 +267,14 @@ Purpose:
 
 V0 design:
 
-- Fast path: YOLO-World.
-- Fallback path: GroundingDINO + SAM2.
+- Main experimental path: controlled detector-like grounding adapter that emits realistic `label`, `bbox`, `mask`, `confidence`, and depth-projected `position_3d` records from scene configuration and offline annotations.
+- Adapter failures are first-class benchmark events: low confidence, target ambiguity, target loss, and invalid depth projection.
+- Optional demo path: YOLO-World fast path and GroundingDINO + SAM2 fallback.
+- V1+ path: real open-vocabulary detectors become the primary runtime perception source.
 - Runtime inputs: RGB, depth, camera intrinsics/extrinsics, robot state.
 - Forbidden runtime inputs: MuJoCo object id, ground-truth target pose, simulator semantic label.
 - Evaluation-only inputs: MuJoCo object id, object pose, contacts, fall state.
+- The controlled adapter may be built from privileged simulator metadata offline, but the runtime only receives detector-like outputs and never receives object IDs or ground-truth target poses.
 
 Output schema:
 
@@ -269,7 +284,7 @@ Output schema:
   "bbox": [120, 80, 260, 310],
   "mask_id": "mask_03",
   "confidence": 0.78,
-  "source": "yolo_world",
+  "source": "controlled_grounding_adapter",
   "position_3d": [2.1, -0.4, 0.0],
   "frame_id": "camera_front",
   "world_frame": "map"
@@ -501,17 +516,55 @@ Body memory schema:
 }
 ```
 
-### 5.8 Recovery Policy
+### 5.8 Supervisory Recovery Policy
 
 Purpose:
 
-- Select recovery actions from typed failure and body-memory evidence.
+- Select task-level recovery actions from typed failure, locomotion status, and body-memory evidence while leaving low-level gait and stabilization to the frozen locomotion controller.
 
 V0 recovery policy:
 
-- rule-based first;
-- complete action taxonomy from day one;
-- learned adaptive recovery policy later.
+- main method: body-memory-conditioned supervisory RL recovery selector;
+- action level: low-frequency discrete task-level action selection, not joint control or 50 Hz velocity control;
+- controller and local planner are frozen during recovery-selector training;
+- rule-based policy remains as deterministic baseline, debugging oracle, and safety fallback;
+- bandit sanity check is used before PPO to verify that body-memory observations contain useful recovery signal;
+- PPO is the V0 main RL algorithm for multi-step recovery chains if the bandit check passes.
+
+V0 RL action space:
+
+1. `continue`
+2. `slow_down`
+3. `safe_stop`
+4. `local_replan`
+5. `recover_balance`
+6. `refresh_target_grounding`
+7. `relocalize`
+8. `abort_task`
+
+Reserved recovery actions remain in the taxonomy for V1+, but they are not part of the V0 RL action space unless explicitly promoted.
+
+Reward priority:
+
+1. Strongly penalize fall, collision, unsafe state, and emergency stop.
+2. Reward final task success.
+3. Reward successful recovery from detected failure.
+4. Penalize recovery latency and path inefficiency.
+5. Penalize unnecessary recovery and overly conservative stopping.
+
+Canonical reward shape:
+
+```text
++ task_success
++ recovery_success_bonus
+- large_collision_penalty
+- large_fall_penalty
+- emergency_stop_penalty
+- repeated_failure_penalty
+- latency_penalty
+- path_inefficiency_penalty
+- unnecessary_recovery_penalty
+```
 
 Recovery action record:
 
@@ -642,7 +695,7 @@ Failure event schema:
 | Normal control | `adjust_heading` | reserved |
 | Normal control | `adjust_posture` | reserved |
 | Stop / protection | `safe_stop` | implemented |
-| Stop / protection | `emergency_stop` | implemented |
+| Stop / protection | `emergency_stop` | safety-only |
 | Stop / protection | `wait_and_observe` | reserved |
 | Balance recovery | `recover_balance` | implemented |
 | Balance recovery | `reset_stance` | reserved |
@@ -651,10 +704,25 @@ Failure event schema:
 | Localization / target | `refresh_target_grounding` | implemented |
 | Localization / target | `confirm_with_user` | reserved |
 | Planning | `local_replan` | implemented |
-| Planning | `ask_agent_replan` | implemented |
-| Planning | `mark_blocked_region` | implemented |
+| Planning | `ask_agent_replan` | reserved |
+| Planning | `mark_blocked_region` | side_effect |
 | Task control | `pause_task` | reserved |
-| Task control | `abort_task` | reserved |
+| Task control | `abort_task` | implemented |
+
+V0 RL selector action set:
+
+```text
+continue
+slow_down
+safe_stop
+local_replan
+recover_balance
+refresh_target_grounding
+relocalize
+abort_task
+```
+
+`emergency_stop` is a SafetySupervisor override, not an action that RL is allowed to select. `mark_blocked_region` is produced by planner/memory side effects after blockage evidence, not a standalone V0 RL action. `ask_agent_replan` remains reserved until high-level agent coordination is introduced outside the real-time loop.
 
 Reserved action schema:
 
@@ -668,36 +736,112 @@ Reserved action schema:
 
 ---
 
-## 7. Benchmark Design
+## 7. Benchmark and Evaluation Design
+
+### External Anchors
+
+No existing benchmark exactly covers language-conditioned humanoid locomotion, task-level failure recovery, body-memory-conditioned supervisory RL, and complete runtime logging. V0 therefore uses a seeded internal failure-recovery benchmark, but anchors its design and comparisons to external sources:
+
+1. **MuJoCo Playground**
+   - Used as the primary external controller-native reference and fallback humanoid locomotion backend.
+   - Rationale: MuJoCo Playground provides open-source MJX robot-learning environments, includes humanoids such as Unitree G1, and demonstrates joystick-style humanoid locomotion and fall recovery examples.
+   - Reference: <https://playground.mujoco.org/> and <https://arxiv.org/abs/2502.08844>
+
+2. **LocoMuJoCo**
+   - Used as a locomotion robustness and evaluation-protocol reference, not necessarily as a direct runtime dependency in V0.
+   - Rationale: LocoMuJoCo is a MuJoCo-based locomotion benchmark for imitation and reinforcement learning with humanoids/bipeds, datasets, dynamics randomization, and task metrics.
+   - Reference: <https://loco-mujoco.readthedocs.io/en/v0.3.0/> and <https://arxiv.org/abs/2311.02496>
+
+3. **HumanoidBench**
+   - Used for related benchmark positioning and optional sanity-check tasks, not as the V0 main benchmark.
+   - Rationale: HumanoidBench is a MuJoCo humanoid benchmark with 27 whole-body tasks, including 12 locomotion tasks, but it does not directly target language-conditioned failure-recovery runtime evaluation.
+   - Reference: <https://humanoid-bench.github.io/> and <https://arxiv.org/abs/2403.10506>
 
 ### V0 Scenario Families
 
-V0 benchmark has five failure-recovery task families.
+V0 benchmark has five seeded failure-recovery task families. Each family starts with a minimal controlled version and may add stronger variants after the runtime is stable.
 
 1. **Dynamic obstacle**
-   - A moving or newly inserted obstacle blocks the route.
-   - Tests stopping, local replanning, blocked-region marking, and collision avoidance.
+   - A single moving or newly inserted obstacle blocks or crosses the route.
+   - Randomized variables: obstacle spawn time, crossing angle, speed, size, and distance to robot.
+   - Tests stopping, slowing, local replanning, blocked-region side effects, and collision avoidance.
 
 2. **Localization drift**
-   - Pose estimate receives noise or temporary loss.
-   - Tests stop-and-relocalize behavior.
+   - Pose estimate receives bounded noise, confidence drop, or temporary loss.
+   - Randomized variables: noise amplitude, drift duration, onset phase, and recovery latency.
+   - Tests safe stop, relocalization, and whether continuing is unsafe.
 
 3. **Velocity tracking failure**
-   - Controller cannot track commanded speed or turn rate.
-   - Tests slowing down and controller instability detection.
+   - Controller cannot track commanded speed or turn rate due to delay, saturation, or degraded tracking.
+   - Randomized variables: target speed, turn rate, delay, tracking degradation, and duration.
+   - Tests slowing down, safe stop, controller-confidence estimation, and recovery latency.
 
 4. **Balance risk**
-   - External force, terrain perturbation, slip, or stability-margin drop.
-   - Tests balance recovery and emergency stop boundaries.
+   - External impulse, terrain perturbation, slip zone, or stability-margin drop creates humanoid-specific risk.
+   - Randomized variables: impulse direction, impulse magnitude, contact timing, slip coefficient, and terrain patch.
+   - Tests safe stop, recover balance, abort boundaries, and fall/collision avoidance.
 
 5. **Target change / user interruption**
    - Target disappears, target changes, or user issues stop/change command.
-   - Tests refresh grounding, safe stop, and high-level replanning.
+   - Randomized variables: interruption time, target ambiguity, new target distance, and grounding confidence.
+   - Tests refresh grounding, safe stop, local replan, and abort behavior.
 
-Initial size:
+### Seed Protocol
 
-- 20 episodes per scenario family.
-- 100 total V0 episodes per baseline.
+Training and evaluation use different seed pools.
+
+- Training seeds: large randomly generated pool per family, scaled to compute budget.
+- Validation seeds: 30 fixed seeds per family for tuning and early stopping.
+- Test seeds: 30 held-out fixed seeds per family for final reporting.
+- All compared methods run exactly the same validation and test seeds.
+- Scenario generator distributions and severity ranges must be committed before final test runs.
+- Failed episodes are retained and reported; no hand-picked success-only evaluation.
+
+### Methods and Ablations
+
+V0 distinguishes external baseline, deterministic baseline, RL methods, and ablations.
+
+1. `controller_native`
+   - External reference: selected locomotion backend driven through its native command interface.
+   - No typed failure-recovery runtime, no body memory, and no learned recovery selector.
+
+2. `rule_recovery`
+   - Deterministic pre-registered recovery policy over typed status/failure signals.
+   - Serves as baseline, fallback, and debugging oracle.
+
+3. `rl_instant_state`
+   - Supervisory RL recovery selector observing only current locomotion status and instant robot state.
+
+4. `rl_window_memory`
+   - Supervisory RL recovery selector observing instant state plus short-window summaries.
+
+5. `rl_full_body_memory`
+   - Main V0 method: supervisory RL recovery selector observing instant state, window summaries, and event/recovery memory.
+
+6. `oracle_upper_bound` optional
+   - Privileged evaluation-only upper bound that may use MuJoCo ground-truth signals.
+   - It is not a fair runtime method and must never be compared as a deployable system.
+
+Primary comparisons:
+
+- `controller_native` vs `rl_full_body_memory` estimates the value of controller-to-task recovery runtime.
+- `rule_recovery` vs `rl_full_body_memory` estimates the value of learned supervisory selection.
+- `rl_instant_state` vs `rl_full_body_memory` estimates the value of body memory.
+- `rl_window_memory` vs `rl_full_body_memory` estimates the additional value of event/recovery history.
+
+### RL Training Protocol
+
+V0 uses a staged training path:
+
+1. **Bandit sanity check**
+   - Treat a failure event as a one-step recovery-action selection problem.
+   - Verify that body-memory observations improve short-horizon recovery outcomes before spending effort on full PPO.
+
+2. **PPO supervisory recovery**
+   - Train a low-frequency discrete recovery selector for multi-step recovery chains.
+   - The frozen locomotion controller handles balance and gait; PPO only selects typed recovery actions.
+
+If the bandit sanity check shows no body-memory advantage over instant state, the project must pause RL scaling and inspect observation design, action taxonomy, and scenario distributions before running long PPO jobs.
 
 ### Metrics
 
@@ -734,33 +878,6 @@ Per-episode metrics schema:
 }
 ```
 
-### Baselines
-
-V0 baselines:
-
-1. `controller_only`
-   - mature G1 controller tracks target velocity or pose; no memory and no recovery.
-
-2. `controller_local_planner`
-   - controller plus MPC/optimization local planner; no body memory and no recovery policy.
-
-3. `status_monitor_only`
-   - local planner plus status monitor; detects issues but does not execute recovery policy.
-
-4. `full_no_body_memory`
-   - recovery policy exists but only sees instant robot state, not window summaries or event memory.
-
-5. `full_body_memory_recovery`
-   - full V0 system with body memory and rule-based recovery policy.
-
-Main comparison:
-
-- `full_no_body_memory` vs `full_body_memory_recovery` isolates the value of body memory.
-- `status_monitor_only` vs `full_body_memory_recovery` isolates the value of recovery action selection.
-- `controller_local_planner` vs `full_body_memory_recovery` isolates the value of failure-aware runtime beyond ordinary local planning.
-
----
-
 ## 8. Episode Data Package
 
 ### Principle
@@ -775,8 +892,11 @@ runs/
     run_manifest.json
     config_snapshot/
       g1_mujoco.yaml
+      mujoco_playground.yaml
       recovery_rules.yaml
+      recovery_rl.yaml
       benchmark_v0.yaml
+      seed_protocol.yaml
       perception.yaml
       logging.yaml
 
@@ -910,7 +1030,7 @@ Use a Viser-based integrated WebUI dashboard.
 ### Dashboard Panels
 
 1. **3D Scene Panel**
-   - G1 robot pose;
+   - humanoid robot pose;
    - target point;
    - safe stop pose;
    - obstacles;
@@ -1002,7 +1122,7 @@ python -m benchmark.runner --config configs/benchmark_v0.yaml
 Requirements:
 
 - run all selected scenarios;
-- run all selected baselines;
+- run all selected methods and ablations;
 - write complete Episode Data Packages;
 - aggregate metrics at run level;
 - support random seeds and config snapshots.
@@ -1114,6 +1234,9 @@ humanoid_loco_runtime/
     failure_modes.py
     recovery_actions.py
     rule_policy.py
+    rl_selector.py
+    bandit_sanity.py
+    reward.py
     recovery_schema.py
 
   benchmark/
@@ -1126,10 +1249,12 @@ humanoid_loco_runtime/
     runner.py
     metrics.py
     logger.py
+    seed_protocol.py
 
   sim/
     mujoco_env.py
     g1_model_loader.py
+    mujoco_playground_backend.py
     cameras.py
     perturbations.py
 
@@ -1140,7 +1265,9 @@ humanoid_loco_runtime/
 
   configs/
     g1_mujoco.yaml
+    mujoco_playground.yaml
     recovery_rules.yaml
+    recovery_rl.yaml
     benchmark_v0.yaml
     perception.yaml
     logging.yaml
@@ -1159,7 +1286,9 @@ humanoid_loco_runtime/
 
 - MuJoCo simulation environment;
 - Unitree G1 model/controller backend;
+- MuJoCo Playground humanoid locomotion backend as fallback and external controller-native reference;
 - YOLO-World or GroundingDINO/SAM2 perception backend;
+- controlled grounding adapter for V0 benchmark stability;
 - Viser dashboard;
 - local filesystem run store;
 - future ROS2 runtime bus;
@@ -1199,26 +1328,30 @@ Deliverables:
 - G1 model loading;
 - mature controller backend wrapper;
 - `stand_ready`, `track_velocity`, `turn_to`, `walk_to`, `safe_stop`;
-- robot state and controller command logging.
+- robot state and controller command logging;
+- MuJoCo Playground humanoid backend smoke path.
 
 Exit criteria:
 
 - G1 can execute basic local target approach in MuJoCo;
 - logs include robot state, controller command, and metrics.
+- if G1 cannot reliably execute `stand_ready`, `track_velocity`, `safe_stop`, and short `walk_to` by the end of week 3, switch the main V0 evidence path to MuJoCo Playground while keeping G1 as target backend.
 
 ### Milestone 2: Open-Vocabulary Grounding and Temporary Memory
 
 Deliverables:
 
-- YOLO-World fast path;
-- GroundingDINO/SAM2 fallback interface;
+- controlled detector-like grounding adapter;
+- target ambiguity, target loss, low-confidence, and invalid-depth failure injection;
+- optional YOLO-World fast path;
+- optional GroundingDINO/SAM2 fallback interface;
 - depth projection;
 - temporary object memory;
 - safe stop pose generation.
 
 Exit criteria:
 
-- runtime grounds a language target from RGB-D without MuJoCo object id;
+- runtime receives detector-like target records from RGB-D-style interfaces without MuJoCo object id or ground-truth target pose;
 - evaluation oracle can score grounding accuracy separately.
 
 ### Milestone 3: NavigatorV0 and Safety Shield
@@ -1236,7 +1369,7 @@ Exit criteria:
 - system can approach target while avoiding local obstacles;
 - planner returns typed blocked/no-feasible-plan failures.
 
-### Milestone 4: Body Memory and Rule Recovery
+### Milestone 4: Body Memory and Supervisory Recovery
 
 Deliverables:
 
@@ -1245,26 +1378,36 @@ Deliverables:
 - event/recovery memory;
 - 16 failure modes;
 - 18 recovery actions;
-- 10 implemented core actions.
+- 8 implemented V0 RL actions;
+- rule-based recovery baseline and safety fallback;
+- bandit sanity-check trainer;
+- PPO supervisory recovery selector.
 
 Exit criteria:
 
-- recovery policy responds to each V0 benchmark failure family;
+- rule baseline and RL selectors respond to each V0 benchmark failure family;
+- bandit sanity check demonstrates whether body-memory observations contain useful recovery signal before long PPO runs;
 - recovery traces are written per episode.
 
-### Milestone 5: Benchmark and Baselines
+### Milestone 5: Seeded Benchmark, External Baseline, and Ablations
 
 Deliverables:
 
 - five scenario families;
-- five baselines;
+- scenario generator distributions and severity ranges;
+- train/validation/test seed protocol;
+- controller-native external baseline;
+- rule recovery baseline;
+- RL instant/window/full-body-memory ablations;
 - batch runner;
 - metrics aggregation.
 
 Exit criteria:
 
-- 100 episodes per baseline can run automatically;
-- run-level summary compares all baselines.
+- validation seeds include 30 fixed seeds per family;
+- final test seeds include 30 held-out fixed seeds per family;
+- all methods run the same held-out seeds;
+- reports include confidence intervals and per-family breakdowns.
 
 ### Milestone 6: Viser Dashboard
 
@@ -1290,6 +1433,7 @@ Deliverables:
 - experiment tables;
 - failure case studies;
 - ablation analysis;
+- external benchmark positioning;
 - limitations and V1 plan.
 
 Exit criteria:
@@ -1302,13 +1446,15 @@ Exit criteria:
 
 | Risk | Impact | Mitigation |
 |---|---|---|
-| Mature G1 controller is hard to integrate | blocks whole runtime | start with simplest velocity tracking backend; keep controller wrapper replaceable |
-| Open-vocabulary detector is too slow | benchmark becomes impractical | use YOLO-World fast path and fallback only on low confidence |
-| Grounding in MuJoCo visuals is brittle | target approach fails for perception reasons | log grounding accuracy separately; use evaluation oracle only for scoring |
+| Mature G1 controller is hard to integrate | blocks whole runtime | set a week-3 smoke gate and switch V0 evidence to MuJoCo Playground humanoid backend if needed |
+| Open-vocabulary detector is too slow or brittle in MuJoCo visuals | benchmark becomes impractical or perception dominates the study | use controlled detector-like grounding adapter for V0 main experiments; keep real detectors as optional demo and V1+ target |
+| Controlled grounding looks too artificial | weak language/open-vocabulary claim | expose detector-like outputs, inject grounding failures, keep oracle evaluation separate, and state that real open-vocabulary detectors are V1+ |
 | Logging is too heavy | slows benchmark and fills disk | configurable rates, compression, retention policy |
 | MPC local planner becomes too complex | delays recovery work | implement minimal optimization planner first; keep API compatible with stronger planner |
-| Body memory seems like renamed state | weak novelty | emphasize window summaries, failure events, and recovery outcomes rather than instant state alone |
-| Rule recovery looks too simple | reviewer may see it as engineering | position as deterministic safety baseline and data generator for learned recovery |
+| Body memory seems like renamed state | weak novelty | make body memory the observation representation for learned recovery and test instant/window/full-memory ablations |
+| PPO training is unstable or expensive | delays core results | run bandit sanity check first, freeze controller/planner, keep action space discrete and low-frequency, and retain rule fallback |
+| Rule recovery looks too simple | reviewer may see it as engineering | position rule recovery as deterministic baseline, fallback, and debugging oracle, not the main method |
+| Benchmark is seen as self-serving | weak external validity | pre-register seeded scenario distributions, report held-out seeds, compare against controller-native external baseline, and position against MuJoCo Playground, LocoMuJoCo, and HumanoidBench |
 | Dashboard consumes too much time | delays benchmark | build only Viser panels necessary for debugging and data validation |
 | Multi-agent extension distracts V0 | scope creep | keep multi-agent behind AgentPort and TaskRouter interfaces only |
 | No real-hardware result | limits venue strength | target workshop/early conference first; plan bxi_elf3/company body as V1/V2 |
@@ -1319,25 +1465,30 @@ Exit criteria:
 
 These are intentionally left open for implementation-time validation:
 
-1. Which exact G1 MuJoCo model and controller backend will be the first stable baseline?
-2. Is YOLO-World sufficient for MuJoCo RGB textures, or is GroundingDINO fallback needed frequently?
+1. Which exact Unitree G1 controller backend can pass the week-3 smoke gate?
+2. If G1 integration misses the smoke gate, which MuJoCo Playground humanoid environment becomes the V0 evidence backend?
 3. Which MPC / optimization library should be used for NavigatorV0?
-4. What numerical formula should define `balance_margin` for the first G1 implementation?
+4. What numerical formula should define `balance_margin` for the first humanoid implementation?
 5. How should `controller_confidence` be estimated if the backend does not expose confidence?
-6. What disk budget per 100-episode run is acceptable with all artifacts enabled?
-7. Which parts of `bxi_elf3` can be safely described in public artifacts?
+6. Which observation features should be included in `rl_instant_state`, `rl_window_memory`, and `rl_full_body_memory`?
+7. How many training seeds are feasible for bandit and PPO under the available compute budget?
+8. What disk budget per held-out evaluation run is acceptable with all artifacts enabled?
+9. Which parts of `bxi_elf3` can be safely described in public artifacts?
 
 ---
 
 ## 16. Summary of Locked Decisions
 
 - Use MuJoCo + Unitree G1 first.
-- Keep `bxi_elf3` and company body as later transfer targets.
-- Use mature G1 controller backend first.
+- Use MuJoCo Playground humanoid backend as the fallback and external controller-native reference if G1 integration misses the early smoke gate.
+- Keep `bxi_elf3` and company body as later compatibility targets, not V0 evidence.
+- Use mature G1 controller backend first, but do not let it become a single point of failure.
 - Do not train end-to-end VLA in V0.
+- Do not train low-level locomotion, gait, joint, or residual controller policies in V0.
+- Train only a high-level supervisory recovery selector over a self-stabilizing controller.
 - Use language parser to produce structured locomotion commands.
-- Use open-vocabulary grounding in V0.
-- Use YOLO-World fast path and GroundingDINO/SAM2 fallback.
+- Use controlled detector-like grounding adapter for V0 main experiments.
+- Use YOLO-World fast path and GroundingDINO/SAM2 fallback only as optional V0 demos and V1+ primary perception targets.
 - Use RGB-D and camera parameters as runtime perception input.
 - Use MuJoCo privileged ground truth only for evaluation.
 - Use temporary object memory in V0, but expose memory interface compatible with persistent 3D semantic memory.
@@ -1346,13 +1497,17 @@ These are intentionally left open for implementation-time validation:
 - Use MPC / optimization-based local planner plus safety shield.
 - Use body memory with instant state, windowed summary, and event/recovery memory.
 - Use complete recovery action taxonomy from day one.
-- Implement 10 core recovery actions in V0 and reserve 8 for later.
+- Implement 8 V0 RL recovery actions: `continue`, `slow_down`, `safe_stop`, `local_replan`, `recover_balance`, `refresh_target_grounding`, `relocalize`, and `abort_task`.
+- Treat `emergency_stop` as SafetySupervisor-only, not RL-selectable.
+- Treat `ask_agent_replan` as reserved until future high-level agent coordination.
 - Use 16 failure modes in V0.
 - Use single RuntimeManager in V0, not multi-agent real-time execution.
 - Keep Agent Bus for high-level async coordination and audit, not real-time safety.
 - Use Episode Data Package from the start, including timeseries and artifacts.
 - Use Viser integrated WebUI dashboard from the start.
 - Support both batch benchmark runner and dashboard debug mode.
-- Use five baselines for V0 evaluation.
-- Treat the three claims as V0 hypotheses, not final fixed paper claims.
-
+- Use seeded five-family failure-recovery benchmark with train/validation/test split.
+- Use `controller_native` as the required external baseline.
+- Use `rule_recovery`, `rl_instant_state`, `rl_window_memory`, `rl_full_body_memory`, and optional `oracle_upper_bound` for V0 evaluation.
+- Run a bandit sanity check before long PPO training.
+- Treat supervisory recovery, body memory, and benchmark claims as V0 hypotheses, not final fixed paper claims.

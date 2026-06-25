@@ -8,8 +8,9 @@
 
 - This repository is for the standalone **Humanoid Locomotion Runtime** project.
 - The canonical plan is [docs/research_plan_prd.md](docs/research_plan_prd.md).
-- V0 targets MuJoCo + Unitree G1 with a mature locomotion controller backend.
+- V0 targets MuJoCo + Unitree G1 with a mature locomotion controller backend, with MuJoCo Playground humanoid locomotion as fallback if the G1 smoke gate fails.
 - V0 is a language-conditioned humanoid locomotion runtime, not an end-to-end foundation-scale VLA.
+- V0 uses supervisory recovery at the task/failure layer; learned policies must not replace low-level gait, joint, or actuator control.
 
 ## Core Boundaries
 
@@ -17,6 +18,7 @@
 - MuJoCo privileged object IDs, ground-truth target poses, and simulator semantic labels are evaluation-only and must not enter runtime decisions.
 - WebUI and future agents may only issue high-level typed commands through `RuntimeManager`.
 - Low-level controller commands and safety overrides must not bypass `RuntimeManager` and `SafetySupervisor`.
+- RL recovery policies may only choose typed high-level recovery actions through `RuntimeManager`.
 - Agent Bus, if added later, is for high-level asynchronous coordination and audit, not real-time safety or high-frequency control.
 
 ## Development Defaults
@@ -33,6 +35,5 @@
 3. MuJoCo + G1 backend smoke test.
 4. Temporary object memory and RGB-D grounding adapter.
 5. NavigatorV0 local planner and SafetySupervisor.
-6. Body memory and rule-based recovery policy.
-7. Benchmark runner and Viser dashboard.
-
+6. Body memory, rule-based recovery fallback, bandit sanity check, and supervisory RL recovery selector.
+7. Seeded benchmark runner, controller-native baseline, and Viser dashboard.
