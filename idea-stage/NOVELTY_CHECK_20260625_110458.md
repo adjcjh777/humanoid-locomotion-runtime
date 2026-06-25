@@ -1,0 +1,81 @@
+# Novelty Check Report
+
+**生成时间**：2026-06-25 11:04 +0800  
+**使用 skill**：`novelty-check`  
+**Reviewer route**：Claude Code `glm-5.2[1M]`, `--effort max`  
+**结论**：没有发现完全相同的工作，但核心组件分别已有强先例；当前 novelty 约 **4/10**，建议 **PROCEED WITH CAUTION**。
+
+## Proposed Method
+
+在冻结 humanoid locomotion controller 之上构建语言/视觉目标驱动的 runtime。低层控制器保持非学习或预训练冻结；上层 supervisory RL selector 根据 failure status、body memory、grounding/runtime summary，在 typed recovery actions 中选择恢复动作，并通过 seeded failure benchmark、Episode Data Package 和 dashboard replay 评估。
+
+## Core Claims
+
+1. **Typed supervisory recovery over frozen humanoid controller**  
+   - Novelty：MEDIUM-LOW  
+   - Closest：RACER、FLARE、Automating Robot Failure Recovery  
+   - 评估：场景从 manipulation 迁移到 humanoid locomotion 是新组合，但 supervisory recovery framing 已存在。
+
+2. **Body-memory-conditioned recovery selector improves over instant state**  
+   - Novelty：LOW-MEDIUM  
+   - Closest：HoRD、Chameleon  
+   - 评估：history-conditioned humanoid RL 和 event memory 都已有强先例；必须用 per-family hypothesis + ablation 证明 body memory 不是改名。
+
+3. **Seeded humanoid failure-recovery benchmark with mandatory episode package**  
+   - Novelty：MEDIUM-HIGH  
+   - Closest：HumanoidBench、LocoMuJoCo、HumanoidArena  
+   - 评估：如果包含 deterministic seeding、oracle gap、完整 telemetry/replay，这部分比 method 本身更有防御力。
+
+4. **Language-conditioned recovery**  
+   - Novelty：LOW unless language enters selector  
+   - Closest：LangWBC、LeVERB、RoboGhost、EgoActor、RACER  
+   - 评估：如果语言只用于初始 target grounding，标题中的 language-conditioned 过强；需要 `language-aware vs language-blind` 消融。
+
+5. **Runtime safety boundary and typed command-only recovery**  
+   - Novelty：MEDIUM  
+   - Closest：一般 robotics runtime / safety supervisor 设计  
+   - 评估：作为工程系统贡献可以成立，但不应单独作为 ML novelty。
+
+## Closest Prior Work
+
+| Paper | Year | Venue | Overlap | Key Difference |
+|---|---:|---|---|---|
+| RACER | 2025 | ICRA | supervisor-actor recovery、language-guided recovery | manipulation；VLM supervisor；非 humanoid locomotion |
+| HoRD | 2026 | arXiv | history-conditioned humanoid RL | 低层 robust controller；非上层 typed recovery |
+| Chameleon | 2026 | arXiv | event memory for delayed decisions | manipulation；prospective memory；非 recovery selector |
+| LookOut | 2025 | ICCV | humanoid nav slowing/rerouting behaviors | trajectory prediction；非 typed action selector |
+| FocusNav | 2026 | arXiv | G1 stability-aware local navigation | policy/gating；非 failure recovery benchmark |
+| STATE-NAV | 2025 | RA-L | bipedal stability-aware navigation | traversability + MPC；非 supervisory RL recovery |
+| FLARE | 2026 | CVPR | online monitor + reset/retry recovery | manipulation VLA；非 humanoid locomotion |
+| HumanoidArena | 2026 | arXiv | high-level/low-level humanoid interface benchmark | 不专注 failure recovery / body memory |
+
+## Overall Novelty Assessment
+
+- **Score**：4/10
+- **Recommendation**：PROCEED WITH CAUTION
+- **Key differentiator if kept**：不是“提出 body memory”，而是“用预注册 seeded failure benchmark 证明哪些 humanoid recovery 场景必须依赖 event/recovery memory”。
+- **Main risk**：如果 `rl_full_body_memory` 与 `rl_instant_state` 差异小，当前 paper contribution 会坍缩。
+- **Reviewer risk**：RACER + HoRD + Chameleon + LookOut 的组合足以让 reviewer 质疑 novelty。
+
+## Suggested Positioning
+
+推荐把论文定位从 method paper 改成：
+
+> A benchmarked runtime study of when typed supervisory recovery for humanoid locomotion needs memory beyond instant state.
+
+也就是：
+
+- **贡献 1**：deterministic seeded humanoid failure-recovery benchmark + Episode Data Package；
+- **贡献 2**：typed supervisory recovery interface with strict safety boundaries；
+- **贡献 3**：per-family memory necessity study，包含 instant/window/full/VLM/rule/oracle；
+- **贡献 4**：实证回答哪些 failure family 需要 body memory，哪些只要 reactive status。
+
+## Required Checks Before Implementation Scale-Up
+
+1. 写定 reward 和 recovery success 判据。
+2. 写定 deterministic failure seeding protocol。
+3. 把 `oracle_upper_bound` 改为 mandatory。
+4. 增加 RACER-style VLM supervisor baseline。
+5. 预注册 per-family body-memory hypotheses。
+6. 对 8 个 typed actions 做单动作成功率审计。
+

@@ -1,0 +1,13 @@
+{
+  "call_number": 1,
+  "purpose": "glm52-novelty-verification",
+  "timestamp": "2026-06-25T03:04:58Z",
+  "tool": "claude-code",
+  "model": "glm-5.2[1M]",
+  "reasoning_effort": "max",
+  "files_referenced": [
+    "docs/research_plan_prd.md",
+    "idea-stage/REF_PAPER_SUMMARY_20260625_110458.md"
+  ],
+  "prompt": "Novelty verification for frozen humanoid locomotion controller plus body-memory-conditioned supervisory RL recovery selector, using searched prior work including RACER, HoRD, LookOut, Chameleon, HumanoidBench, MuJoCo Playground, and related VLA/navigation/recovery papers."
+}

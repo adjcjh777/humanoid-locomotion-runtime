@@ -1,0 +1,2 @@
+{"event":"review_trace","skill":"research-review","purpose":"glm52-max-review","thread_id":"local-claude-code-glm52-max","trace_path":".aris/traces/research-review/2026-06-25_run01/","status":"ok"}
+{"event":"review_trace","skill":"novelty-check","purpose":"glm52-novelty-verification","thread_id":"local-claude-code-glm52-max","trace_path":".aris/traces/novelty-check/2026-06-25_run01/","status":"ok"}

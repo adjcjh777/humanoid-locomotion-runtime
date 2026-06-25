@@ -1,0 +1,131 @@
+# Research Idea Report
+
+**Direction**：Language-conditioned humanoid locomotion runtime with supervisory recovery  
+**Generated**：2026-06-25 11:04 +0800  
+**使用 skill**：`idea-creator`  
+**Ideas evaluated**：8 recommended + 4 eliminated  
+**Reviewer route**：Claude Code `glm-5.2[1M]`, `--effort max`
+
+## Landscape Summary
+
+当前计划的系统边界是正确的：不要和 LangWBC、LeVERB、RoboGhost、WholeBodyVLA 这类 end-to-end / latent VLA humanoid control 正面对打，也不要把低层 gait/control 作为贡献。真正可防御的切入点应该是“humanoid controller 已经能走，但 runtime 如何识别失败、记录证据、选择恢复、可复现评估”。
+
+文献检索显示没有完全相同的组合，但相邻工作非常强：RACER 已经给出 supervisor-actor recovery framing；HoRD 已经给出 history-conditioned humanoid RL；Chameleon 已经给出 event memory 对 delayed decision 的价值；LookOut / FocusNav / STATE-NAV 已覆盖 humanoid navigation 中的 slowing、rerouting、stability-aware planning。当前 PRD 若不修改，容易被判为 re-bundle。
+
+因此，增强后的研究计划应把贡献从“提出 body memory recovery selector”改成“预注册、可复现地回答：哪些 humanoid failure family 真需要 event/recovery memory，哪些只需要 reactive status”。这能把结果做成可证伪的科学问题，而不是系统拼装。
+
+## Recommended Ideas
+
+### Idea 1: Per-Family Body-Memory Hypothesis Gate
+
+- **Method (what we actually do)**：为 5 个 failure family 预注册 memory 需求假设；明确哪些应该 `full > window > instant`，哪些应该 `instant ≈ full`；训练前冻结假设和 margin。
+- **Hypothesis**：localization drift、target change/user interruption 更依赖 event/recovery memory；balance risk 更偏 reactive，instant state 可能足够。
+- **Minimum experiment**：每个 family 先跑 `rl_instant_state`、`rl_window_memory`、`rl_full_body_memory` 各 30 validation seeds，检查预注册方向是否成立。
+- **Expected outcome**：如果 full 只在预期 family 上赢，论文故事变强；如果所有 family 都不赢，应 pivot。
+- **Novelty**：6/10；closest work：HoRD、Chameleon。
+- **Feasibility**：中等，主要是 observation 规格要先冻结。
+- **Risk**：MEDIUM。
+- **Contribution type**：diagnostic + method。
+
+### Idea 2: RACER-Style VLM Supervisor Baseline
+
+- **Method**：把 body memory 和 failure event 转成结构化文本摘要；让 VLM/LLM supervisor 只在同一个 8-action typed action set 中选动作；和 RL selector 在相同 seeds 上比较。
+- **Hypothesis**：RL 在高频重复、低语义的 failure 上更稳定；VLM 在 target change / grounding ambiguity 上可能更强。
+- **Minimum experiment**：3 个 family，每个 30 seeds，比较 `rule_recovery`、`vlm_supervisor`、`rl_full_body_memory`。
+- **Expected outcome**：RL 若赢，可以 justify 为什么不用 RACER/FLARE 风格；VLM 若赢，直接 pivot 到 VLM-supervisor + typed safety runtime。
+- **Novelty**：5/10。
+- **Feasibility**：高，selector 仍只输出 typed action。
+- **Risk**：LOW-MEDIUM。
+- **Contribution type**：baseline + positioning。
+
+### Idea 3: Mandatory Oracle Gap Analysis
+
+- **Method**：把 `oracle_upper_bound` 从 optional 改为 mandatory；oracle 可用 evaluation-only true failure family / best recovery label，但不得作为 runtime method。
+- **Hypothesis**：只有 `oracle - rule` gap 足够大时，learned selector 才有研究空间。
+- **Minimum experiment**：每个 family 50 episodes，报告 `controller_native`、`rule_recovery`、`oracle_upper_bound`。
+- **Expected outcome**：至少 3/5 family 有 `oracle - rule >= 15pt` 才继续 RL。
+- **Novelty**：7/10，作为 benchmark protocol 较强。
+- **Feasibility**：高。
+- **Risk**：LOW。
+- **Contribution type**：benchmark protocol。
+
+### Idea 4: Observation Noise / Delay Stress Test
+
+- **Method**：对 localization、proprioception、grounding confidence 注入噪声、丢帧和 50-200ms 延迟；比较 instant/window/full memory。
+- **Hypothesis**：body memory 的价值主要在 partial observability 和 delayed evidence 下出现。
+- **Minimum experiment**：localization_drift + target_change 两类，3 档噪声，每档 30 seeds。
+- **Expected outcome**：full memory 在中高噪声下显著优于 instant。
+- **Novelty**：6/10。
+- **Feasibility**：中等。
+- **Risk**：MEDIUM。
+- **Contribution type**：diagnostic experiment。
+
+### Idea 5: Typed Action Set Audit and Compression
+
+- **Method**：对 8 个 actions 做单动作成功率审计；测试 8-action vs 合并后的 5-action action set。
+- **Hypothesis**：`refresh_target_grounding` / `relocalize`、`safe_stop` / `abort_task` 可能冗余；更小 action set 可能更稳。
+- **Minimum experiment**：每个 action 在对应 family 上强制触发 30 episodes，记录 success/failure/latency。
+- **Expected outcome**：删掉单动作成功率低或语义重叠的 action，降低 RL 样本复杂度。
+- **Novelty**：5/10。
+- **Feasibility**：高。
+- **Risk**：LOW。
+- **Contribution type**：engineering diagnostic。
+
+### Idea 6: Difficulty Calibration Protocol
+
+- **Method**：每个 failure family 扫 severity，选择 `controller_native` success 落在 30-50% 的难度作为主报告点。
+- **Hypothesis**：这个区间最能暴露 recovery selector 的价值。
+- **Minimum experiment**：5 families × 5 severity levels × 30 seeds。
+- **Expected outcome**：benchmark 不会被质疑为太轻或太重。
+- **Novelty**：6/10。
+- **Feasibility**：中等。
+- **Risk**：LOW-MEDIUM。
+- **Contribution type**：benchmark protocol。
+
+### Idea 7: Language-Conditioned Recovery or Honest Rename
+
+- **Method**：在 target_change/user_interruption 中让 selector 输入 language delta、target text、grounding ambiguity summary；如果无收益，标题去掉 `language-conditioned`，改为 `language-grounded target locomotion runtime`。
+- **Hypothesis**：语言只在目标改变、用户中断、ambiguous grounding 中有 recovery 价值。
+- **Minimum experiment**：target_change family 上 `language-aware selector` vs `language-blind selector`。
+- **Expected outcome**：有 gap 则保留 language claim；无 gap 则主动收缩。
+- **Novelty**：5/10。
+- **Feasibility**：高。
+- **Risk**：LOW。
+- **Contribution type**：claim hygiene。
+
+### Idea 8: Cross-Controller Transfer Sanity
+
+- **Method**：在一个 frozen controller 上训练 selector，在另一个 controller 或 MuJoCo Playground fallback 上测试相同 typed recovery layer。
+- **Hypothesis**：typed supervisory selector 学的是 failure semantics，不只是某个 controller 的参数化 quirks。
+- **Minimum experiment**：选 2 个最有 gap 的 family，A controller 训练，B controller zero-shot eval。
+- **Expected outcome**：即使绝对性能下降，relative ordering 仍保留。
+- **Novelty**：6/10。
+- **Feasibility**：中等偏难。
+- **Risk**：HIGH。
+- **Contribution type**：generalization sanity check。
+
+## Eliminated Ideas
+
+| Idea | Reason eliminated |
+|---|---|
+| End-to-end language/image to joint action | 与 PRD 核心边界冲突，且被 LangWBC / LeVERB / RoboGhost / WholeBodyVLA 强覆盖 |
+| 训练新的低层 gait / whole-body controller | 会和 HoRD、FocusNav、Gallant 等正面竞争，超出 V0 scope |
+| V0 persistent 3D semantic memory | 工程量大，容易让主贡献失焦 |
+| 实时多智能体 Agent Bus 控制 | PRD 已明确 Agent Bus 不进入 real-time safety/control loop |
+
+## Suggested Execution Order
+
+1. 写定 reward、failure seeding、oracle definition、per-family memory hypothesis。
+2. 先跑 `controller_native`、`rule_recovery`、`oracle_upper_bound` gap analysis。
+3. 做 typed action audit，必要时压缩 action set。
+4. 在 gap 最大的 2-3 个 family 上跑 `instant/window/full` pilot。
+5. 加 VLM-supervisor baseline。
+6. 只有 Gate 通过后再扩大到完整 benchmark 和 PPO。
+
+## Go / No-Go Gates
+
+- **Gate 1**：至少 3/5 family 满足 `oracle_upper_bound - rule_recovery >= 15pt`。
+- **Gate 2**：预注册应受益 family 中，`rl_full_body_memory - rl_instant_state >= 5pt`。
+- **Gate 3**：VLM-supervisor baseline 不系统性优于 RL；否则 pivot。
+- **Gate 4**：language claim 通过 `language-aware vs language-blind` 消融；否则改标题。
+
