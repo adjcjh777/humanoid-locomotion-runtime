@@ -18,6 +18,9 @@ env/
 .env.*
 *.local
 
+# ARIS installer backups
+.aris/*.prev
+
 # Generated experiment data
 runs/
 reports/
@@ -40,4 +43,3 @@ datasets/
 .DS_Store
 .idea/
 .vscode/
-

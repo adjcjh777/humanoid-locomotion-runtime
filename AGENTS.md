@@ -68,3 +68,18 @@
 5. NavigatorV0 local planner and SafetySupervisor.
 6. Body memory, rule-based recovery fallback, bandit sanity check, and supervisory RL recovery selector.
 7. Seeded benchmark runner, controller-native baseline, and Viser dashboard.
+<!-- ARIS-CODEX:BEGIN -->
+## ARIS Codex Skill Scope
+ARIS Codex packages installed in this project: skills-codex,skills-codex-claude-review
+Managed entries: 80
+Manifest: `.aris/installed-skills-codex.txt`
+ARIS repo root: `/mnt/nvme0n1p1/zhangzy/projects/Auto-claude-code-research-in-sleep`
+Project skill path: `.agents/skills/<skill-name>`
+For ARIS Codex workflows, prefer the project-local skills under `.agents/skills/`.
+When a skill needs ARIS helper scripts, resolve the repo root from the manifest or set it explicitly:
+`ARIS_REPO=$(awk -F'	' '$1=="repo_root"{print $2; exit}' "/mnt/nvme0n1p1/zhangzy/projects/humanoid-locomotion-runtime/.aris/installed-skills-codex.txt")`
+Do not edit or delete symlinked skills in place; update upstream or rerun:
+`bash /mnt/nvme0n1p1/zhangzy/projects/Auto-claude-code-research-in-sleep/tools/install_aris_codex.sh "/mnt/nvme0n1p1/zhangzy/projects/humanoid-locomotion-runtime" --reconcile`
+For copied Codex installs, use:
+`bash /mnt/nvme0n1p1/zhangzy/projects/Auto-claude-code-research-in-sleep/tools/smart_update_codex.sh --project "/mnt/nvme0n1p1/zhangzy/projects/humanoid-locomotion-runtime"`
+<!-- ARIS-CODEX:END -->
