@@ -20,3 +20,9 @@
 | 2026-06-25 11:58 | /novelty-check | idea-stage/NOVELTY_CHECK.md | idea-discovery | latest copy from Claude Opus 4.8 rerun |
 | 2026-06-25 11:58 | /research-review | idea-stage/RESEARCH_REVIEW_CLAUDE_OPUS48_20260625_115846.md | idea-discovery | Claude Opus 4.8 research review; recommends counterfactual diagnostic paper trajectory |
 | 2026-06-25 11:58 | /research-review | idea-stage/RESEARCH_REVIEW_CLAUDE_GLM52.md | idea-discovery | latest copy retained under legacy filename, content from Claude Opus 4.8 rerun |
+| 2026-06-25 12:13 | /experiment-plan | refine-logs/EXPERIMENT_PLAN_20260625_121320.md | implementation | claim-driven experiment roadmap with A800 single-host execution policy |
+| 2026-06-25 12:13 | /experiment-plan | refine-logs/EXPERIMENT_PLAN.md | implementation | latest copy |
+| 2026-06-25 12:13 | /experiment-plan | refine-logs/EXPERIMENT_TRACKER_20260625_121320.md | implementation | run tracker for daytime human work and nightly ARIS automation |
+| 2026-06-25 12:13 | /experiment-plan | refine-logs/EXPERIMENT_TRACKER.md | implementation | latest copy |
+| 2026-06-25 12:13 | /experiment-plan | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260625_121320.md | implementation | 28-day day/night experiment timeline for A800 single-host workflow |
+| 2026-06-25 12:13 | /experiment-plan | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | latest copy |
