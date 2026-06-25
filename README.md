@@ -22,74 +22,38 @@
 
 ## 预期项目结构
 
+![Humanoid Locomotion Runtime 预期结构图](docs/assets/project_structure_v0_v1_v2.svg)
+
+上图是面向阅读的精简视觉版；下面是便于后续维护的可编辑流程版。
+
 ```mermaid
-flowchart TB
-  subgraph V0["V0 必须实现：论文证据主线"]
-    Cmd["语言条件 high-level command"]
-    RGBD["RGB-D + camera parameters"]
-    Grounding["controlled detector-like grounding adapter"]
-    Schemas["schemas / interfaces\nPolicyObservation · RuntimeEvent · OracleAnnotation"]
-    RM["RuntimeManager\n唯一高层命令入口"]
-    Planner["NavigatorV0\nlocal planner / local avoidance"]
-    Safety["SafetySupervisor\nhard stop / safety override"]
-    Controller["frozen locomotion controller backend\nUnitree G1 or MuJoCo Playground fallback"]
-    Sim["MuJoCo runtime"]
-    TempMem["temporary object memory"]
-    BodyMem["typed body/event memory"]
-    Recovery["supervisory recovery selector\ninstant · frame-stack · GRU · typed memory"]
-    Rule["rule_recovery_tuned fallback"]
-    Options["typed recovery options / SMDP contracts"]
-    Branching["decision-point snapshot branching"]
-    EDP["Episode Data Package\nmanifest · events · metrics · timeseries"]
-    Benchmark["seeded cause x temporal-profile benchmark"]
-    Dashboard["Viser dashboard\nlive/replay debugging"]
-  end
+flowchart LR
+  In["1 Inputs\nlanguage command\nRGB-D + robot state"]
+  Boundary["2 Gate B boundary\nPolicyObservation\nRuntimeEvent\nOracleAnnotation"]
+  Runtime["3 RuntimeManager\nsingle high-level entry"]
+  Control["4 Control stack\nNavigatorV0\nSafetySupervisor\nfrozen controller"]
+  Sim["5 MuJoCo runtime\nG1 or fallback backend"]
+  Recovery["6 Memory + recovery\ntemporary object memory\nbody/event memory\nselector + options"]
+  Evidence["7 Evidence package\nsnapshot branching\nseeded benchmark\nEDP + dashboard"]
 
-  subgraph V1["候选 V1：系统能力扩展"]
-    RealDetector["real open-vocabulary detector\nYOLO-World / GroundingDINO / SAM2"]
-    PersistentMemory["persistent 3D semantic memory"]
-    ParamOptions["parameterized recovery options"]
-    GlobalNav["global navigation / active exploration"]
-    VLM["VLM-prompt supervisor\nappendix or language branch"]
-  end
+  In --> Boundary --> Runtime --> Control --> Sim --> Evidence
+  Runtime --> Recovery --> Runtime
+  Runtime --> Evidence
 
-  subgraph V2["候选 V2：跨平台与更强智能体"]
-    Transfer["G1 -> bxi_elf3 / company humanoid validation"]
-    Residual["status-conditioned controller adaptation\nor residual policy"]
-    Hardware["real robot deployment evidence"]
-    AgentBus["multi-agent runtime manager / TaskRouter / Agent Bus"]
-  end
+  V1["Candidate V1\nreal detector\npersistent 3D memory\nparameterized options\nglobal navigation\nVLM branch"]
+  V2["Candidate V2\ncross-body validation\nhardware evidence\ncontroller adaptation\nAgent Bus audit"]
 
-  Cmd --> RM
-  RGBD --> Grounding --> RM
-  Schemas --> RM
-  RM --> Planner --> Controller --> Sim
-  RM --> Safety --> Controller
-  RM --> TempMem --> BodyMem --> Recovery
-  RM --> Rule --> Options
-  Recovery --> Options --> RM
-  Sim --> Branching --> Benchmark
-  RM --> EDP
-  Benchmark --> EDP
-  EDP --> Dashboard
+  Evidence -. after V0 gates .-> V1
+  V1 -. after V1 evidence .-> V2
 
-  RealDetector -. replaces/extends .-> Grounding
-  PersistentMemory -. replaces/extends .-> TempMem
-  ParamOptions -. extends .-> Options
-  GlobalNav -. extends .-> Planner
-  VLM -. compares after core gates .-> Recovery
-
-  Transfer -. after V0 evidence .-> Controller
-  Residual -. not V0 low-level policy .-> Controller
-  Hardware -. after simulator gates .-> Sim
-  AgentBus -. high-level async only .-> RM
-
-  classDef v0 fill:#e8f5e9,stroke:#2e7d32,color:#123;
-  classDef v1 fill:#fff8e1,stroke:#f9a825,color:#123;
-  classDef v2 fill:#ede7f6,stroke:#6a1b9a,color:#123;
-  class Cmd,RGBD,Grounding,Schemas,RM,Planner,Safety,Controller,Sim,TempMem,BodyMem,Recovery,Rule,Options,Branching,EDP,Benchmark,Dashboard v0;
-  class RealDetector,PersistentMemory,ParamOptions,GlobalNav,VLM v1;
-  class Transfer,Residual,Hardware,AgentBus v2;
+  classDef v0 fill:#e8f5e9,stroke:#2e7d32,color:#123,stroke-width:1.6px;
+  classDef evidence fill:#e3f2fd,stroke:#1565c0,color:#123,stroke-width:1.8px;
+  classDef future fill:#fff8e1,stroke:#f9a825,color:#123,stroke-width:1.4px;
+  classDef later fill:#ede7f6,stroke:#6a1b9a,color:#123,stroke-width:1.4px;
+  class In,Boundary,Runtime,Control,Sim,Recovery v0;
+  class Evidence evidence;
+  class V1 future;
+  class V2 later;
 ```
 
 阶段含义：
