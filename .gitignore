@@ -18,7 +18,9 @@ env/
 .env.*
 *.local
 
-# ARIS installer backups
+# Machine-local ARIS resources
+.agents/
+.aris/installed-skills-codex.txt
 .aris/*.prev
 
 # Generated experiment data

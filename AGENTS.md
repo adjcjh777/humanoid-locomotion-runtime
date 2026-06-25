@@ -70,17 +70,13 @@
 6. Body memory, rule-based recovery fallback, bandit sanity check, and supervisory RL recovery selector.
 7. Seeded benchmark runner, controller-native baseline, and Viser dashboard.
 <!-- ARIS-CODEX:BEGIN -->
-## ARIS Codex Skill Scope
-ARIS Codex packages installed in this project: skills-codex,skills-codex-claude-review
-Managed entries: 80
-Manifest: `.aris/installed-skills-codex.txt`
-ARIS repo root: `/mnt/nvme0n1p1/zhangzy/projects/Auto-claude-code-research-in-sleep`
-Project skill path: `.agents/skills/<skill-name>`
-For ARIS Codex workflows, prefer the project-local skills under `.agents/skills/`.
-When a skill needs ARIS helper scripts, resolve the repo root from the manifest or set it explicitly:
-`ARIS_REPO=$(awk -F'	' '$1=="repo_root"{print $2; exit}' "/mnt/nvme0n1p1/zhangzy/projects/humanoid-locomotion-runtime/.aris/installed-skills-codex.txt")`
-Do not edit or delete symlinked skills in place; update upstream or rerun:
-`bash /mnt/nvme0n1p1/zhangzy/projects/Auto-claude-code-research-in-sleep/tools/install_aris_codex.sh "/mnt/nvme0n1p1/zhangzy/projects/humanoid-locomotion-runtime" --reconcile`
-For copied Codex installs, use:
-`bash /mnt/nvme0n1p1/zhangzy/projects/Auto-claude-code-research-in-sleep/tools/smart_update_codex.sh --project "/mnt/nvme0n1p1/zhangzy/projects/humanoid-locomotion-runtime"`
+## ARIS Codex Local Resources
+
+- `.agents/` and `.aris/installed-skills-codex.txt` are machine-local generated resources and must stay out of git.
+- Initialize or reconcile them separately on each experiment host with that host's local ARIS checkout.
+- Use `--no-doc` when running the installer so it does not write host-specific absolute paths into this tracked `AGENTS.md`.
+- Example pattern:
+  `bash /path/to/ARIS/tools/install_aris_codex.sh "$PWD" --aris-repo /path/to/ARIS --no-doc --quiet`
+- For observed host-specific ARIS roots, see `docs/a800_machine_profile.md` and `docs/rtx5090_machine_profile.md`.
+- Do not commit generated symlink targets, installer manifests, credentials, SSH aliases, tokens, logs, runs, checkpoints, weights, or datasets.
 <!-- ARIS-CODEX:END -->

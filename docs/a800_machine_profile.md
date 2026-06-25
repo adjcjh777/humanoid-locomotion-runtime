@@ -78,10 +78,11 @@ Storage is already tight. Keep generated runs, logs, replay artifacts, datasets,
 ## Repo And ARIS State
 
 - The repo is on `feature/supervisory-rl-prd`, tracking `origin/feature/supervisory-rl-prd`.
-- ARIS Codex project-local skills are installed under `.agents/skills/`.
-- ARIS manifest: `.aris/installed-skills-codex.txt`.
+- ARIS Codex project-local skills should be installed under `.agents/skills/` as machine-local resources.
+- ARIS manifest: `.aris/installed-skills-codex.txt`, generated per host and ignored by git.
 - Installed ARIS packages: `skills-codex,skills-codex-claude-review`.
 - `.gitignore` already covers `runs/`, `reports/`, `artifacts/`, `logs/`, bag/database capture files, `checkpoints/`, `weights/`, `datasets/`, and common model artifacts.
+- `.agents/` and `.aris/installed-skills-codex.txt` are not repository source files. Reconcile them locally on this host instead of committing absolute symlink targets.
 
 ## Operational Implications
 

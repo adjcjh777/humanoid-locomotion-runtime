@@ -76,9 +76,10 @@ Storage is already tight. Keep generated runs, logs, replay artifacts, datasets,
 
 - The repo is on `feature/supervisory-rl-prd`, tracking `origin/feature/supervisory-rl-prd`.
 - Local ARIS repo observed at `/home/chengjunhao/ARIS`.
-- The repository currently tracks project-local `.agents/skills/` symlinks and `.aris/installed-skills-codex.txt` from the A800 setup.
-- On this 5090 host, those tracked A800 symlink targets are not valid until reconciled to `/home/chengjunhao/ARIS`.
-- If this host is used for ARIS workflows, reconcile local resources with the 5090 ARIS path and do not commit machine-specific symlink rewrites unless the repository policy is changed.
+- ARIS Codex project-local skills should be installed under `.agents/skills/` as machine-local resources.
+- ARIS manifest: `.aris/installed-skills-codex.txt`, generated per host and ignored by git.
+- This host should reconcile local ARIS resources against `/home/chengjunhao/ARIS`.
+- Do not commit machine-specific symlink targets or installer manifests.
 
 ## Operational Implications
 
