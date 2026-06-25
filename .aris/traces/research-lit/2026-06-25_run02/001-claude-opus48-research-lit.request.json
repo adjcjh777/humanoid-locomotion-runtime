@@ -1,0 +1,19 @@
+{
+  "model": "claude-opus-4-8",
+  "permission_mode": "dontAsk",
+  "tools": [],
+  "prompt_summary": "Run ARIS research-lit for Humanoid Locomotion Runtime: frozen humanoid controller, typed supervisory recovery policy, body/event memory, seeded failure benchmark, with web-sourced prior-work candidates because arxiv_fetch.py returned HTTP 429.",
+  "key_sources_passed": [
+    "RACER arXiv 2409.14674",
+    "Automating Robot Failure Recovery Using VLMs arXiv 2409.03966",
+    "FLARE CVPR 2026",
+    "HoRD arXiv 2602.04412",
+    "Chameleon arXiv 2603.24576",
+    "HumanoidBench arXiv 2403.10506",
+    "MuJoCo Playground arXiv 2502.08844",
+    "LocoMuJoCo arXiv 2311.02496",
+    "STATE-NAV arXiv 2506.01046",
+    "FocusNav arXiv 2601.12790",
+    "LookOut arXiv 2508.14466"
+  ]
+}

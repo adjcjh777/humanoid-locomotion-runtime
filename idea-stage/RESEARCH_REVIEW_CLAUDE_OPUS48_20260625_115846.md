@@ -1,6 +1,6 @@
 # RESEARCH_REVIEW: Humanoid Locomotion Runtime — Typed Supervisory Recovery Policy
 
-> ARIS local rerun metadata: generated on 2026-06-25 11:58 CST with `claude-opus-4-8`. Filename is kept for compatibility with the existing ARIS manifest naming, but this run used Claude Opus 4.8 rather than GLM 5.2.
+> ARIS local rerun metadata: generated on 2026-06-25 11:58 CST with `claude-opus-4-8`.
 
 ## 1. Overall assessment
 

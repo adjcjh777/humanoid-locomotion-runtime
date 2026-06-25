@@ -1,0 +1,6 @@
+{
+  "model": "claude-opus-4-8",
+  "permission_mode": "dontAsk",
+  "tools": [],
+  "prompt_summary": "Run ARIS research-review as a senior robotics/embodied-AI reviewer. Assess publishability, weaknesses, required experiments, reframed paper story, 4-week plan, and final decision for the diagnostic version of the Humanoid Locomotion Runtime paper."
+}

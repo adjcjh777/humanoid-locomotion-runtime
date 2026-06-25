@@ -1,0 +1,7 @@
+{
+  "status": "completed",
+  "stdout_empty_first_attempt": true,
+  "completed_at_local": "2026-06-25 11:58:46 CST",
+  "artifact": "idea-stage/REF_PAPER_SUMMARY_20260625_115846.md",
+  "notes": "Initial long-prompt Claude Opus 4.8 attempt exited code 0 with empty stdout; rerun with shorter prompt produced the saved report."
+}

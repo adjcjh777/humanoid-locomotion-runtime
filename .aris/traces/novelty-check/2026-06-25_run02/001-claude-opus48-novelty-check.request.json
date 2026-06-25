@@ -1,0 +1,6 @@
+{
+  "model": "claude-opus-4-8",
+  "permission_mode": "dontAsk",
+  "tools": [],
+  "prompt_summary": "Run ARIS novelty-check for the proposed I10 seeded failure protocol + I1 typed supervisory memory + I3 memory-value diagnostic package. Require claim-by-claim audit, closest-prior-work conflict table, retained claims, softened claims, and minimum evidence package."
+}
