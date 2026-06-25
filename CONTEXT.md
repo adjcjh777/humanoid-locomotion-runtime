@@ -1,25 +1,25 @@
 # Humanoid Locomotion Runtime
 
-This context defines the project language for the humanoid locomotion runtime research repo. It captures domain terms only, not implementation decisions or task plans.
+这个上下文定义本仓库的项目语言。它只记录领域术语，不记录实现决策、任务计划或临时想法。
 
-## Language
+## 语言
 
-**A800 Single-Host Experiment Path**:
-The default research execution path where one A800 server is treated as the canonical host for experiment code, queued runs, logs, and summaries.
-_Avoid_: Split-server experiment path, ad-hoc dual-server workflow
+**A800 单机实验路径**:
+默认科研执行路径，把一台 A800 服务器视为实验代码、队列任务、日志和摘要的唯一 canonical host。
+_避免使用_: split-server experiment path, ad-hoc dual-server workflow
 
-**Local Studio Workspace**:
-The local macOS working environment used for planning, code review, documentation, and local ARIS research runs.
-_Avoid_: Local server, company server
+**本机工作室**:
+本地 macOS 工作环境，用于计划、代码审查、文档和本地 ARIS 科研流程。
+_避免使用_: local server, company server
 
-**Company Experiment Server**:
-A remote GPU server used for actual experiment execution, including A800 or 5090 machines.
-_Avoid_: Local studio, laptop
+**公司实验服务器**:
+用于实际实验执行的远程 GPU 服务器，包括 A800 或 5090 机器。
+_避免使用_: local studio, laptop
 
-**Nightly ARIS Run**:
-An unattended ARIS-managed run started after the daytime handoff, usually for smoke tests, queued pilots, multi-seed experiments, monitoring, or result summaries.
-_Avoid_: Manual run, daytime inspection
+**夜间 ARIS 任务**:
+白天 handoff 后由 ARIS 无人值守执行的任务，通常包括 smoke tests、queued pilots、multi-seed experiments、monitoring 或 result summaries。
+_避免使用_: manual run, daytime inspection
 
-**Morning Acceptance Check**:
-The human review step after a Nightly ARIS Run that decides whether the produced logs, metrics, and artifacts are valid enough to unlock the next run group.
-_Avoid_: Casual log skim, informal check
+**次日验收检查**:
+夜间 ARIS 任务结束后的人工检查步骤，用来判断日志、指标和 artifacts 是否有效，能否解锁下一组 run。
+_避免使用_: casual log skim, informal check

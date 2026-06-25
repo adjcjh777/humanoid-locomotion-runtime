@@ -1,98 +1,98 @@
-# Experiment Plan
+# 实验计划
 
-**Problem**: 在 frozen / mature humanoid locomotion controller 之上，验证高层 typed recovery supervisor 中的 event/body memory 是否、何时、为何能改善失败恢复，而不是只做一个工程 runtime。
-**Method Thesis**: 论文应被组织为 counterfactual diagnostic study：用 seeded typed failure protocol 和 matched-seed decision-flip analysis 证明 memory 的收益只在 long-horizon / cumulative / degradation failure 中成立。
-**Date**: 2026-06-25
-**Execution Host Policy**: 尽量单机执行。默认 **A800_SINGLE_HOST** 为唯一主实验机；5090 只作紧急备用，不进入日常实验主线。
+**问题**：在冻结 / 成熟 humanoid locomotion controller 之上，验证高层 typed recovery supervisor 中的 event/body memory 是否、何时、为何能改善失败恢复，而不是只做一个工程 runtime。
+**方法主张**：论文应组织为 counterfactual diagnostic study：用 seeded typed failure protocol 和 matched-seed decision-flip analysis 证明 memory 的收益只在 long-horizon / cumulative / degradation failure 中成立。
+**日期**：2026-06-25
+**执行主机策略**：尽量单机执行。默认 `A800_SINGLE_HOST` 为唯一主实验机；5090 只作紧急备用，不进入日常实验主线。
 
-## Claim Map
+## Claim 映射
 
-| Claim | Why It Matters | Minimum Convincing Evidence | Linked Blocks |
-|-------|-----------------|-----------------------------|---------------|
-| C1: Memory-value diagnostic | 这是当前最可防守的论文主贡献；避免把 8-action supervisor 包装成 novelty | matched-seed 下 memory-on/off 的 decision flip 率、flip 条件恢复收益、95% CI、negative-control 上无显著收益 | B2, B3, B4 |
-| C2: Seeded typed failure protocol | 让 recovery 结果可以被复现、分层、反事实比较 | failure family 预注册定义、固定 seed split、controller-native/heuristic/oracle 对照、Episode Data Package | B1, B2 |
-| Anti-claim A1: gain only comes from event trace/current state | 审稿人会质疑 memory 只是重命名状态 | leave-one-out: instant-only、event-only、trend-only、language-only、shuffled-memory | B3, B4 |
-| Anti-claim A2: heuristic can solve everything | 若规则系统打平，RL/memory selector 没意义 | tuned heuristic supervisor 与 no-memory/full-memory 在 cumulative/degradation family 的 matched comparison | B2, B3 |
-| Anti-claim A3: VLM prompt is enough | RACER/VLM recovery 近邻要求比较 | VLM-prompt supervisor 在同一 8-action space、同一 seeds、同一 summaries 上比较 latency/success | B5 |
+| Claim | 为什么重要 | 最小可信证据 | 对应实验块 |
+|-------|------------|--------------|------------|
+| C1: memory-value diagnostic | 这是当前最可防守的论文主贡献；避免把 8-action supervisor 包装成 novelty | matched-seed 下 memory-on/off 的 decision flip 率、flip 条件恢复收益、95% CI、negative-control 上无显著收益 | B2, B3, B4 |
+| C2: seeded typed failure protocol | 让 recovery 结果可以复现、分层、反事实比较 | failure family 预注册定义、固定 seed split、controller-native / heuristic / oracle 对照、Episode Data Package | B1, B2 |
+| Anti-claim A1: 收益只来自 event trace/current state | 审稿人会质疑 memory 只是重命名状态 | leave-one-out: instant-only、event-only、trend-only、language-only、shuffled-memory | B3, B4 |
+| Anti-claim A2: heuristic 能解决一切 | 如果规则系统打平，RL/memory selector 没意义 | tuned heuristic supervisor 与 no-memory/full-memory 在 cumulative/degradation family 的 matched comparison | B2, B3 |
+| Anti-claim A3: VLM prompt 已经足够 | RACER/VLM recovery 近邻要求比较 | VLM-prompt supervisor 在相同 8-action space、相同 seeds、相同 summaries 下比较 latency/success | B5 |
 
-## Paper Storyline
+## 论文实验叙事
 
-- Main paper must prove:
-  - C1: memory 的价值是条件性的、可归因的，不是平均 success rate 小涨。
-  - C2: seeded typed failure protocol 支撑 matched-seed counterfactual，而不是自造偏置 benchmark。
-- Appendix can support:
+- 主文必须证明：
+  - C1：memory 的价值是条件性的、可归因的，不是平均 success rate 小幅上涨。
+  - C2：seeded typed failure protocol 支撑 matched-seed counterfactual，而不是自造偏置 benchmark。
+- 附录可以支持：
   - horizon scan、更多 failure severity、VLM prompt variants、dashboard/replay case studies。
-- Experiments intentionally cut:
+- 主动砍掉的实验：
   - 真机 G1、多本体迁移、端到端 VLA、复杂 open-vocabulary detector 主线、低层 gait/residual policy。
 
-## Experiment Blocks
+## 实验块
 
-### Block 0: A800 Single-Host Reproducibility Setup
+### B0: A800 单机可复现执行地基
 
-- Claim tested: 无，前置可执行性。
-- Why this block exists: 当前 repo 主要是 PRD/研究产物，尚无可自动跑的代码脚手架；若不先统一 A800 环境，晚上 ARIS 无法可靠接管。
-- Dataset / split / task: 无；建立 repo、env、logs、run manifests、nightly handoff 模板。
-- Compared systems: 无。
-- Metrics: `git status` clean、env check pass、sample artifact write pass、nightly dry-run pass。
-- Setup details: A800_SINGLE_HOST 上 clone/pull 当前 branch；只允许一个 canonical code dir；所有实验产物写入不提交的 runs/logs 目录。
-- Success criterion: 白天人工提交后，夜间 ARIS 能从同一 repo path 读取 tracker、启动 dry-run、写回 summary。
-- Failure interpretation: 不能进入实验；先修 SSH/env/path。
-- Table / figure target: 不进论文。
-- Priority: MUST-RUN。
+- 测试 claim：无，属于前置执行条件。
+- 为什么存在：当前 repo 主要是 PRD/研究产物，尚无可自动跑的代码脚手架；若不先统一 A800 环境，晚上 ARIS 无法可靠接管。
+- 数据/任务：无；建立 repo、env、logs、run manifests、nightly handoff 模板。
+- 对比系统：无。
+- 指标：`git status` clean、env check pass、sample artifact write pass、nightly dry-run pass。
+- 设置细节：在 `A800_SINGLE_HOST` 上 clone/pull 当前 branch；只允许一个 canonical code dir；所有实验产物写入不提交的 runs/logs 目录。
+- 成功标准：白天人工提交后，夜间 ARIS 能从同一 repo path 读取 tracker、启动 dry-run、写回 summary。
+- 失败解释：不能进入实验；先修 SSH/env/path。
+- 论文位置：不进论文。
+- 优先级：MUST-RUN。
 
-### Block 1: Seeded Typed Failure Protocol Freeze
+### B1: Seeded typed failure protocol 冻结
 
-- Claim tested: C2。
-- Why this block exists: 防止“挑 memory 擅长场景”的循环论证。
-- Dataset / split / task: 4 个主 family：transient/instant negative-control、long-horizon、cumulative drift、sensor/localization degradation；每类固定 train/val/test seed split。
-- Compared systems: controller-native only for calibration；oracle labels只用于评价上界。
-- Metrics: controller-native success rate、failure trigger reproducibility、severity bands、episode validity rate。
-- Setup details: 每类从 3 个 severity 开始；主报告点选择 controller-native success 约 30-70% 的非饱和区间。
-- Success criterion: 每类至少 20 个 valid pilot episodes；同一 seed 复跑 failure timing/status 一致；negative-control 明确预注册为 memory 不应收益。
-- Failure interpretation: 若 failure 全 0/全 100 或不可复现，先调注入协议，不训练 supervisor。
-- Table / figure target: Methods table + Appendix protocol table。
-- Priority: MUST-RUN。
+- 测试 claim：C2。
+- 为什么存在：防止“挑 memory 擅长场景”的循环论证。
+- 数据/任务：4 个主 family：transient/instant negative-control、long-horizon、cumulative drift、sensor/localization degradation；每类固定 train/val/test seed split。
+- 对比系统：controller-native only for calibration；oracle labels 只用于评价上界。
+- 指标：controller-native success rate、failure trigger reproducibility、severity bands、episode validity rate。
+- 设置细节：每类从 3 个 severity 开始；主报告点选择 controller-native success 约 30-70% 的非饱和区间。
+- 成功标准：每类至少 20 个 valid pilot episodes；同一 seed 复跑 failure timing/status 一致；negative-control 明确预注册为 memory 不应收益。
+- 失败解释：若 failure 全 0/全 100 或不可复现，先调注入协议，不训练 supervisor。
+- 论文位置：Methods table + Appendix protocol table。
+- 优先级：MUST-RUN。
 
-### Block 2: Baseline Stage
+### B2: Baseline 阶段
 
-- Claim tested: C2, A2。
-- Why this block exists: 先确认低层 controller、规则、no-memory supervisor 的下限和强度。
-- Dataset / split / task: Block 1 的 pilot split，先 cumulative/degradation，再扩到全部 family。
-- Compared systems:
+- 测试 claim：C2, A2。
+- 为什么存在：先确认低层 controller、规则、no-memory supervisor 的下限和强度。
+- 数据/任务：B1 的 pilot split，先 cumulative/degradation，再扩到全部 family。
+- 对比系统：
   - `controller_native`
   - `rule_recovery_tuned`
   - `rl_or_bandit_instant_state`
   - `oracle_upper_bound`
-- Metrics: task success、recovery success、fall/unstable count、stop latency、repeated failure count、episode validity。
-- Setup details: 先 bandit sanity check，再决定是否 PPO；每个 cell 先 3 seeds × 10 episodes pilot。
-- Success criterion: heuristic 不是 strawman，但在至少一个 cumulative/degradation family 上存在明显 oracle gap 和 learnable gap。
-- Failure interpretation: 如果 tuned heuristic 打平 no-memory/full-memory，论文从 learned supervisor pivot 到 protocol/diagnostic。
-- Table / figure target: Main Table 1 baseline ladder。
-- Priority: MUST-RUN。
+- 指标：task success、recovery success、fall/unstable count、stop latency、repeated failure count、episode validity。
+- 设置细节：先 bandit sanity check，再决定是否 PPO；每个 cell 先 3 seeds × 10 episodes pilot。
+- 成功标准：heuristic 不是 strawman，但在至少一个 cumulative/degradation family 上存在明显 oracle gap 和 learnable gap。
+- 失败解释：如果 tuned heuristic 打平 no-memory/full-memory，论文从 learned supervisor pivot 到 protocol/diagnostic。
+- 论文位置：Main Table 1 baseline ladder。
+- 优先级：MUST-RUN。
 
-### Block 3: Memory-Value Counterfactual
+### B3: Memory-value 反事实实验
 
-- Claim tested: C1, A1。
-- Why this block exists: 全文最关键实验，证明 memory 改变了高层动作选择且这种改变有收益。
-- Dataset / split / task: matched held-out seeds；同一初始状态、同一 failure injection、同一 controller backend。
-- Compared systems:
+- 测试 claim：C1, A1。
+- 为什么存在：全文最关键实验，证明 memory 改变了高层动作选择且这种改变有收益。
+- 数据/任务：matched held-out seeds；同一 initial state、同一 failure injection、同一 controller backend。
+- 对比系统：
   - `instant_state`
   - `window_memory`
   - `full_event_body_memory`
   - `shuffled_memory_negative_control`
-- Metrics: decision-flip rate、flip-conditioned success delta、paired bootstrap CI、McNemar / paired tests、per-action confusion matrix。
-- Setup details: 所有 variants 必须共享 action set、reward、controller、planner、seed；只改 observation memory。
-- Success criterion: 在 long-horizon/cumulative/degradation 至少 1-2 类中 full memory 相对 instant 有显著 flip-conditioned recovery gain；transient negative-control 上无显著收益。
-- Failure interpretation: 若平均成功涨但 flip 解释不了，不能写 causality；若 negative-control 也涨，说明协议或特征泄漏。
-- Table / figure target: Main Figure 1 + Table 2。
-- Priority: MUST-RUN。
+- 指标：decision-flip rate、flip-conditioned success delta、paired bootstrap CI、McNemar / paired tests、per-action confusion matrix。
+- 设置细节：所有 variants 必须共享 action set、reward、controller、planner、seed；只改 observation memory。
+- 成功标准：在 long-horizon/cumulative/degradation 至少 1-2 类中，full memory 相对 instant 有显著 flip-conditioned recovery gain；transient negative-control 上无显著收益。
+- 失败解释：若平均成功涨但 flip 解释不了，不能写 causality；若 negative-control 也涨，说明协议或特征泄漏。
+- 论文位置：Main Figure 1 + Table 2。
+- 优先级：MUST-RUN。
 
-### Block 4: Input and Horizon Ablations
+### B4: 输入和 Horizon 消融
 
-- Claim tested: A1。
-- Why this block exists: 防止 reviewer 说 event trace/current state/language 才是实际来源。
-- Dataset / split / task: Block 3 的 held-out seeds。
-- Compared systems:
+- 测试 claim：A1。
+- 为什么存在：防止 reviewer 说 event trace/current state/language 才是实际来源。
+- 数据/任务：B3 的 held-out seeds。
+- 对比系统：
   - no memory
   - event trace only
   - body trend only
@@ -100,47 +100,47 @@
   - event + body + language
   - shuffled memory
   - horizon lengths: short / medium / long
-- Metrics: recovery success、decision flip、over-conservatism rate、safe_stop/abort frequency。
-- Setup details: 先小 grid，只有 Block 3 gate 通过后才扩大。
-- Success criterion: 能定位 memory 的有效成分；不要求所有组件都有用。
-- Failure interpretation: language 无效则论文标题/claim 中弱化 language-conditioned。
-- Table / figure target: Main Figure 2 or Appendix Table。
-- Priority: MUST-RUN after B3 pilot。
+- 指标：recovery success、decision flip、over-conservatism rate、safe_stop/abort frequency。
+- 设置细节：先小 grid；只有 B3 gate 通过后才扩大。
+- 成功标准：能定位 memory 的有效成分；不要求所有组件都有用。
+- 失败解释：language 无效则论文标题/claim 中弱化 language-conditioned。
+- 论文位置：Main Figure 2 或 Appendix Table。
+- 优先级：B3 pilot 通过后 MUST-RUN。
 
-### Block 5: VLM-Prompt Supervisor and Simplicity Check
+### B5: VLM-prompt supervisor 与简洁性检查
 
-- Claim tested: A3 and simplicity。
-- Why this block exists: RACER/VLM recovery 是近邻；必须证明我们不是忽略强 baseline。
-- Dataset / split / task: 同一 held-out seeds，优先 target change / grounding ambiguity / cumulative failure。
-- Compared systems:
+- 测试 claim：A3 和 simplicity。
+- 为什么存在：RACER/VLM recovery 是近邻；必须证明我们不是忽略强 baseline。
+- 数据/任务：同一 held-out seeds，优先 target change / grounding ambiguity / cumulative failure。
+- 对比系统：
   - VLM-prompt supervisor over same 8 actions
   - rule recovery
   - full memory supervisor
   - optional 3-action compressed supervisor
-- Metrics: recovery success、decision latency、invalid action rate、cost per episode、same-seed action agreement。
-- Setup details: VLM 只读合法状态摘要，不读 MuJoCo privileged ground truth。
-- Success criterion: learned/lightweight supervisor 在 latency/reliability 或特定 failure family 上有可辩护优势；若 VLM 更强，改写成 VLM baseline/policy comparison paper。
-- Failure interpretation: VLM 全面碾压则不再主打 RL policy。
-- Table / figure target: Main Table 3 or Appendix。
-- Priority: MUST-RUN before paper submission, not before first pilot。
+- 指标：recovery success、decision latency、invalid action rate、cost per episode、same-seed action agreement。
+- 设置细节：VLM 只读合法状态摘要，不读 MuJoCo privileged ground truth。
+- 成功标准：learned/lightweight supervisor 在 latency/reliability 或特定 failure family 上有可辩护优势；若 VLM 更强，改写成 VLM baseline/policy comparison paper。
+- 失败解释：VLM 全面碾压则不再主打 RL policy。
+- 论文位置：Main Table 3 或 Appendix。
+- 优先级：投稿前 MUST-RUN，但不是 first pilot 前置项。
 
-### Block 6: Robustness, Packaging, and Paper Figures
+### B6: 稳健性、证据打包与论文图表
 
-- Claim tested: C1/C2 presentation robustness。
-- Why this block exists: 把实验变成可投稿证据。
-- Dataset / split / task: held-out seeds, severity sweep, selected qualitative episodes。
-- Compared systems: only final method + key baselines。
-- Metrics: CI/effect size、artifact completeness、replay validity、failure-case diversity。
-- Setup details: 每个论文图表有固定 source script；不手工改图。
-- Success criterion: 每个 main claim 有表/图支撑，失败案例与 limitations 一致。
-- Failure interpretation: 如果图无法复现，停止写作先修 analysis pipeline。
-- Table / figure target: 全部 main/appendix figures。
-- Priority: MUST-RUN for writing week。
+- 测试 claim：C1/C2 presentation robustness。
+- 为什么存在：把实验变成可投稿证据。
+- 数据/任务：held-out seeds、severity sweep、selected qualitative episodes。
+- 对比系统：final method + key baselines。
+- 指标：CI/effect size、artifact completeness、replay validity、failure-case diversity。
+- 设置细节：每个论文图表有固定 source script；不手工改图。
+- 成功标准：每个 main claim 有表/图支撑，失败案例与 limitations 一致。
+- 失败解释：如果图无法复现，停止写作先修 analysis pipeline。
+- 论文位置：全部 main/appendix figures。
+- 优先级：写作周 MUST-RUN。
 
-## Run Order and Milestones
+## 运行顺序与里程碑
 
-| Milestone | Goal | Runs | Decision Gate | Cost | Risk |
-|-----------|------|------|---------------|------|------|
+| Milestone | 目标 | Runs | 决策 Gate | 成本 | 风险 |
+|-----------|------|------|-----------|------|------|
 | M0 | A800 single-host automation ready | R000-R005 | ARIS nightly dry-run can read tracker and write summary | low | server/env unknown |
 | M1 | protocol freeze | R010-R019 | failure families reproducible and non-saturated | low-med | injection too artificial |
 | M2 | baseline ladder | R020-R029 | heuristic has gap and oracle gap exists | med | heuristic too strong |
@@ -148,43 +148,43 @@
 | M4 | ablations/VLM | R040-R059 | input source understood; VLM does not invalidate story | med-high | VLM stronger |
 | M5 | paper package | R060-R079 | figures/tables reproducible from artifacts | med | analysis drift |
 
-## Compute and Data Budget
+## 计算与数据预算
 
-- Total estimated GPU-hours: unknown until A800 env and simulator throughput are measured. Use Day 2 throughput benchmark to estimate.
-- Planning assumption: MuJoCo rollout may be CPU/simulator-bound; A800 matters most for batched RL/PPO, VLM, and parallel experiment orchestration.
-- Data preparation needs:
+- 总 GPU-hours：在 A800 env 和 simulator throughput 实测前未知。Day 2 throughput benchmark 后估算。
+- 规划假设：MuJoCo rollout 可能受 CPU/simulator 限制；A800 主要价值在 batched RL/PPO、VLM 和并行队列。
+- 数据准备：
   - seed split files
   - failure family config files
   - episode manifest schema
   - artifact retention policy
-- Human evaluation needs:
-  - daily morning review of overnight logs
-  - gate decisions before expanding runs
-- Biggest bottleneck:
-  - G1/MuJoCo controller smoke gate and reproducible failure injection, not PPO itself.
+- 人工评估：
+  - 每天早上检查 overnight logs
+  - 每个 gate 决定是否扩量
+- 最大瓶颈：
+  - G1/MuJoCo controller smoke gate 和 reproducible failure injection，不是 PPO 本身。
 
-## Risks and Mitigations
+## 风险与缓解
 
-- A800 server details missing:
-  - Mitigation: Day 1 creates `CLAUDE.md`/server stanza or equivalent private handoff; no night automation before this passes.
-- G1 controller integration fails:
-  - Mitigation: by project rule, switch main evidence path to MuJoCo Playground humanoid backend if week-3 smoke gate fails.
-- Experiment claims drift:
-  - Mitigation: freeze failure definitions and seed splits before seeing results.
-- Heuristic wins:
-  - Mitigation: pivot to diagnostic/protocol paper; do not force RL story.
-- Memory effect absent:
-  - Mitigation: report negative result if protocol is strong; otherwise pivot to failure-injection/testbed contribution.
-- Artifacts too large:
-  - Mitigation: nightly retention policy: keep summaries and selected traces for all, full replay only for held-out / failure cases.
+- A800 server details 缺失：
+  - 缓解：Day 1 建立 `CLAUDE.md`/server stanza 或等价 private handoff；未通过前不跑夜间自动化。
+- G1 controller integration 失败：
+  - 缓解：按项目规则，week-3 smoke gate 失败则切到 MuJoCo Playground。
+- 实验 claim 漂移：
+  - 缓解：看结果前冻结 failure definitions 和 seed splits。
+- heuristic baseline 获胜：
+  - 缓解：pivot 到 diagnostic/protocol paper；不强行讲 RL story。
+- memory effect 缺失：
+  - 缓解：如果 protocol 强，报告 negative result；否则 pivot 到 failure-injection/testbed。
+- artifacts 过大：
+  - 缓解：nightly retention policy：所有 run 保留 summary 和 selected traces；full replay 只保留 held-out / failure cases。
 
-## Final Checklist
+## 最终检查清单
 
 - [ ] A800 single-host execution path documented
-- [ ] Main paper tables are covered
-- [ ] Novelty is isolated through matched-seed counterfactual
-- [ ] Simplicity is defended against tuned heuristic and compressed action set
-- [ ] VLM baseline is either run or explicitly deferred with reason
-- [ ] Nice-to-have runs are separated from must-run runs
-- [ ] Every night job has a morning acceptance checklist
-- [ ] No runtime decision uses MuJoCo privileged ground truth
+- [ ] main paper tables covered
+- [ ] novelty isolated through matched-seed counterfactual
+- [ ] simplicity defended against tuned heuristic and compressed action set
+- [ ] VLM baseline run or explicitly deferred with reason
+- [ ] nice-to-have runs separated from must-run runs
+- [ ] every night job has a morning acceptance checklist
+- [ ] no runtime decision uses MuJoCo privileged ground truth

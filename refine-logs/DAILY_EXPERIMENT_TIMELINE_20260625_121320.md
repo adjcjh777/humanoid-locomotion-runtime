@@ -1,40 +1,40 @@
-# Daily Experiment Timeline
+# 每日实验时间线
 
-**Date**: 2026-06-25
-**Host Policy**: A800 单机主线。5090 只作为备用，不主动分裂实验环境。
-**Working Rhythm**: 白天由人完成设计、实现、审查、gate 决策；晚上交给 ARIS 做可自动化的 smoke / queue / monitor / summarize。
-**Core Rule**: 每个晚上只能跑“白天已经冻结输入、验收标准和回滚条件”的任务。没有白天 handoff，不跑夜间自动实验。
+**日期**: 2026-06-25
+**主机策略**: A800 单机主线。5090 只作为备用，不主动分裂实验环境。
+**工作节奏**: 白天由人完成设计、实现、审查、gate 决策；晚上交给 ARIS 做可自动化的 smoke / queue / monitor / summarize。
+**核心规则**: 每个晚上只能跑“白天已经冻结输入、验收标准和回滚条件”的任务。没有白天 handoff，不跑夜间自动实验。
 
 ## 每日固定节奏
 
-### 09:00-10:00 Morning Acceptance Check
+### 09:00-10:00 次日验收检查
 
 - 阅读昨晚 ARIS summary。
 - 检查失败 jobs、OOM、stale screen、磁盘占用、episode artifact 完整性。
 - 决定当天是继续扩量、修 bug、还是停止当前分支。
 - 只提交代码/config/summary，不提交 raw runs、logs、checkpoints、weights。
 
-### 10:00-12:30 Daytime Build Block A
+### 10:00-12:30 白天构建块 A
 
 - 做需要人判断的代码/协议/配置。
 - 更新 tracker 的 `Status` 和 `Notes`。
 - 对任何会影响论文 claim 的变更写清楚 reason。
 
-### 14:00-18:30 Daytime Build Block B
+### 14:00-18:30 白天构建块 B
 
 - 补测试、跑小规模本地/A800 smoke。
 - 产出 night handoff：要跑哪些 run id、输入 config、成功标准、失败处理。
 - commit/push 后再让 ARIS 夜间接管。
 
-### 21:00-08:00 Nightly ARIS Run
+### 21:00-08:00 夜间 ARIS 任务
 
 - ARIS 只跑 tracker 中明确标为 Night 的 run。
 - 自动记录 queue state、logs、metrics、artifact paths。
 - 结束后写 morning summary，不直接修改论文 claim。
 
-## Week 1: 单机实验地基与协议冻结
+## 第 1 周：单机实验地基与协议冻结
 
-### Day 1: A800 单机环境和 ARIS handoff 打通
+### 第 1 天：打通 A800 单机环境和 ARIS handoff
 
 **白天人工**
 
@@ -57,7 +57,7 @@
 - ARIS summary 能写回指定 summary 文件。
 - 若 env 不通，Day 2 不进入代码实验，先修 A800。
 
-### Day 2: Schema-first scaffolding 与 throughput 估算
+### 第 2 天：Schema-first scaffolding 与 throughput 估算
 
 **白天人工**
 
@@ -77,7 +77,7 @@
 - 估算 100/1k/10k episodes 的磁盘占用。
 - 若单 episode artifact 太大，先调 retention policy。
 
-### Day 3: Event logger 与 run manifest
+### 第 3 天：Event logger 与 run manifest
 
 **白天人工**
 
@@ -97,7 +97,7 @@
 - EDP validator 通过率 100%。
 - 若 validator 不稳定，不进入 MuJoCo。
 
-### Day 4: MuJoCo / G1 backend smoke
+### 第 4 天：MuJoCo / G1 backend smoke
 
 **白天人工**
 
@@ -116,7 +116,7 @@
 - G1 至少能稳定站立和短时 velocity tracking。
 - 若不通，白天只修 backend，不做 failure protocol。
 
-### Day 5: Controller-native baseline skeleton
+### 第 5 天：Controller-native baseline skeleton
 
 **白天人工**
 
@@ -134,7 +134,7 @@
 - 无 failure 场景成功率应足够高，否则 runtime 地基未稳。
 - 若 no-failure 都不稳，暂停 recovery 研究，修 controller/backend。
 
-### Day 6: Failure family 预注册草案
+### 第 6 天：Failure family 预注册草案
 
 **白天人工**
 
@@ -156,7 +156,7 @@
 - 若某 family 无法稳定触发，Day 7 先改 protocol。
 - 不允许根据 memory 结果改 family 定义，因为此时还不应训练 memory policy。
 
-### Day 7: Protocol freeze gate
+### 第 7 天：Protocol freeze gate
 
 **白天人工**
 
@@ -176,9 +176,9 @@
 - controller-native 成功率不应全 0 或全 100。
 - 若不满足，Week 2 不启动 baseline ladder，先重做 severity。
 
-## Week 2: Baseline ladder 与 bandit sanity
+## 第 2 周：Baseline ladder 与 bandit sanity
 
-### Day 8: Severity calibration
+### 第 8 天：Severity calibration
 
 **白天人工**
 
@@ -196,7 +196,7 @@
 - 至少 3 个 family 有非饱和 severity。
 - negative-control family 仍保持清晰定义。
 
-### Day 9: Tuned heuristic baseline 设计
+### 第 9 天：Tuned heuristic baseline 设计
 
 **白天人工**
 
@@ -214,7 +214,7 @@
 - rule baseline 不能太弱；如果 obvious rule 都没做，重调。
 - 如果 rule 已经接近 oracle，后续 RL/memory story 高风险。
 
-### Day 10: Oracle upper bound 和标签来源
+### 第 10 天：Oracle upper bound 和标签来源
 
 **白天人工**
 
@@ -232,7 +232,7 @@
 - 如果 `oracle - rule` gap 太小，说明任务没有 recovery 学习空间。
 - 若 oracle 使用泄漏路径进入 runtime，立即修。
 
-### Day 11: Instant-state bandit sanity
+### 第 11 天：Instant-state bandit sanity
 
 **白天人工**
 
@@ -250,7 +250,7 @@
 - 如果 instant-state 学不动，先查 reward/action semantics。
 - 不直接上 PPO。
 
-### Day 12: Full-memory bandit sanity
+### 第 12 天：Full-memory bandit sanity
 
 **白天人工**
 
@@ -268,7 +268,7 @@
 - 只看方向性，不写论文结论。
 - 若 full-memory 没有任何信号，先做 feature audit。
 
-### Day 13: Baseline gate review
+### 第 13 天：Baseline gate review
 
 **白天人工**
 
@@ -289,7 +289,7 @@
 - 若 gate 不过，停止扩量；写 pivot note。
 - 若 gate 通过，冻结 Week 3 config。
 
-### Day 14: Week 2 cleanup and commit
+### 第 14 天：第 2 周清理与提交
 
 **白天人工**
 
@@ -305,9 +305,9 @@
 
 - 主分支/feature branch 可从干净 clone 重现 baseline smoke。
 
-## Week 3: Matched-seed memory-value counterfactual
+## 第 3 周：Matched-seed memory-value counterfactual
 
-### Day 15: Matched-seed runner
+### 第 15 天：Matched-seed runner
 
 **白天人工**
 
@@ -322,7 +322,7 @@
 
 - 每个 matched group 都有相同 seed、failure config、initial condition。
 
-### Day 16: Decision logging and flip extraction
+### 第 16 天：Decision logging and flip extraction
 
 **白天人工**
 
@@ -338,7 +338,7 @@
 - 能生成 per-seed decision flip table。
 - 若 action timestamps 对不上，修 logging。
 
-### Day 17: Full matched pilot
+### 第 17 天：Full matched pilot
 
 **白天人工**
 
@@ -356,7 +356,7 @@
 - 看 long-horizon/cumulative/degradation 是否有方向性 memory gain。
 - 看 transient negative-control 是否无显著收益。
 
-### Day 18: Negative-control audit
+### 第 18 天：Negative-control audit
 
 **白天人工**
 
@@ -372,7 +372,7 @@
 
 - 如果 negative-control 也涨，暂停所有 claim，修 protocol/feature。
 
-### Day 19: Memory feature audit
+### 第 19 天：Memory feature audit
 
 **白天人工**
 
@@ -387,7 +387,7 @@
 
 - 找到主要有效成分或确认无效成分。
 
-### Day 20: Horizon scan
+### 第 20 天：Horizon scan
 
 **白天人工**
 
@@ -402,7 +402,7 @@
 
 - 若 longer horizon 反而退化，记录 over-history limitation。
 
-### Day 21: Week 3 gate
+### 第 21 天：第 3 周 gate
 
 **白天人工**
 
@@ -422,9 +422,9 @@
 - Gate 通过：进入 VLM baseline 和图表。
 - Gate 失败：转 protocol/diagnostic negative result，不再扩 PPO。
 
-## Week 4: VLM baseline, figures, paper evidence
+## 第 4 周：VLM baseline、图表和论文证据
 
-### Day 22: VLM-prompt supervisor spec
+### 第 22 天：VLM-prompt supervisor spec
 
 **白天人工**
 
@@ -441,7 +441,7 @@
 - 如果 VLM invalid/action latency 太高，记录为效率劣势。
 - 如果 VLM 明显更强，准备 pivot story。
 
-### Day 23: VLM vs learned comparison
+### 第 23 天：VLM vs learned comparison
 
 **白天人工**
 
@@ -456,7 +456,7 @@
 
 - 判断 learned supervisor 是否仍可作为主线。
 
-### Day 24: Main tables
+### 第 24 天：主表格
 
 **白天人工**
 
@@ -472,7 +472,7 @@
 
 - 表中所有数字可追溯到 run ids。
 
-### Day 25: Main figures
+### 第 25 天：主图
 
 **白天人工**
 
@@ -487,7 +487,7 @@
 
 - 图可复现；CI/effect size 正确。
 
-### Day 26: Case studies and failure review
+### 第 26 天：Case studies 和 failure review
 
 **白天人工**
 
@@ -503,7 +503,7 @@
 
 - 每个 case 对应一个论文论点或 limitation。
 
-### Day 27: Evidence package audit
+### 第 27 天：Evidence package audit
 
 **白天人工**
 
@@ -520,7 +520,7 @@
 
 - 若缺关键 evidence，Day 28 只补关键 runs，不加新想法。
 
-### Day 28: Final decision and handoff
+### 第 28 天：最终决策与 handoff
 
 **白天人工**
 
@@ -540,35 +540,35 @@
 ## 每晚交给 ARIS 的 Handoff 模板
 
 ```markdown
-# Nightly ARIS Handoff
+# 夜间 ARIS Handoff
 
-Date:
-Host: A800_SINGLE_HOST
-Branch:
-Commit:
+日期：
+主机：A800_SINGLE_HOST
+分支：
+提交：
 
-## Runs to launch
-- Run IDs:
-- Config files:
-- Expected outputs:
+## 本晚要启动的 runs
+- Run IDs：
+- 配置文件：
+- 预期输出：
 
-## Success criteria
+## 成功标准
 - TODO
 
-## Stop conditions
+## 停止条件
 - TODO
 
-## Do not do
-- Do not modify paper claims.
-- Do not use privileged MuJoCo truth as runtime input.
-- Do not commit raw logs, checkpoints, weights, or generated replay dumps.
+## 禁止事项
+- 不修改论文 claim。
+- 不把 privileged MuJoCo truth 当作 runtime input。
+- 不提交 raw logs、checkpoints、weights 或 generated replay dumps。
 
-## Morning summary required
-- Completed / failed / stuck jobs
-- Metrics table
-- Artifact paths
-- Disk usage
-- Gate recommendation
+## 次日必须产出的 summary
+- completed / failed / stuck jobs
+- metrics table
+- artifact paths
+- disk usage
+- gate recommendation
 ```
 
 ## 每日 Commit 规则
