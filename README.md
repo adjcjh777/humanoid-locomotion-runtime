@@ -5,6 +5,7 @@
 核心文档：
 
 - [研究计划 / PRD](docs/research_plan_prd.md)
+- [Gate A 工程地基记录](docs/gate_a_foundation.md)
 - [实验计划](refine-logs/EXPERIMENT_PLAN.md)
 - [每日实验时间线](refine-logs/DAILY_EXPERIMENT_TIMELINE.md)
 - [实验跟踪表](refine-logs/EXPERIMENT_TRACKER.md)

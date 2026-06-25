@@ -35,7 +35,7 @@
 
 | Gate | 目标 | 必须完成 | 不通过时 |
 |------|------|----------|----------|
-| Gate A | repo foundation + environment lock | `pyproject.toml`、`uv.lock`、`src/`、`tests/`、CI、LICENSE、public/private ops 分离、`.aris/traces` 不入库 | 不跑实验，先补工程地基 |
+| Gate A | repo foundation + environment lock | `pyproject.toml`、`uv.lock`、`src/`、`tests/`、CI、LICENSE、public/private ops 分离、`.aris/traces` 不入库 | DONE；证据见 `docs/gate_a_foundation.md`、R007、R008 |
 | Gate B | schema + leakage boundary + EDP | `PolicyObservation`、`RuntimeEvent`、`OracleAnnotation` 隔离；policy serializer 测试；EDP writer/validator | 不接入 controller |
 | Gate C | option/SMDP + snapshot/restore | recovery option contracts、decision epoch、snapshot/restore、common random numbers、branch metadata | 不写 counterfactual，不训练 supervisor |
 | Gate D | failure protocol calibration/freeze | cause × temporal-profile taxonomy、seed split、severity calibration、negative-control equivalence plan | 不启动 baseline ladder |
@@ -65,6 +65,10 @@
 - [x] A800 本机已按 `--no-doc` 重新初始化 ARIS skills，且 `.agents/` / `.aris/installed-skills-codex.txt` 不再被 git 跟踪。
 - [x] repo sync 基线已在 A800 上验证到当前分支，工作树保持干净。
 - [x] generated runs/logs/artifacts/checkpoints/weights/datasets 已由 `.gitignore` 排除。
+- [x] R006: public repo hygiene 完成；证据：`.gitignore`、匿名机器 profile、`git ls-files .aris` 为空。
+- [x] R007: environment lock scaffold 完成；证据：`.python-version`、`pyproject.toml`、`uv.lock`、`configs/environment.lock.toml`。
+- [x] R008: repo foundation scaffold 完成；证据：`src/`、`tests/`、`configs/`、`.github/workflows/ci.yml`、`LICENSE`、`uv run ruff check .`、`uv run pytest`。
+- [x] Gate A: repo foundation + environment lock 完成；证据：`docs/gate_a_foundation.md`。
 - [ ] R001: 夜间 repo sync dry-run 产出 summary。
 - [ ] R002: 夜间 environment smoke 记录 Python/MuJoCo/import/GPU 版本与结果。
 - [ ] R003: 夜间 artifact write smoke 证明 EDP skeleton 可写，且 generated outputs 不进 git。
@@ -294,6 +298,7 @@
 - [x] machine-local ARIS resources documented；证据：`AGENTS.md`、`.gitignore`、`docs/a800_machine_profile.md`、`docs/rtx5090_machine_profile.md`。
 - [x] experiment plan / timeline use checkable todos；证据：`refine-logs/EXPERIMENT_PLAN.md`、`refine-logs/DAILY_EXPERIMENT_TIMELINE.md`。
 - [x] raw ARIS traces and machine profiles follow public/private split；证据：`.gitignore`、`docs/a800_machine_profile.md`、`docs/rtx5090_machine_profile.md`、`refine-logs/EXPERIMENT_TRACKER.md` R006。
+- [x] Gate A repo foundation + environment lock completed；证据：`docs/gate_a_foundation.md`、`pyproject.toml`、`uv.lock`、`src/`、`tests/`、`.github/workflows/ci.yml`、`LICENSE`、`configs/environment.lock.toml`、`configs/artifact_retention.toml`。
 - [ ] main paper tables covered
 - [ ] novelty isolated through snapshot branching；未实现前只能写 paired matched-seed diagnostic
 - [ ] frame-stack raw-history and GRU raw-history baselines completed before VLM is promoted to main text

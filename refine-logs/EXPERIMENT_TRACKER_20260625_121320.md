@@ -9,8 +9,8 @@
 | R004 | M0 | disk/throughput microbenchmark | empty/synthetic rollout loop | dev seeds | steps/sec, disk MB/episode | MUST | 夜间：ARIS | TODO | 正式前置 gate；决定 retention policy |
 | R005 | M0 | nightly handoff dry-run | tracker -> summary | n/a | summary written | MUST | 夜间：ARIS | TODO | 真实 overnight runs 前必须通过 |
 | R006 | M0 | public repo hygiene | `.gitignore` + machine docs + raw traces | n/a | no raw traces tracked | MUST | 白天：人工 | DONE | `.aris/meta/`、`.aris/traces/` 已改为本机/私有审计材料；机器 profile 匿名化 |
-| R007 | M0 | environment lock scaffold | pyproject/uv/version pins | n/a | lock inputs listed | MUST | 白天：人工 | TODO | 锁 Python 3.12、MuJoCo、JAX/JAXLIB、CUDA wheel、controller checkpoint、robot XML/MJCF hash |
-| R008 | M0 | repo foundation scaffold | src/tests/configs/CI/LICENSE | n/a | minimal tests pass | MUST | 白天：人工 | TODO | 当前只允许做到最小脚手架和协议冻结 |
+| R007 | M0 | environment lock scaffold | pyproject/uv/version pins | n/a | lock inputs listed | MUST | 白天：人工 | DONE | 证据：`.python-version`、`pyproject.toml`、`uv.lock`、`configs/environment.lock.toml`；Python/MuJoCo/JAX/JAXLIB/CUDA extra 已 pin，controller/MJCF hash 明确为未选择阻塞字段 |
+| R008 | M0 | repo foundation scaffold | src/tests/configs/CI/LICENSE | n/a | minimal tests pass | MUST | 白天：人工 | DONE | 证据：`src/`、`tests/`、`configs/`、`.github/workflows/ci.yml`、`LICENSE`；`uv run ruff check .` 和 `uv run pytest` 已通过 |
 | R010 | M1 | failure protocol freeze | protocol doc/config | fixed seed list | definitions complete | MUST | 白天：人工 | TODO | 看结果前完成冻结 |
 | R010a | M1 | cause x temporal taxonomy | protocol doc/config | fixed seed list | taxonomy complete | MUST | 白天：人工 | TODO | 区分故障原因和时间结构；`user_interrupt` 是 task-control event |
 | R010b | M1 | state-aliasing benchmark cell | selected positive cells | dev seeds | same-observation/different-history check | MUST | 白天+夜间 | TODO | 至少一个 memory-positive cell 显式制造非 Markov 性 |

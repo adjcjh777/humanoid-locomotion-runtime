@@ -1,0 +1,49 @@
+[build-system]
+requires = ["hatchling==1.30.1"]
+build-backend = "hatchling.build"
+
+[project]
+name = "humanoid-locomotion-runtime"
+version = "0.1.0"
+description = "Gate-driven humanoid locomotion runtime research scaffold."
+readme = "README.md"
+requires-python = "==3.12.*"
+license = "MIT"
+authors = [
+  { name = "Humanoid Locomotion Runtime contributors" },
+]
+dependencies = [
+  "pydantic==2.13.4",
+  "typing-extensions==4.15.0",
+]
+
+[project.optional-dependencies]
+sim = [
+  "jax[cuda12]==0.10.2",
+  "jaxlib==0.10.2",
+  "mujoco==3.10.0",
+]
+
+[dependency-groups]
+dev = [
+  "pytest==9.1.1",
+  "ruff==0.15.19",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/humanoid_locomotion_runtime"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.uv]
+required-version = ">=0.11.23,<0.12"
+default-groups = ["dev"]

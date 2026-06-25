@@ -11,11 +11,11 @@
 
 ### Gate A: repo foundation + environment lock
 
-- [ ] 加入 `pyproject.toml`、`uv.lock`、`src/`、`tests/`、CI、LICENSE。
-- [ ] 锁定 Python、MuJoCo、JAX/JAXLIB、CUDA wheel、controller checkpoint、robot XML/MJCF 版本与 hash。
-- [ ] 清理 public repo：`.aris/meta/`、`.aris/traces/`、raw agent prompt/response 不进 git。
-- [ ] 机器 profile 保持匿名化；hostname、用户名、绝对路径、私有 SSH/IP/ARIS path 写入 private ops。
-- [ ] 配置 artifact retention policy；磁盘 microbenchmark 成为正式前置 gate。
+- [x] 加入 `pyproject.toml`、`uv.lock`、`src/`、`tests/`、CI、LICENSE；证据：`docs/gate_a_foundation.md`、`refine-logs/EXPERIMENT_TRACKER.md` R008。
+- [x] 锁定 Python、MuJoCo、JAX/JAXLIB、CUDA wheel；controller checkpoint 和 robot XML/MJCF hash 在 `configs/environment.lock.toml` 中明确为未选择阻塞字段。
+- [x] 清理 public repo：`.aris/meta/`、`.aris/traces/`、raw agent prompt/response 不进 git；证据：`.gitignore`、`git ls-files .aris` 为空。
+- [x] 机器 profile 保持匿名化；hostname、用户名、绝对路径、私有 SSH/IP/ARIS path 写入 private ops；证据：`docs/a800_machine_profile.md`、`docs/rtx5090_machine_profile.md`。
+- [x] 配置 artifact retention policy；磁盘 microbenchmark 成为正式前置 gate；证据：`configs/artifact_retention.toml`、R004 保持 TODO 且标为 MUST。
 
 ### Gate B: schema + leakage boundary + EDP
 
@@ -107,6 +107,7 @@
 - [x] 在 A800 本机用 `--no-doc` 重新初始化 ARIS Codex skills；本机 manifest 被 `.gitignore` 忽略。
 - [x] 确认 `.gitignore` 覆盖 `runs/`、`logs/`、`artifacts/`、`checkpoints/`、`weights/`、`datasets/` 和 ARIS 本机资源。
 - [x] 更新 `refine-logs/EXPERIMENT_TRACKER.md` 中 R000 状态为 `DONE`。
+- [x] 完成 Gate A repo foundation + environment lock；证据：`docs/gate_a_foundation.md`、`pyproject.toml`、`uv.lock`、`configs/environment.lock.toml`、`configs/artifact_retention.toml`、`src/`、`tests/`、`.github/workflows/ci.yml`、`LICENSE`。
 - [ ] 在私有/安全位置记录 A800 公司网络访问方式；不要把 SSH、IP、token、jump-host 细节写进 repo。
 - [ ] 为 R001/R002/R003/R005 补齐 night handoff 的输入路径、成功标准、失败处理和输出 summary 路径。
 - [ ] 白天结束前 commit/push tracker、timeline、plan、handoff 相关文档。

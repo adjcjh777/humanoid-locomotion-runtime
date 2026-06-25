@@ -1,0 +1,50 @@
+schema_version = 1
+status = "gate-a-foundation-lock"
+locked_date = "2026-06-25"
+
+[python]
+version = "3.12.13"
+source = "uv-managed CPython"
+evidence = [".python-version", "pyproject.toml", "uv.lock", ".github/workflows/ci.yml"]
+
+[uv]
+version = "0.11.23"
+constraint = ">=0.11.23,<0.12"
+
+[packages]
+pydantic = { version = "2.13.4", source = "PyPI" }
+typing_extensions = { version = "4.15.0", source = "PyPI" }
+pytest = { version = "9.1.1", source = "PyPI" }
+ruff = { version = "0.15.19", source = "PyPI" }
+mujoco = { version = "3.10.0", source = "PyPI", optional_extra = "sim" }
+jax = { version = "0.10.2", source = "PyPI", optional_extra = "sim[cuda12]" }
+jaxlib = { version = "0.10.2", source = "PyPI", optional_extra = "sim" }
+
+[cuda_wheel]
+provider = "jax[cuda12]"
+jax_version = "0.10.2"
+status = "pinned-optional-extra"
+note = "Install with `uv sync --extra sim` only on hosts intended for simulator/GPU work."
+
+[mujoco_playground]
+source = "https://github.com/google-deepmind/mujoco_playground.git"
+ref = "refs/tags/v0.2.0"
+commit = "124a73fa3303f75a62f8fe04d329b829ed0ebdfb"
+status = "pinned-source-reference-not-vendored"
+
+[controller_checkpoint]
+status = "unselected"
+sha256 = ""
+required_before = "controller smoke gate"
+note = "No controller checkpoint is selected or committed at Gate A; this field must be filled before learned or matched evaluation runs."
+
+[robot_mjcf]
+status = "unselected"
+sha256 = ""
+required_before = "controller smoke gate"
+note = "No robot XML/MJCF asset is selected or committed at Gate A; this field must be filled before controller backend evidence."
+
+[runtime_reproducibility]
+jax_default_matmul_precision = "highest"
+deterministic_evaluation_backend = "cpu-mujoco-or-validated-deterministic-backend"
+raw_traces_in_git = false

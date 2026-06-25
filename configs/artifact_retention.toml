@@ -1,0 +1,44 @@
+schema_version = 1
+status = "gate-a-retention-policy"
+
+[git_policy]
+commit_generated_runs = false
+commit_raw_logs = false
+commit_replay_artifacts = false
+commit_checkpoints = false
+commit_weights = false
+commit_datasets = false
+commit_raw_agent_traces = false
+
+[paths]
+generated_roots = ["runs", "logs", "artifacts", "checkpoints", "weights", "datasets"]
+private_agent_roots = [".aris/meta", ".aris/traces"]
+
+[classes.training]
+keep_metrics = true
+keep_events = true
+keep_failure_ring_buffer = true
+keep_full_sensor_artifacts = false
+keep_video = false
+
+[classes.pilot_evaluation]
+keep_metrics = true
+keep_events = true
+keep_numeric_timeseries = true
+keep_selected_sensor_artifacts = true
+keep_video = false
+
+[classes.paper_cases]
+keep_metrics = true
+keep_events = true
+keep_numeric_timeseries = true
+keep_selected_sensor_artifacts = true
+keep_video = true
+selection_rule = "must include success, failure, and limitation cases"
+
+[disk_gate]
+run_id = "R004"
+required_before = "any batch rollout or overnight experiment"
+records = ["steps_per_second", "disk_mb_per_episode", "free_gb_before", "estimated_100_episode_gb", "estimated_1000_episode_gb"]
+minimum_free_gb_before_batch = 200
+if_below_minimum = "block batch run and write cleanup plan"
