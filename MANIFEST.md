@@ -32,3 +32,13 @@
 | 2026-06-25 17:50 | manual | refine-logs/MORNING_ACCEPTANCE_20260626.md | implementation | R001/R002/R004/R005 ARIS night handoff morning acceptance summary |
 | 2026-06-26 01:30 | manual | configs/environment.lock.toml | implementation | 将 V0 backend policy 从 MuJoCo Playground-first 改为 MJLab/mujocolab-compatible classic MuJoCo first；JAX/JAXLIB 降级为 deferred optional extra |
 | 2026-06-26 01:41 | manual | refine-logs/MORNING_ACCEPTANCE_RERUN_20260626.md | implementation | R001/R002/R004/R005 rerun summary；R002 classic MuJoCo smoke 通过，R004 按用户 100GB override 完成 synthetic-only microbenchmark |
+| 2026-06-26 12:32 | manual | docs/research_plan_prd.md | implementation | PRD 通俗化改写；保留 V0 约定、MJLab fallback、EDP、snapshot branching、negative-control 和 baseline 边界 |
+| 2026-06-26 12:32 | manual | README.md | implementation | README 第一屏通俗化；解释项目目标、V0 范围和非目标 |
+| 2026-06-26 12:32 | manual | docs/gate_a_foundation.md | implementation | Gate A 记录通俗化；明确它只证明仓库地基，不授权 PPO、大规模 rollout 或论文结论 |
+| 2026-06-26 12:32 | manual | docs/gate_b_schema_edp.md | implementation | Gate B 记录通俗化；解释 runtime/evaluation 泄漏边界和 EDP 证据包 |
+| 2026-06-26 12:32 | manual | refine-logs/EXPERIMENT_PLAN_20260626_123244.md | implementation | 实验计划通俗化 timestamp copy；保留 run blocks、gate、claim mapping 和 checklist |
+| 2026-06-26 12:32 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | 实验计划通俗化最新副本 |
+| 2026-06-26 12:32 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260626_123244.md | implementation | 每日实验时间线通俗化 timestamp copy；强调 gate 优先于日历 |
+| 2026-06-26 12:32 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | 每日实验时间线通俗化最新副本 |
+| 2026-06-26 12:32 | manual | refine-logs/EXPERIMENT_TRACKER_20260626_123244.md | implementation | 实验 tracker 通俗化 timestamp copy；补充 run-level 状态读法 |
+| 2026-06-26 12:32 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | 实验 tracker 通俗化最新副本 |
