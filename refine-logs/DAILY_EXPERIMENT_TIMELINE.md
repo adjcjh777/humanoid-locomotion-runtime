@@ -15,7 +15,7 @@
 - [x] 锁定 Python、MuJoCo 和 MJLab/classic MuJoCo first backend policy；JAX/JAXLIB 仅作为 deferred Playground extra，controller checkpoint 和 robot XML/MJCF hash 在 `configs/environment.lock.toml` 中明确为未选择阻塞字段。
 - [x] 清理 public repo：`.aris/meta/`、`.aris/traces/`、raw agent prompt/response 不进 git；证据：`.gitignore`、`git ls-files .aris` 为空。
 - [x] 机器 profile 保持匿名化；hostname、用户名、绝对路径、私有 SSH/IP/ARIS path 写入 private ops；证据：`docs/a800_machine_profile.md`、`docs/rtx5090_machine_profile.md`。
-- [x] 配置 artifact retention policy；磁盘 microbenchmark 成为正式前置 gate；证据：`configs/artifact_retention.toml`、R004 保持 TODO 且标为 MUST。
+- [x] 配置 artifact retention policy；磁盘 microbenchmark 成为正式前置 gate；证据：`configs/artifact_retention.toml`、R004 M0 synthetic-only rerun summary。
 
 ### Gate B: schema + leakage boundary + EDP
 
@@ -109,15 +109,15 @@
 - [x] 更新 `refine-logs/EXPERIMENT_TRACKER.md` 中 R000 状态为 `DONE`。
 - [x] 完成 Gate A repo foundation + environment lock；证据：`docs/gate_a_foundation.md`、`pyproject.toml`、`uv.lock`、`configs/environment.lock.toml`、`configs/artifact_retention.toml`、`src/`、`tests/`、`.github/workflows/ci.yml`、`LICENSE`。
 - [ ] 在私有/安全位置记录 A800 公司网络访问方式；不要把 SSH、IP、token、jump-host 细节写进 repo。
-- [ ] 为 R001/R002/R005 补齐 night handoff 的输入路径、成功标准、失败处理和输出 summary 路径；R003 已由白天 tmp-path 单元测试替代完成。
+- [x] 为 R001/R002/R005 补齐 night handoff 的输入路径、成功标准、失败处理和输出 summary 路径；证据：`refine-logs/MORNING_ACCEPTANCE_RERUN_20260626.md`。
 - [ ] 白天结束前 commit/push tracker、timeline、plan、handoff 相关文档。
 
 **晚上 ARIS**
 
-- [ ] R001: repo sync dry-run。
-- [ ] R002: environment smoke；primary smoke 检查 Python/MuJoCo/MJLab-classic import/GPU，不把 JAX 作为前置条件。
+- [x] R001: repo sync dry-run；证据：`refine-logs/MORNING_ACCEPTANCE_RERUN_20260626.md`。
+- [x] R002: environment smoke；primary smoke 检查 Python/MuJoCo/MJLab-classic import/GPU，不把 JAX 作为前置条件；证据：`refine-logs/MORNING_ACCEPTANCE_RERUN_20260626.md`。
 - [x] R003: artifact write smoke；证据：`write_sample_episode_data_package()`、`tests/test_gate_b_edp.py`，本次由白天 tmp-path 单元测试完成，不提交 generated outputs。
-- [ ] R005: nightly handoff dry-run。
+- [x] R005: nightly handoff dry-run；证据：`refine-logs/MORNING_ACCEPTANCE_RERUN_20260626.md`。
 
 **次日验收**
 
@@ -136,7 +136,7 @@
 
 **晚上 ARIS**
 
-- [ ] R004: throughput microbenchmark。
+- [x] R004: throughput microbenchmark；证据：`refine-logs/MORNING_ACCEPTANCE_RERUN_20260626.md`。本次按用户授权 100GB disk override 只验证 M0 synthetic smoke，不放行真实 batch。
 - [x] R003 repeat: sample Episode Data Package skeleton 写入检查；证据：`tests/test_gate_b_edp.py`。
 - [ ] 自动生成一份 disk budget estimate。
 

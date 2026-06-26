@@ -3,11 +3,11 @@
 | Run ID | 里程碑 | 目的 | 系统 / 变体 | Split | 指标 | 优先级 | 白天/夜间负责人 | 状态 | 备注 |
 |--------|--------|------|-------------|-------|------|--------|------------------|------|------|
 | R000 | M0 | A800/5090 public-safe machine profile | A800_SINGLE_HOST + RTX5090_BACKUP_HOST | n/a | host policy documented | MUST | 白天：人工 | DONE | 公共安全机器档案已写入 `docs/a800_machine_profile.md` 和 `docs/rtx5090_machine_profile.md`；A800 canonical，5090 backup；私有 SSH/路径/GPU 占用不进仓库 |
-| R001 | M0 | repo sync dry-run | current branch | n/a | clean git, pull ok | MUST | 夜间：ARIS | TODO | 暂不跑真实实验 |
-| R002 | M0 | environment smoke | Python/MuJoCo/MJLab-classic imports | n/a | import pass, GPU visible, versions captured | MUST | 夜间：ARIS | TODO | Primary smoke 不要求 JAX；JAX/JAXLIB 只在显式选择 MuJoCo Playground deferred fallback 时检查 |
+| R001 | M0 | repo sync dry-run | current branch | n/a | clean git, pull ok | MUST | 夜间：ARIS | DONE | rerun pass；证据：`refine-logs/MORNING_ACCEPTANCE_RERUN_20260626.md`、raw log in ignored `runs/night_handoff_rerun/20260626T013950Z/` |
+| R002 | M0 | environment smoke | Python/MuJoCo/MJLab-classic imports | n/a | import pass, GPU visible, versions captured | MUST | 夜间：ARIS | DONE | rerun pass：Python 3.12.13、package import、MuJoCo 3.10.0、8 x A800 visible；MJLab backend reference still unselected；JAX not primary requirement |
 | R003 | M0 | artifact write smoke | Episode Data Package skeleton | n/a | manifest/json/log write ok | MUST | 白天：人工 | DONE | sample EDP writer/validator 已通过 tmp-path 单元测试；证据：`write_sample_episode_data_package()`、`tests/test_gate_b_edp.py`；不提交 generated runs |
-| R004 | M0 | disk/throughput microbenchmark | empty/synthetic rollout loop | dev seeds | steps/sec, disk MB/episode | MUST | 夜间：ARIS | TODO | 正式前置 gate；决定 retention policy |
-| R005 | M0 | nightly handoff dry-run | tracker -> summary | n/a | summary written | MUST | 夜间：ARIS | TODO | 真实 overnight runs 前必须通过 |
+| R004 | M0 | disk/throughput microbenchmark | empty/synthetic rollout loop | dev seeds | steps/sec, disk MB/episode | MUST | 夜间：ARIS | DONE | rerun pass for M0 synthetic-only with user 100GB disk override；free disk 99.42 GiB，50 synthetic EDPs，168633.81 steps/sec，0.002993 MB/episode；200 GiB batch threshold remains unchanged |
+| R005 | M0 | nightly handoff dry-run | tracker -> summary | n/a | summary written | MUST | 夜间：ARIS | DONE | rerun pass；summary written to `refine-logs/MORNING_ACCEPTANCE_RERUN_20260626.md` |
 | R006 | M0 | public repo hygiene | `.gitignore` + machine docs + raw traces | n/a | no raw traces tracked | MUST | 白天：人工 | DONE | `.aris/meta/`、`.aris/traces/` 已改为本机/私有审计材料；机器 profile 匿名化 |
 | R007 | M0 | environment lock scaffold | pyproject/uv/version pins | n/a | lock inputs listed | MUST | 白天：人工 | DONE | 证据：`.python-version`、`pyproject.toml`、`uv.lock`、`configs/environment.lock.toml`；Python/MuJoCo/MJLab-first policy 已 pin，JAX/JAXLIB 移到 deferred Playground extra，controller/MJCF hash 明确为未选择阻塞字段 |
 | R008 | M0 | repo foundation scaffold | src/tests/configs/CI/LICENSE | n/a | minimal tests pass | MUST | 白天：人工 | DONE | 证据：`src/`、`tests/`、`configs/`、`.github/workflows/ci.yml`、`LICENSE`；`uv run ruff check .` 和 `uv run pytest` 已通过 |

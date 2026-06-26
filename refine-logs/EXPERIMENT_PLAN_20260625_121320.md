@@ -70,10 +70,11 @@
 - [x] R008: repo foundation scaffold 完成；证据：`src/`、`tests/`、`configs/`、`.github/workflows/ci.yml`、`LICENSE`、`uv run ruff check .`、`uv run pytest`。
 - [x] Gate A: repo foundation + environment lock 完成；证据：`docs/gate_a_foundation.md`。
 - [x] R009: Gate B schema/leakage boundary 和 EDP writer/validator 完成；证据：`docs/gate_b_schema_edp.md`、`src/humanoid_locomotion_runtime/schemas.py`、`src/humanoid_locomotion_runtime/edp.py`、`tests/test_gate_b_schemas.py`、`tests/test_gate_b_edp.py`。
-- [ ] R001: 夜间 repo sync dry-run 产出 summary。
-- [ ] R002: 夜间 environment smoke 记录 Python/MuJoCo/MJLab-classic import/GPU 版本与结果；JAX 不作为 primary smoke 前置条件。
+- [x] R001: 夜间 repo sync dry-run 产出 summary；证据：`refine-logs/MORNING_ACCEPTANCE_RERUN_20260626.md`。
+- [x] R002: 夜间 environment smoke 记录 Python/MuJoCo/MJLab-classic import/GPU 版本与结果；JAX 不作为 primary smoke 前置条件；证据：`refine-logs/MORNING_ACCEPTANCE_RERUN_20260626.md`。
 - [x] R003: artifact write smoke 证明 EDP skeleton 可写，且 generated outputs 不进 git；证据：`write_sample_episode_data_package()`、`tests/test_gate_b_edp.py`，执行位置为 tmp-path 单元测试。
-- [ ] R005: 夜间 handoff dry-run 能从 tracker 生成 morning summary。
+- [x] R004: throughput microbenchmark 完成 M0 synthetic-only rerun；证据：`refine-logs/MORNING_ACCEPTANCE_RERUN_20260626.md`。用户授权约 100GB disk override；200 GiB batch threshold 不自动取消。
+- [x] R005: 夜间 handoff dry-run 能从 tracker 生成 morning summary；证据：`refine-logs/MORNING_ACCEPTANCE_RERUN_20260626.md`。
 
 ### B1: Seeded typed failure protocol 冻结
 
@@ -254,7 +255,7 @@
 
 | Milestone | 目标 | Runs | 决策 Gate | 成本 | 风险 |
 |-----------|------|------|-----------|------|------|
-| M0 | A800 single-host automation ready | R000-R005 | ARIS nightly dry-run can read tracker and write summary | low | server/env unknown |
+| M0 | A800 single-host automation ready | R000-R005 | DONE for M0 smoke/handoff；MJLab backend selection remains next daytime task | low | backend/asset reference still unselected |
 | M1 | protocol freeze | R010-R019 | selected failure cells reproducible and non-saturated | low-med | injection too artificial |
 | M2 | baseline ladder | R020-R029 | heuristic has gap and oracle gap exists | med | heuristic too strong |
 | M3 | memory intervention diagnostic | R030-R039 | snapshot branch gain is positive in expected cells; if snapshot is unavailable, only paired matched-seed diagnostics are reported | med-high | no memory effect |
