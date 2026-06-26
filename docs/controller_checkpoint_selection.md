@@ -1,7 +1,7 @@
 # Controller Checkpoint Selection 记录
 
 **日期**: 2026-06-26
-**状态**: official Unitree RL MJLab G1 29DoF velocity ONNX candidate downloaded locally; company 23DoF controller pending
+**状态**: official Unitree RL MJLab G1 29DoF velocity ONNX candidate downloaded locally; company 23DoF controller route locked, mature controller still pending
 
 ## 结论
 
@@ -13,6 +13,8 @@
 - [x] 已读取 ONNX graph shape 和 metadata：input `obs=[1,98]`，output `actions=[1,29]`。
 - [x] 公司 G1 edu 23DoF 官方 URDF/MJCF source 已记录在 `docs/g1_edu_23dof_source_lock.md`，但这不是 controller checkpoint。
 - [x] 公司 G1 edu 23DoF raw MuJoCo asset compile smoke 已通过，见 `docs/g1_edu_23dof_compile_smoke.md`；这仍不是 controller checkpoint 或 controller smoke。
+- [x] R007e controller route/contract 已锁定，见 `docs/g1_edu_23dof_controller_route.md`：23DoF action dim `23`，MJLab flat actor obs dim `81`，Unitree deploy-style obs dim `80`。
+- [x] 23DoF mature controller source 决策为 `none-selected-mature-controller-pending`；主路线是 `train_23dof_required`，29DoF conversion 只能作为单独实验。
 - [ ] ONNX candidate 与本仓库 runtime adapter 还未完成 shape/feature adapter；MJLab G1 actor obs 是 `[1,99]`，不是直接同形输入。
 - [ ] 当前 ONNX candidate output 是 29DoF，不能直接作为公司 23DoF edu controller evidence。
 - [ ] 还未通过 `stand_ready` / `track_velocity` controller smoke。
@@ -44,7 +46,9 @@
 | ONNX output | `actions=[1,29]` |
 | MJLab G1 smoke actor obs | `[1,99]` |
 | MJLab G1 smoke action | `[1,29]` |
-| Company G1 edu target action | `23DoF target; controller pending` |
+| Company G1 edu target action | `23DoF target; route locked, mature controller pending` |
+| Company G1 MJLab flat actor obs | `81` |
+| Company G1 deploy-style obs | `80` |
 
 ## 选择理由
 
@@ -69,7 +73,8 @@
 - [ ] `scripts/fetch_unitree_g1_velocity_checkpoint.sh` 可重拉 artifact 并通过 SHA256 检查。
 - [ ] MJLab dependency environment 在当前 repo 中可复现安装或运行。
 - [ ] Runtime adapter 能读取 `deploy.yaml`，把 MJLab actor/runtime state 转成 ONNX 期望的 98-dim observation，并把 29-dim ONNX output 映射成 typed high-level controller action path。
-- [ ] 若目标是公司 G1 edu 23DoF，必须使用 23DoF controller checkpoint，或将 29DoF policy 转成 23DoF adapter experiment 并单独 smoke；不能直接升级为 mature controller evidence。
+- [x] 若目标是公司 G1 edu 23DoF，R007e 已明确路线：必须训练 native 23DoF controller，或将 29DoF policy 转成 23DoF adapter experiment 并单独 smoke；不能直接升级为 mature controller evidence。
+- [ ] Native 23DoF controller training 或 validated conversion experiment 完成。
 - [ ] `stand_ready` smoke 通过。
 - [ ] `track_velocity` short smoke 通过，且记录为 controller evidence。
 

@@ -25,12 +25,12 @@ Robot profile 是一个可复查的机器人本体配置，不只是一个名字
 - [x] 23DoF official URDF/MJCF source path and hash
 - [x] 23DoF controlled joint names and order from official URDF
 - [x] 23DoF raw MuJoCo asset compile smoke
+- [x] 23DoF obs/action shape contract: action `23`, MJLab flat actor obs `81`, deploy-style obs `80`
 - [ ] project-local MJLab asset/wrapper path and hash
 - [ ] 23DoF velocity controller artifact
-- [ ] 23DoF obs/action shape
 - [ ] 23DoF stand/track smoke
 
-官方 source lock 见 `docs/g1_edu_23dof_source_lock.md`。
+官方 source lock 见 `docs/g1_edu_23dof_source_lock.md`；controller route/contract 见 `docs/g1_edu_23dof_controller_route.md`。
 
 ## `mjlab_g1_29dof_reference`
 

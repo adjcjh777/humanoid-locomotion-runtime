@@ -11,8 +11,9 @@
 - [x] 当前 source commit 和文件 SHA256 已记录。
 - [x] 23DoF URDF/MJCF 和 27 个官方 STL mesh assets 可由 fetch script 拉到 git ignored `robot_descriptions/` 路径并通过 SHA256 校验。
 - [x] 23DoF MJCF raw asset compile smoke 已通过 MuJoCo 3.10.0；证据见 `docs/g1_edu_23dof_compile_smoke.md`。
+- [x] 23DoF controller route/contract 已锁定；证据见 `docs/g1_edu_23dof_controller_route.md`。
 - [ ] 尚未把 23DoF asset vendor 到 tracked project-local MJLab wrapper。
-- [ ] 尚未完成 23DoF MJLab task adapter、controller checkpoint selection 或 controller smoke。
+- [ ] 尚未完成 23DoF MJLab task adapter、native controller training / validated conversion experiment 或 controller smoke。
 
 ## 官方来源
 
@@ -71,6 +72,7 @@ Mesh assets are fetched from the same pinned source commit by `scripts/fetch_uni
 - [x] 23DoF rev 1.0 只有 `waist_yaw_joint`，没有 `waist_roll_joint` 和 `waist_pitch_joint`。
 - [x] 23DoF rev 1.0 每条手臂是 5DoF，包含 `wrist_roll_joint`，没有 `wrist_pitch_joint` 和 `wrist_yaw_joint`。
 - [x] 当前 MJLab reference / ONNX candidate 是 29DoF，包含 3DoF waist 和每臂 7DoF，因此不能直接作为 23DoF controller evidence。
+- [x] R007e 已锁定 23DoF contract：action dim `23`，MJLab flat actor obs `81`，Unitree deploy-style obs `80`，route 为 `train_23dof_required`。
 
 ## R007d Raw Compile Smoke
 
@@ -85,5 +87,6 @@ Mesh assets are fetched from the same pinned source commit by `scripts/fetch_uni
 - [x] 写 fetch script 在复现时拉取 URDF/MJCF/mesh assets 并校验 SHA256，下载产物保持在 git 外。
 - [x] 下载官方 mesh assets，并通过 MuJoCo compile smoke。
 - [ ] 建立 23DoF MJLab robot cfg / task cfg / action scale / actuator config。
-- [ ] 选择或训练 23DoF controller checkpoint。
-- [ ] 记录 23DoF controller obs/action shape、joint order、PD gains、deploy params 和 smoke evidence。
+- [ ] 训练 native 23DoF controller，或执行 validated 29DoF-to-23DoF conversion experiment。
+- [x] 记录 23DoF controller obs/action shape 和 joint order contract。
+- [ ] 记录 23DoF PD gains、deploy params 和 smoke evidence。

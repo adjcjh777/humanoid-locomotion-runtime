@@ -1,5 +1,14 @@
 """Humanoid Locomotion Runtime research scaffold."""
 
+from humanoid_locomotion_runtime.controller_contracts import (
+    COMPANY_G1_23DOF_CONTROLLER_CONTRACT,
+    COMPANY_G1_23DOF_JOINT_ORDER,
+    MJLAB_G1_29DOF_REFERENCE_CONTRACT,
+    ControllerProfileContract,
+    ObservationTermContract,
+    get_controller_contract,
+    joint_order_sha256,
+)
 from humanoid_locomotion_runtime.edp import (
     EDPValidationResult,
     EpisodeDataPackageWriter,
@@ -30,6 +39,9 @@ __version__ = "0.1.0"
 
 __all__ = [
     "BodyMemoryState",
+    "COMPANY_G1_23DOF_CONTROLLER_CONTRACT",
+    "COMPANY_G1_23DOF_JOINT_ORDER",
+    "ControllerProfileContract",
     "EDPValidationResult",
     "EpisodeDataPackageWriter",
     "EpisodeManifest",
@@ -38,7 +50,9 @@ __all__ = [
     "FailureEvent",
     "LocomotionCommand",
     "LocomotionStatus",
+    "MJLAB_G1_29DOF_REFERENCE_CONTRACT",
     "MemoryTarget",
+    "ObservationTermContract",
     "OracleAnnotation",
     "PolicyObservation",
     "RecoveryActionRecord",
@@ -48,6 +62,8 @@ __all__ = [
     "__version__",
     "assert_no_privileged_keys",
     "assert_valid_episode_data_package",
+    "get_controller_contract",
+    "joint_order_sha256",
     "serialize_policy_observation",
     "validate_episode_data_package",
     "write_sample_episode_data_package",

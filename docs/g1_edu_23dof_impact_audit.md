@@ -7,7 +7,7 @@
 
 公司 G1 是 23DoF edu 版本后，当前仓库里所有“Unitree G1 + mature controller”的表述都要拆成两条线：
 
-- `company_g1_edu_23dof`: V0 primary deployment target，官方 Unitree 23DoF rev 1.0 URDF/MJCF source 已定位；project-local MJLab wrapper、controller 和 profile smoke 仍 pending。
+- `company_g1_edu_23dof`: V0 primary deployment target，官方 Unitree 23DoF rev 1.0 URDF/MJCF source 已定位，raw asset compile 和 R007e controller contract 已完成；project-local MJLab wrapper、mature controller 和 profile smoke 仍 pending。
 - `mjlab_g1_29dof_reference`: 当前已通过的 MJLab reference smoke，action `[1,29]`，不能当作公司 23DoF evidence。
 
 这不是命名问题，而是 action space、observation contract、joint order、controller checkpoint 和 Gate C snapshot contract 都会改变。
@@ -124,7 +124,7 @@
 - [x] Gate A repo foundation 本身仍然有效。
 - [x] Gate B schema/leakage boundary 本身仍然有效。
 - [x] R007d raw asset compile smoke 已通过；证据：`docs/g1_edu_23dof_compile_smoke.md`。
-- [ ] Gate C 必须等待 R007e / robot profile runtime contract；否则 snapshot/restore 会绑定错误 action/obs/controller state。
+- [x] R007e / robot profile runtime contract 已完成；证据：`docs/g1_edu_23dof_controller_route.md`、`src/humanoid_locomotion_runtime/controller_contracts.py`。
 - [ ] R020 controller-native baseline 必须等待 23DoF target smoke 或明确改成 29DoF reference baseline。
 - [ ] 所有论文 claim 里的 `Unitree G1` 必须改成具体 profile，避免 reviewer 追问 23/29DoF 不一致。
 
@@ -133,7 +133,7 @@
 1. [x] 向硬件/仿真负责人确认公司 23DoF edu joint list 和 MJCF 来源。
 2. [x] 新增 `configs/robot_profiles/` 或等价 TOML section，锁定 `company_g1_edu_23dof`。
 3. [x] 将现有 29DoF MJLab smoke 降级命名为 reference smoke。
-4. [ ] 搜索或复制 23DoF edu controller checkpoint；若不存在，先决定是否训练/转换/暂用 29DoF reference。
+4. [x] 搜索或复制 23DoF edu controller checkpoint；当前未选择 mature checkpoint，R007e 决策为 `train_23dof_required`，29DoF reference 不能升级为 target evidence。
 5. [x] 修改 smoke scripts 和 Gate A tests，使 wrong-profile smoke 会失败。
 6. [x] 完成 23DoF raw asset fetch/verify 和 MuJoCo compile smoke。
 7. [x] 同步 README、PRD、Gate A、backend lock、checkpoint selection、plan、timeline、tracker 和 timestamped companions。

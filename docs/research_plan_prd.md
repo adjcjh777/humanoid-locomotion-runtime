@@ -7,7 +7,7 @@
 ## 0. 项目记录
 
 - **项目名称**：Humanoid Locomotion Runtime。可以理解为“让人形机器人按语言目标行走、监控自己、出问题时恢复”的运行系统。
-- **初始平台**：MuJoCo + 公司 Unitree G1 edu 23DoF profile。官方 `g1_23dof_rev_1_0.urdf/xml` source 已记录在 `docs/g1_edu_23dof_source_lock.md`，raw MuJoCo asset compile smoke 已记录在 `docs/g1_edu_23dof_compile_smoke.md`，但还没有完成 project-local MJLab adapter、controller checkpoint 和 controller smoke。
+- **初始平台**：MuJoCo + 公司 Unitree G1 edu 23DoF profile。官方 `g1_23dof_rev_1_0.urdf/xml` source 已记录在 `docs/g1_edu_23dof_source_lock.md`，raw MuJoCo asset compile smoke 已记录在 `docs/g1_edu_23dof_compile_smoke.md`，R007e controller route/contract 已记录在 `docs/g1_edu_23dof_controller_route.md`。当前仍没有 mature 23DoF controller checkpoint，也还没有通过 project-local MJLab adapter/controller smoke。
 - **reference 平台**：当前已跑通的是 MJLab 29DoF G1 reference smoke。它能证明 backend health，不能直接作为公司 23DoF edu G1 evidence。
 - **fallback 平台**：如果 G1 controller 早期 smoke gate 过不了，优先切到 MJLab/mujocolab-compatible classic MuJoCo humanoid locomotion backend。意思是先找一个更容易跑通、但仍然是 classic MuJoCo 的人形行走后端，而不是默认切到 MuJoCo Playground。
 - **后续兼容目标**：`bxi_elf3` / `bxi_robotics` 和公司自研 humanoid body。它们是 V1/V2 的扩展验证目标，不作为 V0 论文主证据。
@@ -743,7 +743,7 @@ Opus 4.8 rerun 后，当前最稳论文主线调整为：
 - MuJoCo + Unitree G1 first。
 - V0 首选 MJLab/mujocolab-compatible backend reference 锁定为项目内 `third_party/mjlab` submodule 的 `Mjlab-Velocity-Flat-Unitree-G1`；G1 MJCF、task config 和 wrapper hashes 见 `configs/environment.lock.toml` 与 `docs/mjlab_backend_lock.md`。
 - 完整 MJLab dependency environment 和 G1 headless simulation smoke 已通过：`scripts/mjlab_sync_and_smoke.sh` 使用 Python 3.12.13、`third_party/mjlab/uv.lock`、A800 `cuda:0`，完成 `Mjlab-Velocity-Flat-Unitree-G1` reset + 16 zero-action steps；actor obs `[1,99]`、critic obs `[1,111]`、action `[1,29]`。
-- 当前 controller artifact candidate 为官方 Unitree RL MJLab G1 velocity ONNX，存放于 ignored `checkpoints/unitree_rl_mjlab_g1_velocity_v0/`，来源与 hash 见 `docs/controller_checkpoint_selection.md`；adapter smoke 通过前不能作为成熟 controller evidence。公司 23DoF raw asset compile smoke 已通过，但 23DoF controller checkpoint 仍 pending。
+- 当前 controller artifact candidate 为官方 Unitree RL MJLab G1 velocity ONNX，存放于 ignored `checkpoints/unitree_rl_mjlab_g1_velocity_v0/`，来源与 hash 见 `docs/controller_checkpoint_selection.md`；adapter smoke 通过前不能作为成熟 controller evidence。公司 23DoF raw asset compile smoke 和 R007e controller contract 已通过/锁定；23DoF route 为 `train_23dof_required`，mature controller checkpoint 仍 pending。
 - G1 smoke gate 失败时，用 MJLab/mujocolab-compatible classic MuJoCo backend 作为 V0 evidence backend；MuJoCo Playground 仅保留为 deferred optional external reference。
 - `bxi_elf3` 和公司本体是后续兼容目标，不进入 V0 证据主线。
 - 使用成熟 G1 controller backend，但不能让它成为 single point of failure。

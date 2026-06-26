@@ -155,3 +155,25 @@
 | 2026-06-26 08:50 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | R007d DONE 的 tracker 最新副本 |
 | 2026-06-26 08:50 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260626_085015.md | implementation | R007d 完成后的每日时间线 timestamp copy；Gate C 仍等待 R007e 或 reference-only 决策 |
 | 2026-06-26 08:50 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | R007d 完成后的每日时间线最新副本 |
+| 2026-06-26 09:25 | manual | docs/g1_edu_23dof_controller_route.md | implementation | R007e controller route/contract lock：23DoF action dim 23、MJLab flat actor obs 81、deploy-style obs 80，route 为 train_23dof_required |
+| 2026-06-26 09:25 | manual | src/humanoid_locomotion_runtime/controller_contracts.py | implementation | 新增轻量 controller/profile contract，记录 23DoF pending controller profile 和 29DoF reference-only profile |
+| 2026-06-26 09:25 | manual | src/humanoid_locomotion_runtime/__init__.py | implementation | 导出 controller contract API，便于后续 EDP/adapter 使用同一 profile contract |
+| 2026-06-26 09:25 | manual | tests/test_controller_contracts.py | implementation | 测试 R007e 23DoF/29DoF action 和 observation dimensions、joint order hash、reference-only 边界 |
+| 2026-06-26 09:25 | manual | tests/test_gate_a_foundation.py | implementation | Gate A 测试同步 R007e controller contract 和 no-mature-controller 状态 |
+| 2026-06-26 09:25 | manual | configs/environment.lock.toml | implementation | 环境锁新增 `[controller_contracts.*]` 表，记录 23DoF contract、route 和 29DoF reference-only candidate |
+| 2026-06-26 09:25 | manual | docs/controller_checkpoint_selection.md | implementation | Checkpoint 记录同步 R007e：29DoF ONNX 仍 reference-only，23DoF mature controller 需 native training 或 validated conversion |
+| 2026-06-26 09:25 | manual | docs/mjlab_backend_lock.md | implementation | Backend lock 同步 23DoF controller contract 和仍待完成的 23DoF wrapper/controller smoke |
+| 2026-06-26 09:25 | manual | docs/gate_a_foundation.md | implementation | Gate A 记录同步 R007e route lock，但保持 controller smoke/PPO/rollout 阻塞 |
+| 2026-06-26 09:25 | manual | docs/g1_edu_23dof_source_lock.md | implementation | Source lock 同步 R007e：obs/action contract 已记录，native controller 或 validated conversion 仍 pending |
+| 2026-06-26 09:25 | manual | docs/g1_edu_23dof_compile_smoke.md | implementation | R007d 文档同步 R007e 已完成，避免旧 TODO 状态误导后续 agent |
+| 2026-06-26 09:25 | manual | docs/research_plan_prd.md | implementation | PRD 同步 R007e controller route contract，不改变论文 claim 或实验范围 |
+| 2026-06-26 09:25 | manual | README.md | implementation | README 增加 R007e controller route 链接和 23DoF/29DoF shape 边界 |
+| 2026-06-26 09:25 | manual | docs/adr/ADR-20260626-g1-edu-23dof-primary-profile.md | implementation | ADR 同步 R007e 已回答 23DoF controller checkpoint 问题 |
+| 2026-06-26 09:25 | manual | docs/g1_edu_23dof_impact_audit.md | implementation | 影响审计同步 R007e 已完成，controller-native baseline 仍等待 target smoke 或 reference-only 决策 |
+| 2026-06-26 09:25 | manual | docs/glossary.md | implementation | 术语表同步 23DoF obs/action shape contract 已锁定 |
+| 2026-06-26 09:25 | manual | refine-logs/EXPERIMENT_TRACKER_20260626_092536.md | implementation | R007e DONE 的 tracker timestamp copy；记录 contract、route 和 controller smoke pending |
+| 2026-06-26 09:25 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | R007e DONE 的 tracker 最新副本 |
+| 2026-06-26 09:25 | manual | refine-logs/EXPERIMENT_PLAN_20260626_092536.md | implementation | R007e 完成后的实验计划 timestamp copy；M0 robot profile contract gate 已满足 |
+| 2026-06-26 09:25 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | R007e 完成后的实验计划最新副本 |
+| 2026-06-26 09:25 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260626_092536.md | implementation | R007e 完成后的每日时间线 timestamp copy；controller smoke 和 baseline 仍 pending |
+| 2026-06-26 09:25 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | R007e 完成后的每日时间线最新副本 |

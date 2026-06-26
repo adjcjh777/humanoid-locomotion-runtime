@@ -14,6 +14,7 @@
 - [MJLab backend lock 记录](docs/mjlab_backend_lock.md)
 - [Controller checkpoint 选择记录](docs/controller_checkpoint_selection.md)
 - [G1 edu 23DoF source lock](docs/g1_edu_23dof_source_lock.md)
+- [G1 edu 23DoF controller route](docs/g1_edu_23dof_controller_route.md)
 - [G1 edu 23DoF 影响审计](docs/g1_edu_23dof_impact_audit.md)
 - [实验计划](refine-logs/EXPERIMENT_PLAN.md)
 - [每日实验时间线](refine-logs/DAILY_EXPERIMENT_TIMELINE.md)
@@ -34,9 +35,9 @@
 - [ ] 拉取代码后运行 `git submodule update --init --recursive`，初始化项目内 `third_party/mjlab`。
 - [ ] 如需本地 controller artifact，运行 `scripts/fetch_unitree_g1_velocity_checkpoint.sh`；脚本会把官方 Unitree RL MJLab G1 velocity ONNX candidate 放到 ignored `checkpoints/` 路径并校验 SHA256。
 - [ ] 运行 `scripts/mjlab_sync_and_smoke.sh`，用主项目 Python 3.12.13 同步 `third_party/mjlab/uv.lock` 并执行 headless G1 simulation smoke。
-- [ ] 公司现有 G1 是 edu 23DoF；官方 `g1_23dof_rev_1_0.urdf/xml` source 已记录在 `docs/g1_edu_23dof_source_lock.md`，raw MuJoCo asset compile smoke 见 `docs/g1_edu_23dof_compile_smoke.md`，但尚未接入 project-local MJLab runtime。
+- [ ] 公司现有 G1 是 edu 23DoF；官方 `g1_23dof_rev_1_0.urdf/xml` source 已记录在 `docs/g1_edu_23dof_source_lock.md`，raw MuJoCo asset compile smoke 见 `docs/g1_edu_23dof_compile_smoke.md`，controller route/contract 见 `docs/g1_edu_23dof_controller_route.md`，但尚未通过 project-local MJLab runtime/controller smoke。
 - [ ] 如需复现 23DoF raw asset smoke，运行 `scripts/fetch_unitree_g1_23dof_description.sh` 拉取 ignored URDF/MJCF/mesh assets，再运行 `uv run --extra sim python scripts/compile_unitree_g1_23dof_description.py`。
-- [ ] 在 controller smoke 通过前，不把该 ONNX candidate 当成成熟 controller evidence；当前 ONNX input `[1,98]` 与 MJLab actor obs `[1,99]` 不直接相同，且 ONNX output `[1,29]` 属于 29DoF reference path，不适配公司 23DoF edu G1。
+- [ ] 在 controller smoke 通过前，不把该 ONNX candidate 当成成熟 controller evidence；当前 ONNX input `[1,98]` 与 MJLab actor obs `[1,99]` 不直接相同，且 ONNX output `[1,29]` 属于 29DoF reference path。23DoF contract 已锁为 action dim `23`、MJLab flat actor obs `81`、deploy-style obs `80`，需要 native 23DoF controller 或 validated conversion experiment。
 
 ## 预期项目结构
 

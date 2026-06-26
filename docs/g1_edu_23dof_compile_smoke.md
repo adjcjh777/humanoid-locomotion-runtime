@@ -71,6 +71,6 @@ The first joint is the floating base; the remaining 23 joints are the controlled
 ## Gate Decision
 
 - [x] R007d can be marked DONE for raw asset compile smoke.
-- [x] R007e remains TODO: the project still needs a 23DoF MJLab wrapper/controller selection decision.
-- [x] Gate C remains blocked until robot profile contract, controller state/action/observation contract, and snapshot/restore contract are bound to either `company_g1_edu_23dof` or an explicitly declared `mjlab_g1_29dof_reference` path.
+- [x] R007e is now DONE for controller route/contract lock; see `docs/g1_edu_23dof_controller_route.md`.
+- [x] Gate C protocol work may reference the locked `company_g1_edu_23dof` robot/controller contract, but controller smoke remains blocked until a native 23DoF controller or validated conversion experiment exists.
 - [x] The current 29DoF ONNX candidate is still not company 23DoF mature controller evidence.

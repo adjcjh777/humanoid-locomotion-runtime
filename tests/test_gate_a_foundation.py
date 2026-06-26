@@ -88,13 +88,11 @@ def test_g1_asset_wrapper_and_checkpoint_candidate_are_project_local() -> None:
 def test_company_g1_23dof_source_is_recorded_separately_from_29dof_reference() -> None:
     environment = load_toml("configs/environment.lock.toml")
     robot_profiles = environment["robot_profiles"]
+    controller_contracts = environment["controller_contracts"]
 
     company_g1 = robot_profiles["company_g1_edu_23dof"]
     assert company_g1["role"] == "primary-deployment-target"
-    assert (
-        company_g1["status"]
-        == "raw-asset-compile-smoke-passed-mjlab-controller-integration-pending"
-    )
+    assert company_g1["status"] == "controller-route-locked-no-mature-controller"
     assert company_g1["source_repo"] == "https://github.com/unitreerobotics/unitree_rl_gym"
     assert company_g1["source_commit"] == "276801e46c5d433564f24658bac64f254b7d2d4b"
     assert company_g1["urdf_path"].endswith("g1_23dof_rev_1_0.urdf")
@@ -106,6 +104,14 @@ def test_company_g1_23dof_source_is_recorded_separately_from_29dof_reference() -
         "8ca62fcccdca91a431ca04f1a42f9c2fda241fdd5e13411168dc82de00f978de"
     )
     assert company_g1["controlled_dof"] == 23
+    assert company_g1["action_dim"] == 23
+    assert company_g1["mjlab_flat_actor_obs_dim"] == 81
+    assert company_g1["deploy_style_actor_obs_dim"] == 80
+    assert company_g1["controller_route"] == "train_23dof_required"
+    assert company_g1["selected_controller_source"] == "none-selected-mature-controller-pending"
+    assert company_g1["joint_order_sha256"] == (
+        "186e29d240d7cfeefe4b4c3d8c739c33a779503817ae685783ae5004fd0ebb2c"
+    )
     assert len(company_g1["joint_order"]) == 23
     assert company_g1["joint_order"][0] == "left_hip_pitch_joint"
     assert company_g1["joint_order"][-1] == "right_wrist_roll_joint"
@@ -117,11 +123,28 @@ def test_company_g1_23dof_source_is_recorded_separately_from_29dof_reference() -
     assert company_g1["compile_smoke_result"].startswith("PASS: MuJoCo 3.10.0")
     assert "nu=23" in company_g1["compile_smoke_result"]
 
+    company_contract = controller_contracts["company_g1_edu_23dof"]
+    assert company_contract["status"] == "r007e-route-locked-no-mature-controller"
+    assert company_contract["controller_profile_id"] == (
+        "company_g1_edu_23dof_controller_pending_r007e"
+    )
+    assert company_contract["action_dim"] == 23
+    assert company_contract["mjlab_flat_actor_obs_dim"] == 81
+    assert company_contract["deploy_style_actor_obs_dim"] == 80
+    assert company_contract["mature_controller_evidence"] is False
+    assert company_contract["convert_29dof_policy_allowed_as_target_evidence"] is False
+
     reference_g1 = robot_profiles["mjlab_g1_29dof_reference"]
     assert reference_g1["role"] == "backend-health-reference"
     assert reference_g1["controlled_dof"] == 29
     assert reference_g1["mjcf_model"] == "g1_29dof_rev_1_0"
     assert "not-company-target" in reference_g1["status"]
+    reference_contract = controller_contracts["mjlab_g1_29dof_reference"]
+    assert reference_contract["action_dim"] == 29
+    assert reference_contract["mjlab_flat_actor_obs_dim"] == 99
+    assert reference_contract["deploy_style_actor_obs_dim"] == 98
+    assert reference_contract["route"] == "reference_29dof_only"
+    assert reference_contract["mature_controller_evidence"] is False
     assert "29DoF reference" in environment["controller_checkpoint"]["robot_profile_note"]
 
 

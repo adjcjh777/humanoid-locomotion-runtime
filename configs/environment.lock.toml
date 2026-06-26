@@ -1,5 +1,5 @@
 schema_version = 1
-status = "gate-a-foundation-lock-plus-project-local-mjlab-g1-smoke"
+status = "gate-a-foundation-lock-plus-r007e-controller-route"
 locked_date = "2026-06-26"
 
 [python]
@@ -67,7 +67,7 @@ commit = "124a73fa3303f75a62f8fe04d329b829ed0ebdfb"
 status = "deferred-optional-reference-not-primary-v0-requirement"
 
 [robot_profiles.company_g1_edu_23dof]
-status = "raw-asset-compile-smoke-passed-mjlab-controller-integration-pending"
+status = "controller-route-locked-no-mature-controller"
 role = "primary-deployment-target"
 source_repo = "https://github.com/unitreerobotics/unitree_rl_gym"
 source_commit = "276801e46c5d433564f24658bac64f254b7d2d4b"
@@ -80,15 +80,22 @@ dof_breakdown = "legs=6*2, waist=1, arms=5*2, hands=0"
 controlled_dof = 23
 base_joint = "floating_base_joint"
 joint_order = ["left_hip_pitch_joint", "left_hip_roll_joint", "left_hip_yaw_joint", "left_knee_joint", "left_ankle_pitch_joint", "left_ankle_roll_joint", "right_hip_pitch_joint", "right_hip_roll_joint", "right_hip_yaw_joint", "right_knee_joint", "right_ankle_pitch_joint", "right_ankle_roll_joint", "waist_yaw_joint", "left_shoulder_pitch_joint", "left_shoulder_roll_joint", "left_shoulder_yaw_joint", "left_elbow_joint", "left_wrist_roll_joint", "right_shoulder_pitch_joint", "right_shoulder_roll_joint", "right_shoulder_yaw_joint", "right_elbow_joint", "right_wrist_roll_joint"]
+joint_order_sha256 = "186e29d240d7cfeefe4b4c3d8c739c33a779503817ae685783ae5004fd0ebb2c"
+controller_profile_id = "company_g1_edu_23dof_controller_pending_r007e"
+action_dim = 23
+mjlab_flat_actor_obs_dim = 81
+deploy_style_actor_obs_dim = 80
+controller_route = "train_23dof_required"
+selected_controller_source = "none-selected-mature-controller-pending"
 local_ignored_description_path = "robot_descriptions/unitree_g1_23dof_rev_1_0"
 local_asset_file_count = 29
 local_mesh_asset_count = 27
 local_asset_manifest_sha256 = "ff699c19c0d28feee34bb0af1e6a02e6c30850db0e21ad90bbcd277a7bb3a007"
 compile_smoke_command = "uv run --extra sim python scripts/compile_unitree_g1_23dof_description.py"
 compile_smoke_result = "PASS: MuJoCo 3.10.0 raw asset compile; nq=30, nv=29, nu=23, nbody=25, njnt=24, ngeom=60, nmesh=27, floating_base_joint plus 23 controlled joints"
-evidence = ["docs/g1_edu_23dof_source_lock.md", "docs/g1_edu_23dof_compile_smoke.md", "scripts/fetch_unitree_g1_23dof_description.sh", "scripts/compile_unitree_g1_23dof_description.py"]
-required_before = "23DoF MJLab wrapper/controller selection, company-G1 controller smoke, Gate C snapshot/restore, controller-native baseline"
-note = "Official Unitree 23DoF rev 1.0 source and raw MuJoCo asset compile are verified. It is still not integrated into the project-local MJLab runtime and has no selected 23DoF controller checkpoint."
+evidence = ["docs/g1_edu_23dof_source_lock.md", "docs/g1_edu_23dof_compile_smoke.md", "docs/g1_edu_23dof_controller_route.md", "scripts/fetch_unitree_g1_23dof_description.sh", "scripts/compile_unitree_g1_23dof_description.py", "src/humanoid_locomotion_runtime/controller_contracts.py"]
+required_before = "native 23DoF controller training or separately validated conversion experiment, company-G1 controller smoke, Gate C snapshot/restore, controller-native baseline"
+note = "Official Unitree 23DoF rev 1.0 source, raw MuJoCo asset compile, and R007e controller route contract are verified. No mature 23DoF controller checkpoint is selected; the 29DoF ONNX remains reference-only."
 
 [robot_profiles.mjlab_g1_29dof_reference]
 status = "verified-reference-smoke-not-company-target"
@@ -101,6 +108,36 @@ controlled_dof = 29
 smoke_result = "PASS: action_shape=[1,29], actor_obs=[1,99], critic_obs=[1,111]"
 evidence = ["docs/mjlab_backend_lock.md"]
 note = "This profile remains useful as a reproducible MJLab reference smoke, but it must not be reported as company G1 edu 23DoF evidence."
+
+[controller_contracts.company_g1_edu_23dof]
+status = "r007e-route-locked-no-mature-controller"
+controller_profile_id = "company_g1_edu_23dof_controller_pending_r007e"
+robot_profile_id = "company_g1_edu_23dof"
+controlled_dof = 23
+action_dim = 23
+mjlab_flat_actor_obs_dim = 81
+deploy_style_actor_obs_dim = 80
+joint_order_sha256 = "186e29d240d7cfeefe4b4c3d8c739c33a779503817ae685783ae5004fd0ebb2c"
+selected_controller_source = "none-selected-mature-controller-pending"
+route = "train_23dof_required"
+convert_29dof_policy_allowed_as_target_evidence = false
+mature_controller_evidence = false
+evidence = ["docs/g1_edu_23dof_controller_route.md", "src/humanoid_locomotion_runtime/controller_contracts.py", "tests/test_controller_contracts.py"]
+note = "R007e selection is a no-mature-controller decision: train a native 23DoF controller or run a separately validated conversion experiment before controller smoke."
+
+[controller_contracts.mjlab_g1_29dof_reference]
+status = "reference-only-candidate"
+controller_profile_id = "mjlab_g1_29dof_reference_velocity_v0"
+robot_profile_id = "mjlab_g1_29dof_reference"
+controlled_dof = 29
+action_dim = 29
+mjlab_flat_actor_obs_dim = 99
+deploy_style_actor_obs_dim = 98
+selected_controller_source = "checkpoints/unitree_rl_mjlab_g1_velocity_v0/policy.onnx"
+route = "reference_29dof_only"
+mature_controller_evidence = false
+evidence = ["docs/controller_checkpoint_selection.md", "scripts/fetch_unitree_g1_velocity_checkpoint.sh"]
+note = "Reference-only controller candidate. It cannot be reported as company_g1_edu_23dof evidence."
 
 [controller_checkpoint]
 status = "candidate-downloaded-pending-controller-smoke"

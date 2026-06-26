@@ -1,7 +1,7 @@
 # MJLab Backend Lock 记录
 
 **日期**: 2026-06-26
-**状态**: project-local 29DoF reference backend / G1 asset / controller wrapper selected; full MJLab G1 headless simulation smoke passed; company 23DoF raw asset compile smoke passed but runtime integration pending
+**状态**: project-local 29DoF reference backend / G1 asset / controller wrapper selected; full MJLab G1 headless simulation smoke passed; company 23DoF raw asset compile and R007e controller route contract locked
 
 ## 结论
 
@@ -15,8 +15,9 @@
 - [x] 下载官方 Unitree RL MJLab G1 velocity ONNX controller artifact candidate 到本项目 ignored checkpoint 路径。
 - [x] 在当前 runtime repo 中解决完整 MJLab dependency environment，并运行 project-local MJLab G1 headless simulation smoke。
 - [x] 公司 G1 edu 23DoF 官方 source 已记录在 `docs/g1_edu_23dof_source_lock.md`，raw MuJoCo asset compile smoke 记录在 `docs/g1_edu_23dof_compile_smoke.md`。
+- [x] R007e 23DoF controller route/contract 已锁定：`action_dim=23`，MJLab flat actor obs `81`，deploy-style obs `80`，controller route 为 `train_23dof_required`。
 - [ ] 验证 ONNX candidate 的 observation/action shape 与 runtime adapter 后，才能把它升级为 mature controller evidence。
-- [ ] 将官方 23DoF URDF/MJCF 接入 project-local MJLab runtime 并通过 23DoF MJLab/controller smoke。
+- [ ] 将官方 23DoF URDF/MJCF 接入 project-local MJLab runtime，训练 native 23DoF controller 或完成 validated conversion experiment，并通过 23DoF MJLab/controller smoke。
 
 ## 候选比较
 
@@ -41,6 +42,8 @@
 | Selected task | `Mjlab-Velocity-Flat-Unitree-G1` |
 | Fallback task | `Mjlab-Velocity-Rough-Unitree-G1` |
 | Robot profile role | `mjlab_g1_29dof_reference`; not company `company_g1_edu_23dof` evidence |
+| Company 23DoF controller route | `train_23dof_required`; no mature checkpoint selected |
+| Company 23DoF action / MJLab actor / deploy obs | `23` / `81` / `80` |
 | Robot MJCF SHA256 | `febdcbeffbbf84051556ae41a5ac1b43fb479a5d76bdb3f54824dbc2721c20aa` |
 | G1 asset tree manifest SHA256 | `067725caac9efe43e91d51c97e28bc75a04065d5be666fceeff8334831a107e4` |
 | G1 mesh asset manifest SHA256 | `203eca02f0d048b9c6d9c4a3dddc2fb4c533e270dc107645c0caced76247f10b` |
@@ -88,11 +91,18 @@
   - MuJoCo: `3.10.0`
   - result: `nq=30`, `nv=29`, `nu=23`, `nbody=25`, `njnt=24`, `ngeom=60`, `nmesh=27`
   - joint gate: `floating_base_joint` plus 23 controlled joints
+- [x] 公司 23DoF controller route/contract lock 完成：
+  - controller profile: `company_g1_edu_23dof_controller_pending_r007e`
+  - action dim: `23`
+  - MJLab flat actor obs dim: `81`
+  - Unitree deploy-style obs dim: `80`
+  - selected mature controller source: `none-selected-mature-controller-pending`
+  - route: `train_23dof_required`
 
 ## 未完成边界
 
 - [ ] 官方 Unitree ONNX controller artifact candidate 已下载，但还没有通过本仓库 runtime adapter 的 observation/action shape 检查。当前 ONNX input 是 `[1,98]`，MJLab actor obs 是 `[1,99]`，不能直接宣称 trained-controller smoke。
-- [ ] 当前 MJLab G1 headless smoke 是 29DoF reference smoke，不能直接代表公司 G1 edu 23DoF runtime/controller evidence；23DoF 目前只到 raw MuJoCo asset compile smoke。
+- [ ] 当前 MJLab G1 headless smoke 是 29DoF reference smoke，不能直接代表公司 G1 edu 23DoF runtime/controller evidence；23DoF 目前只到 raw MuJoCo asset compile smoke 和 R007e controller contract lock。
 - [ ] `stand_ready`、`safe_stop`、`track_velocity` runtime adapter command 尚未实现。
 
 ## 下一步怎么做
