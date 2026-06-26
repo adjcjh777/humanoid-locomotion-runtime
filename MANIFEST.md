@@ -40,6 +40,36 @@
 | 2026-06-25 17:50 | manual | refine-logs/MORNING_ACCEPTANCE_20260626.md | implementation | R001/R002/R004/R005 ARIS night handoff morning acceptance summary |
 | 2026-06-26 01:30 | manual | configs/environment.lock.toml | implementation | 将 V0 backend policy 从 MuJoCo Playground-first 改为 MJLab/mujocolab-compatible classic MuJoCo first；JAX/JAXLIB 降级为 deferred optional extra |
 | 2026-06-26 01:41 | manual | refine-logs/MORNING_ACCEPTANCE_RERUN_20260626.md | implementation | R001/R002/R004/R005 rerun summary；R002 classic MuJoCo smoke 通过，R004 按用户 100GB override 完成 synthetic-only microbenchmark |
+| 2026-06-26 02:04 | manual | docs/mjlab_backend_lock.md | implementation | 早期本机同级目录 backend lock 记录；已被 02:22 project-local submodule lock supersede |
+| 2026-06-26 02:04 | manual | configs/environment.lock.toml | implementation | 早期本机同级目录 backend reference；已被 02:22 project-local submodule lock supersede |
+| 2026-06-26 02:04 | manual | refine-logs/EXPERIMENT_PLAN_20260626_020420.md | implementation | backend lock 后的 timestamped 实验计划副本 |
+| 2026-06-26 02:04 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | backend lock 后的最新实验计划副本 |
+| 2026-06-26 02:04 | manual | refine-logs/EXPERIMENT_TRACKER_20260626_020420.md | implementation | backend lock 后的 timestamped tracker 副本 |
+| 2026-06-26 02:04 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | backend lock 后的最新 tracker 副本 |
+| 2026-06-26 02:04 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260626_020420.md | implementation | backend lock 后的 timestamped 每日时间线副本 |
+| 2026-06-26 02:04 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | backend lock 后的最新每日时间线副本 |
+| 2026-06-26 02:22 | manual | .gitmodules | implementation | 将 MJLab 改为项目内 `third_party/mjlab` submodule，避免开源复现依赖作者机器同级目录 |
+| 2026-06-26 02:22 | manual | docs/mjlab_backend_lock.md | implementation | project-local MJLab backend lock：`third_party/mjlab` commit、G1 MJCF、task config、wrapper hashes |
+| 2026-06-26 02:22 | manual | docs/controller_checkpoint_selection.md | implementation | 官方 Unitree RL MJLab G1 velocity ONNX controller artifact candidate 的来源、hash、筛选理由和 smoke 阻塞条件 |
+| 2026-06-26 02:22 | manual | scripts/fetch_unitree_g1_velocity_checkpoint.sh | implementation | 从官方 Unitree RL MJLab commit 拉取 G1 velocity ONNX candidate 并校验 SHA256 |
+| 2026-06-26 02:22 | manual | configs/environment.lock.toml | implementation | 将 backend reference 更新为 project-local submodule；记录官方 ONNX candidate 本地 ignored checkpoint path 和 hash |
+| 2026-06-26 02:22 | manual | refine-logs/EXPERIMENT_PLAN_20260626_022236.md | implementation | project-local backend/checkpoint lock 后的 timestamped 实验计划副本 |
+| 2026-06-26 02:22 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | project-local backend/checkpoint lock 后的最新实验计划副本 |
+| 2026-06-26 02:22 | manual | refine-logs/EXPERIMENT_TRACKER_20260626_022236.md | implementation | project-local backend/checkpoint lock 后的 timestamped tracker 副本 |
+| 2026-06-26 02:22 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | project-local backend/checkpoint lock 后的最新 tracker 副本 |
+| 2026-06-26 02:22 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260626_022236.md | implementation | project-local backend/checkpoint lock 后的 timestamped 每日时间线副本 |
+| 2026-06-26 02:22 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | project-local backend/checkpoint lock 后的最新每日时间线副本 |
+| 2026-06-26 03:38 | manual | scripts/mjlab_g1_smoke.py | implementation | Headless MJLab Unitree G1 smoke：创建 `Mjlab-Velocity-Flat-Unitree-G1`，reset 后运行 16 个 zero-action steps |
+| 2026-06-26 03:38 | manual | scripts/mjlab_sync_and_smoke.sh | implementation | 使用主项目 Python 3.12.13 同步 `third_party/mjlab/uv.lock`，运行 MJLab import matrix 和 G1 headless simulation smoke |
+| 2026-06-26 03:38 | manual | configs/environment.lock.toml | implementation | 将 `mjlab_runtime_dependencies` 更新为 verified full MJLab G1 headless smoke；记录 Python/package/device/smoke 证据和 ONNX shape gap |
+| 2026-06-26 03:38 | manual | docs/mjlab_backend_lock.md | implementation | 记录完整 MJLab runtime dependency smoke 和 G1 headless simulation smoke 通过 |
+| 2026-06-26 03:38 | manual | docs/controller_checkpoint_selection.md | implementation | 记录 ONNX candidate input `[1,98]`、output `[1,29]` 与 MJLab actor obs `[1,99]` 的 adapter gap |
+| 2026-06-26 03:38 | manual | refine-logs/EXPERIMENT_PLAN_20260626_033833.md | implementation | 完整 MJLab dependency/simulation smoke 后的 timestamped 实验计划副本 |
+| 2026-06-26 03:38 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | 完整 MJLab dependency/simulation smoke 后的最新实验计划副本 |
+| 2026-06-26 03:38 | manual | refine-logs/EXPERIMENT_TRACKER_20260626_033833.md | implementation | 完整 MJLab dependency/simulation smoke 后的 timestamped tracker 副本 |
+| 2026-06-26 03:38 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | 完整 MJLab dependency/simulation smoke 后的最新 tracker 副本 |
+| 2026-06-26 03:38 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260626_033833.md | implementation | 完整 MJLab dependency/simulation smoke 后的 timestamped 每日时间线副本 |
+| 2026-06-26 03:38 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | 完整 MJLab dependency/simulation smoke 后的最新每日时间线副本 |
 | 2026-06-26 12:32 | manual | docs/research_plan_prd.md | implementation | PRD 通俗化改写；保留 V0 约定、MJLab fallback、EDP、snapshot branching、negative-control 和 baseline 边界 |
 | 2026-06-26 12:32 | manual | README.md | implementation | README 第一屏通俗化；解释项目目标、V0 范围和非目标 |
 | 2026-06-26 12:32 | manual | docs/gate_a_foundation.md | implementation | Gate A 记录通俗化；明确它只证明仓库地基，不授权 PPO、大规模 rollout 或论文结论 |
@@ -66,3 +96,40 @@
 | 2026-06-26 12:39 | manual | idea-stage/RESEARCH_REVIEW_CLAUDE_GLM52.md | idea-discovery | research review 通俗化最新副本 |
 | 2026-06-26 12:39 | manual | refine-logs/*_20260625_121320.md | implementation | 旧实验计划/时间线/tracker 快照补充归档读法，指向通俗化最新副本 |
 | 2026-06-26 12:39 | manual | idea-stage/*20260625*.md | idea-discovery | 旧 idea-stage 快照补充归档读法，保留原始研究结论并指向通俗化最新副本 |
+| 2026-06-26 06:16 | manual | docs/gate_a_foundation.md | implementation | pull merge 后的 Gate A 最新副本；保留 Mac 通俗化读法，同时同步 project-local MJLab runtime smoke 和 controller adapter gap 证据 |
+| 2026-06-26 06:16 | manual | refine-logs/EXPERIMENT_PLAN_20260626_061653.md | implementation | pull merge 后的实验计划 timestamp copy；对齐 Mac 通俗化读法和 MJLab backend/checkpoint/smoke 证据 |
+| 2026-06-26 06:16 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | pull merge 后的实验计划最新副本 |
+| 2026-06-26 06:16 | manual | refine-logs/EXPERIMENT_TRACKER_20260626_061653.md | implementation | pull merge 后的 tracker timestamp copy；R002/R007 对齐 project-local MJLab smoke 和 ONNX adapter gap |
+| 2026-06-26 06:16 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | pull merge 后的 tracker 最新副本 |
+| 2026-06-26 06:16 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260626_061653.md | implementation | pull merge 后的每日时间线 timestamp copy；同步 Gate A/MJLab smoke 状态和 controller smoke 阻塞项 |
+| 2026-06-26 06:16 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | pull merge 后的每日时间线最新副本 |
+| 2026-06-26 07:39 | manual | docs/adr/ADR-20260626-g1-edu-23dof-primary-profile.md | implementation | grill-with-docs ADR：公司 G1 edu 23DoF 应作为 primary deployment profile，当前 29DoF MJLab smoke 只算 reference evidence |
+| 2026-06-26 07:39 | manual | docs/glossary.md | implementation | 新增 robot profile / controller evidence / reference smoke / profile-gated Gate C 术语定义 |
+| 2026-06-26 07:39 | manual | docs/g1_edu_23dof_impact_audit.md | implementation | 23DoF 影响审计清单：列出需要修改的文档、配置、脚本、schema、测试和 Gate 状态 |
+| 2026-06-26 08:11 | manual | docs/g1_edu_23dof_source_lock.md | implementation | 记录 Unitree 官方 `g1_23dof_rev_1_0.urdf/xml` source、observed commit、SHA256、DoF breakdown 和 URDF joint order |
+| 2026-06-26 08:11 | manual | configs/environment.lock.toml | implementation | 新增 `company_g1_edu_23dof` primary profile source lock 和 `mjlab_g1_29dof_reference` reference profile 区分 |
+| 2026-06-26 08:11 | manual | AGENTS.md | implementation | 项目规则同步 23DoF primary target 与 29DoF reference-only 边界 |
+| 2026-06-26 08:11 | manual | README.md | implementation | README 核心文档和复现说明加入 23DoF source lock 与 29DoF ONNX 不兼容提醒 |
+| 2026-06-26 08:11 | manual | docs/research_plan_prd.md | implementation | PRD 初始平台和 V0 定位同步为公司 G1 edu 23DoF primary、29DoF reference backend |
+| 2026-06-26 08:11 | manual | docs/gate_a_foundation.md | implementation | Gate A 阻塞字段同步 23DoF source identified 但 adapter/controller smoke pending |
+| 2026-06-26 08:11 | manual | docs/mjlab_backend_lock.md | implementation | MJLab backend lock 标明当前 smoke 是 29DoF reference，不是公司 23DoF target evidence |
+| 2026-06-26 08:11 | manual | docs/controller_checkpoint_selection.md | implementation | Controller checkpoint 记录标明当前 ONNX 是 29DoF reference candidate，23DoF controller 仍 pending |
+| 2026-06-26 08:11 | manual | docs/adr/ADR-20260626-g1-edu-23dof-primary-profile.md | implementation | ADR 更新已回答的 23DoF source/joint-order grilling 问题 |
+| 2026-06-26 08:11 | manual | docs/glossary.md | implementation | 术语表更新 `company_g1_edu_23dof` 已有 official source，但 project-local wrapper/controller 仍 pending |
+| 2026-06-26 08:11 | manual | docs/g1_edu_23dof_impact_audit.md | implementation | 影响审计从 source unknown 更新为 official source identified |
+| 2026-06-26 08:11 | manual | tests/test_gate_a_foundation.py | implementation | 新增测试确保 23DoF primary profile 与 29DoF reference profile 在环境锁中分开记录 |
+| 2026-06-26 08:31 | manual | .gitignore | implementation | 排除 `robot_descriptions/`，确保官方 23DoF URDF/MJCF 下载产物不进入 git |
+| 2026-06-26 08:31 | manual | scripts/fetch_unitree_g1_23dof_description.sh | implementation | 新增 Unitree G1 edu 23DoF 官方 URDF/MJCF fetch/verify 脚本；固定 source commit 和 SHA256，只写入 git 外路径 |
+| 2026-06-26 08:31 | manual | tests/test_fetch_unitree_g1_23dof_description.py | implementation | 测试 23DoF fetch 脚本的 source commit、raw URL、SHA256 和非 checkpoint scope warning |
+| 2026-06-26 08:31 | manual | scripts/mjlab_g1_smoke.py | implementation | 为 MJLab G1 smoke 增加 robot profile 和 action/actor/critic dimension gate；默认仍是 29DoF reference smoke |
+| 2026-06-26 08:31 | manual | tests/test_mjlab_g1_smoke.py | implementation | 测试 profile/dimension gate，防止 `company_g1_edu_23dof` 复用 29DoF action dim evidence |
+| 2026-06-26 08:31 | manual | src/humanoid_locomotion_runtime/schemas.py | implementation | `EpisodeManifest` 新增 robot profile id、DoF、action dim、joint order hash 和 controller profile id |
+| 2026-06-26 08:31 | manual | src/humanoid_locomotion_runtime/edp.py | implementation | sample EDP manifest 写入 robot profile metadata，避免 23DoF target 与 29DoF reference episode 混淆 |
+| 2026-06-26 08:31 | manual | tests/test_gate_b_schemas.py | implementation | 新增 EpisodeManifest robot profile metadata、legacy defaults、joint order hash 和 metadata leakage 测试 |
+| 2026-06-26 08:31 | manual | tests/test_gate_b_edp.py | implementation | 新增 sample EDP manifest robot profile metadata 持久化测试 |
+| 2026-06-26 08:31 | manual | refine-logs/EXPERIMENT_PLAN_20260626_083118.md | implementation | 子代理完成 R007b/R007c/R009a 后的实验计划 timestamp copy；R007d/R007e 仍 pending |
+| 2026-06-26 08:31 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | 子代理完成 R007b/R007c/R009a 后的实验计划最新副本 |
+| 2026-06-26 08:31 | manual | refine-logs/EXPERIMENT_TRACKER_20260626_083118.md | implementation | 子代理完成 R007b/R007c/R009a 后的 tracker timestamp copy；记录证据和剩余 Gate C 前置项 |
+| 2026-06-26 08:31 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | 子代理完成 R007b/R007c/R009a 后的 tracker 最新副本 |
+| 2026-06-26 08:31 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260626_083118.md | implementation | 子代理完成 R007b/R007c/R009a 后的每日时间线 timestamp copy；Gate C 前置仍等待 R007d/R007e 或 reference-only 决策 |
+| 2026-06-26 08:31 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | 子代理完成 R007b/R007c/R009a 后的每日时间线最新副本 |

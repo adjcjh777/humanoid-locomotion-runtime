@@ -290,8 +290,22 @@ class EpisodeManifest(StrictSchema):
     policy_training_seed: int | None = None
     controller_backend: str = "unselected"
     robot_model: str = "unselected"
+    robot_profile_id: str = "unselected"
+    robot_dof: int | None = Field(default=None, gt=0)
+    action_dim: int | None = Field(default=None, gt=0)
+    joint_order_sha256: str | None = None
+    controller_profile_id: str = "unselected"
     code_version: str = "uncommitted"
     metadata: JsonDict = Field(default_factory=dict)
+
+    @field_validator("joint_order_sha256")
+    @classmethod
+    def _joint_order_sha256_must_be_hex_digest(cls, value: str | None) -> str | None:
+        if value is not None and (
+            len(value) != 64 or any(character not in "0123456789abcdef" for character in value)
+        ):
+            raise ValueError("joint_order_sha256 must be a lowercase 64-character hex digest")
+        return value
 
     @field_validator("metadata")
     @classmethod

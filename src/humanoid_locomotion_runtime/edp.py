@@ -239,6 +239,11 @@ def write_sample_episode_data_package(
         policy_name="schema_smoke_policy",
         controller_backend="none",
         robot_model="none",
+        robot_profile_id="unselected",
+        robot_dof=None,
+        action_dim=None,
+        joint_order_sha256=None,
+        controller_profile_id="unselected",
         code_version="gate-b",
     )
     writer = EpisodeDataPackageWriter(root, manifest)

@@ -45,7 +45,8 @@
 | Project `uv run python` version | `3.12.13` | R002 | PASS |
 | Package import | OK | R002 | PASS |
 | MuJoCo import via `uv run --extra sim` | `3.10.0` | R002 | PASS |
-| MJLab backend policy | `preferred-v0-sim-backend-unselected` | R002 | recorded |
+| MJLab backend policy | `preferred-v0-sim-backend-unselected` at rerun time; daytime follow-up now selects project-local `third_party/mjlab` Unitree G1 backend | R002 | recorded then updated |
+| Full MJLab runtime smoke | Python 3.12.13, Torch 2.9.0+cu128, MuJoCo-Warp 3.9.0.1, `Mjlab-Velocity-Flat-Unitree-G1` 16-step headless smoke on `cuda:0` | R002/R007 | PASS |
 | MuJoCo Playground policy | `deferred-optional-reference-not-primary-v0-requirement` | R002 | recorded |
 | JAX/JAXLIB primary requirement | not required | R002 | PASS |
 | GPU count visible through `nvidia-smi` | 8 x NVIDIA A800-SXM4-80GB | R002 | PASS |
@@ -77,10 +78,14 @@
 - [x] Treat M0 automation readiness as PASS for low-footprint synthetic smoke and curated summaries.
 - [x] Keep real rollout/batch experiment scale constrained until a separate artifact budget decision is recorded.
 - [x] Do not treat the 100GB operator override as permission to write videos, checkpoints, datasets, replay dumps, or large raw sensor artifacts.
-- [x] Next daytime task is to select and lock the MJLab/mujocolab-compatible controller backend and robot asset reference before controller smoke.
+- [x] Next daytime task was to select and lock the MJLab/mujocolab-compatible controller backend and robot asset reference before controller smoke; completed in daytime follow-up with project-local evidence in `configs/environment.lock.toml` and `docs/mjlab_backend_lock.md`.
 
 ## Next Action
 
-- [ ] Choose the exact MJLab/mujocolab-compatible backend path and lock its commit/version in `configs/environment.lock.toml`.
-- [ ] Choose or locate the G1 / fallback robot MJCF and controller wrapper; record hashes before controller smoke.
-- [ ] Keep R010+ and controller/G1/PPO work blocked until the backend and asset references are selected.
+- [x] Choose the exact MJLab/mujocolab-compatible backend path and lock its commit/version in `configs/environment.lock.toml`: selected project-local `third_party/mjlab` submodule at commit `efdcadc8b281553fd3e1be2a9a88db9553356e8a`.
+- [x] Choose or locate the G1 robot MJCF and controller wrapper; hashes recorded before controller smoke in `docs/mjlab_backend_lock.md`.
+- [x] Choose a project-local controller artifact candidate without committing weights: official Unitree RL MJLab G1 velocity ONNX downloaded to ignored `checkpoints/unitree_rl_mjlab_g1_velocity_v0/`; source/hash recorded in `docs/controller_checkpoint_selection.md`.
+- [x] Resolve the full MJLab dependency environment for this runtime repo before importing/running the selected MJLab G1 task: `scripts/mjlab_sync_and_smoke.sh` passed with explicit Python 3.12.13 and project-local `third_party/mjlab/uv.lock`.
+- [x] Run complete MJLab G1 headless simulation smoke: `Mjlab-Velocity-Flat-Unitree-G1`, 16 zero-action steps, action `[1,29]`, actor obs `[1,99]`, critic obs `[1,111]`, no termination/timeout.
+- [ ] Validate controller artifact observation/action shape and pass `track_velocity` controller smoke before treating it as mature controller evidence.
+- [ ] Keep executable R011-R017 pilots, controller/G1 smoke, PPO, and large experiments blocked until backend import and controller smoke pass. R010/R019 protocol documents may be drafted because backend and asset references are now selected.

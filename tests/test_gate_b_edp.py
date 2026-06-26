@@ -97,6 +97,20 @@ def test_sample_episode_data_package_is_valid_without_mujoco(tmp_path) -> None:
         assert (root / required_path).exists()
 
 
+def test_sample_edp_manifest_includes_robot_profile_metadata(tmp_path) -> None:
+    root = write_sample_episode_data_package(tmp_path / "sample-edp")
+
+    manifest_payload = json.loads((root / MANIFEST_FILE).read_text(encoding="utf-8"))
+    manifest = EpisodeManifest.model_validate(manifest_payload)
+
+    assert manifest_payload["robot_profile_id"] == "unselected"
+    assert manifest_payload["robot_dof"] is None
+    assert manifest_payload["action_dim"] is None
+    assert manifest_payload["joint_order_sha256"] is None
+    assert manifest_payload["controller_profile_id"] == "unselected"
+    assert manifest.robot_profile_id == "unselected"
+
+
 def test_sample_edp_keeps_oracle_annotations_out_of_runtime_events(tmp_path) -> None:
     root = write_sample_episode_data_package(tmp_path / "sample-edp")
 

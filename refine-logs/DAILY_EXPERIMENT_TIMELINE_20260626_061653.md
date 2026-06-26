@@ -18,7 +18,7 @@
 ### Gate A: repo foundation + environment lock
 
 - [x] 加入 `pyproject.toml`、`uv.lock`、`src/`、`tests/`、CI、LICENSE；证据：`docs/gate_a_foundation.md`、`refine-logs/EXPERIMENT_TRACKER.md` R008。
-- [x] 锁定 Python、MuJoCo、项目内 MJLab/classic MuJoCo first backend reference、29DoF reference MJCF、controller wrapper 和完整 MJLab G1 headless simulation smoke；JAX/JAXLIB 仅作为 deferred Playground extra。公司 G1 edu 23DoF 官方 source 已锁定，但 project-local MJLab wrapper/controller smoke 仍 pending；官方 29DoF ONNX candidate 不能假装适配 23DoF。
+- [x] 锁定 Python、MuJoCo、项目内 MJLab/classic MuJoCo first backend reference、Unitree G1 MJCF、controller wrapper 和完整 MJLab G1 headless simulation smoke；JAX/JAXLIB 仅作为 deferred Playground extra。官方 ONNX controller candidate 已下载并记录 hash，但还需要 adapter 和 trained-controller smoke，不能假装已经就绪。
 - [x] 清理 public repo：`.aris/meta/`、`.aris/traces/`、raw agent prompt/response 不进 git；证据：`.gitignore`、`git ls-files .aris` 为空。
 - [x] 机器 profile 保持匿名化；hostname、用户名、绝对路径、私有 SSH/IP/ARIS path 写入 private ops；证据：`docs/a800_machine_profile.md`、`docs/rtx5090_machine_profile.md`。
 - [x] 配置 artifact retention policy；磁盘 microbenchmark 成为正式前置 gate；证据：`configs/artifact_retention.toml`、R004 M0 synthetic-only rerun summary。
@@ -32,7 +32,6 @@
 
 ### Gate C: option/SMDP + snapshot/restore
 
-- [ ] Gate C 启动前必须完成 robot-profile gate：R007b/R007c/R009a 已完成；仍需 R007d/R007e，或明确选择 29DoF reference-only path。
 - [ ] 为每个 recovery action 定义 option contract：什么时候能开始、什么时候禁止、怎么执行、持续多久、怎样算成功/失败/结束、能否打断、能重试几次、冷却多久。
 - [ ] 明确 decision epoch：failure trigger、active option termination、option timeout、重大 task event。
 - [ ] 实现 simulator/runtime snapshot 和 restore。
@@ -180,7 +179,7 @@
 
 ### 第 4 天：MuJoCo / G1 backend smoke
 
-目标：先把公司 G1 edu 23DoF 和 MJLab 29DoF reference 的边界锁住，再验证目标 profile 或 fallback backend 的最小站立、速度跟踪和安全停止，不做 failure protocol。
+目标：只验证 G1 或 fallback backend 的最小站立、速度跟踪和安全停止，不做 failure protocol。
 
 **白天人工**
 
@@ -188,12 +187,6 @@
 - [x] 定位并下载项目内 G1 controller artifact candidate：官方 Unitree RL MJLab G1 velocity ONNX，存放于 ignored `checkpoints/unitree_rl_mjlab_g1_velocity_v0/`；证据：`docs/controller_checkpoint_selection.md`、`scripts/fetch_unitree_g1_velocity_checkpoint.sh`。
 - [x] 解决完整 MJLab dependency environment，并确认当前 runtime repo 能 import 选定 MJLab G1 task；证据：`scripts/mjlab_sync_and_smoke.sh` 使用 Python 3.12.13、`third_party/mjlab/uv.lock`、`torch==2.9.0+cu128`、`mujoco-warp==3.9.0.1`。
 - [x] 完成完整 MJLab G1 headless simulation smoke：`Mjlab-Velocity-Flat-Unitree-G1` 在 `cuda:0` reset + 16 zero-action steps，actor obs `[1,99]`、critic obs `[1,111]`、action `[1,29]`，reward finite，无 termination/timeout；证据：`scripts/mjlab_g1_smoke.py`。
-- [x] 定位公司 G1 edu 23DoF 官方 source：`g1_23dof_rev_1_0.urdf/xml`；证据：`docs/g1_edu_23dof_source_lock.md`。
-- [x] 实现 23DoF source fetch/verify script：R007b；证据：`scripts/fetch_unitree_g1_23dof_description.sh`、`tests/test_fetch_unitree_g1_23dof_description.py`、`.gitignore` 中 `robot_descriptions/`。
-- [x] 为 MJLab smoke 增加 profile/dim gate：R007c；证据：`scripts/mjlab_g1_smoke.py`、`tests/test_mjlab_g1_smoke.py`。
-- [x] 为 EDP manifest 增加 robot profile metadata：R009a；证据：`src/humanoid_locomotion_runtime/schemas.py`、`src/humanoid_locomotion_runtime/edp.py`、`tests/test_gate_b_schemas.py`、`tests/test_gate_b_edp.py`。
-- [ ] 完成 23DoF raw asset compile smoke：R007d。
-- [ ] 完成 23DoF MJLab wrapper/controller selection：R007e。
 - [ ] 实现最小 `stand_ready` / `safe_stop` / `track_velocity` smoke command。
 - [ ] 明确如果 G1 不通，MJLab/mujocolab-compatible classic MuJoCo fallback 的入口和接口差异。
 
@@ -205,7 +198,7 @@
 
 **次日验收**
 
-- [ ] 如果目标是公司 G1 edu 23DoF，必须有 23DoF profile smoke；如果只跑 29DoF reference，验收中必须明确标注 reference-only。
+- [ ] G1 至少能稳定站立和短时 velocity tracking。
 - [ ] 若不通，白天只修 backend，不做 failure protocol。
 
 ### 第 5 天：Controller-native baseline skeleton

@@ -2,23 +2,17 @@
 
 **日期**: 2026-06-25
 **主机策略**: A800 单机主线。5090 只作为备用，不主动分裂实验环境。
-
-读法：这份时间线是“每天怎么推进”的执行说明，不是必须照天数硬跑的日历。真正的顺序由 gate 决定：当前 gate 没过，就停下来修当前问题，不进入下一阶段。
-
-**工作节奏**: 白天由人完成设计、实现、审查和 gate 决策；晚上交给 ARIS 做已经定义清楚的 smoke / queue / monitor / summarize。
-
-**核心规则**: 每个晚上只能跑白天已经冻结输入、验收标准和回滚条件的任务。没有白天 handoff，就不跑夜间自动实验。
-
+**工作节奏**: 白天由人完成设计、实现、审查、gate 决策；晚上交给 ARIS 做可自动化的 smoke / queue / monitor / summarize。
+**核心规则**: 每个晚上只能跑“白天已经冻结输入、验收标准和回滚条件”的任务。没有白天 handoff，不跑夜间自动实验。
 **待办规则**: 可执行事项使用 `- [ ]` / `- [x]`；完成项必须附带可复查证据路径、run id、commit id 或 tracker 记录。
-
-**审核后修正**: 下面的 28 天安排只是参考节奏。任何 gate 未通过，不进入下一阶段，也不启动 PPO、大规模实验或论文主结论。
+**审核后修正**: 下面的 28 天安排只是参考节奏；真实推进按 gate 执行。任何 gate 未通过，不进入下一阶段，也不启动 PPO、大规模实验或论文主结论。
 
 ## Gate-driven 总时间线
 
 ### Gate A: repo foundation + environment lock
 
 - [x] 加入 `pyproject.toml`、`uv.lock`、`src/`、`tests/`、CI、LICENSE；证据：`docs/gate_a_foundation.md`、`refine-logs/EXPERIMENT_TRACKER.md` R008。
-- [x] 锁定 Python、MuJoCo、项目内 MJLab/classic MuJoCo first backend reference、29DoF reference MJCF、controller wrapper 和完整 MJLab G1 headless simulation smoke；JAX/JAXLIB 仅作为 deferred Playground extra。公司 G1 edu 23DoF 官方 source 已锁定，但 project-local MJLab wrapper/controller smoke 仍 pending；官方 29DoF ONNX candidate 不能假装适配 23DoF。
+- [x] 锁定 Python、MuJoCo、MJLab/classic MuJoCo first backend reference、Unitree G1 MJCF 和 controller wrapper；JAX/JAXLIB 仅作为 deferred Playground extra，controller checkpoint 在 `configs/environment.lock.toml` 中明确为未选择阻塞字段。
 - [x] 清理 public repo：`.aris/meta/`、`.aris/traces/`、raw agent prompt/response 不进 git；证据：`.gitignore`、`git ls-files .aris` 为空。
 - [x] 机器 profile 保持匿名化；hostname、用户名、绝对路径、私有 SSH/IP/ARIS path 写入 private ops；证据：`docs/a800_machine_profile.md`、`docs/rtx5090_machine_profile.md`。
 - [x] 配置 artifact retention policy；磁盘 microbenchmark 成为正式前置 gate；证据：`configs/artifact_retention.toml`、R004 M0 synthetic-only rerun summary。
@@ -32,8 +26,7 @@
 
 ### Gate C: option/SMDP + snapshot/restore
 
-- [ ] Gate C 启动前必须完成 robot-profile gate：R007b/R007c/R009a 已完成；仍需 R007d/R007e，或明确选择 29DoF reference-only path。
-- [ ] 为每个 recovery action 定义 option contract：什么时候能开始、什么时候禁止、怎么执行、持续多久、怎样算成功/失败/结束、能否打断、能重试几次、冷却多久。
+- [ ] 为每个 recovery action 定义 option contract：initiation、mask、implementation、duration、success/failure/termination、interruptibility、retry、cooldown。
 - [ ] 明确 decision epoch：failure trigger、active option termination、option timeout、重大 task event。
 - [ ] 实现 simulator/runtime snapshot 和 restore。
 - [ ] 使用 common random numbers 固定外部随机流。
@@ -41,7 +34,7 @@
 
 ### Gate D: failure protocol calibration and freeze
 
-- [ ] 将 failure taxonomy 重构为 cause x temporal profile。也就是把“失败原因”和“失败持续方式”分开。
+- [ ] 将 failure taxonomy 重构为 cause × temporal profile。
 - [ ] 把 `user_interrupt` 从 failure family 改为 task-control event。
 - [ ] 至少构造一个 state-aliasing positive benchmark cell。
 - [ ] 冻结 seed split、severity band、negative-control equivalence interval 和 primary endpoint。
@@ -105,8 +98,6 @@
 
 ### 第 1 天：打通 A800 单机环境和 ARIS handoff
 
-目标：先确认 A800 上的仓库、环境、日志路径和 handoff 都可用。这个阶段不是跑研究实验，而是防止后面把环境问题误判成方法问题。
-
 **白天人工**
 
 - [x] 记录公共安全机器档案：`docs/a800_machine_profile.md` 和 `docs/rtx5090_machine_profile.md`。
@@ -136,8 +127,6 @@
 
 ### 第 2 天：Schema-first scaffolding 与 throughput 估算
 
-目标：先把数据格式、EDP 和最小写入能力固定下来，再估算每个 episode 会消耗多少磁盘。
-
 **白天人工**
 
 - [x] 实现核心 schema：command/status/failure/recovery/memory/episode metadata；证据：`src/humanoid_locomotion_runtime/schemas.py`、`docs/gate_b_schema_edp.md`。
@@ -157,8 +146,6 @@
 - [ ] 若单 episode artifact 太大，先调 retention policy。
 
 ### 第 3 天：Event logger 与 run manifest
-
-目标：让每次 run 有稳定编号、事件日志、manifest 和 morning summary。没有这些，后面的失败无法复盘。
 
 **白天人工**
 
@@ -180,20 +167,12 @@
 
 ### 第 4 天：MuJoCo / G1 backend smoke
 
-目标：先把公司 G1 edu 23DoF 和 MJLab 29DoF reference 的边界锁住，再验证目标 profile 或 fallback backend 的最小站立、速度跟踪和安全停止，不做 failure protocol。
-
 **白天人工**
 
 - [x] 定位并锁定 G1 model/backend reference：项目内 `third_party/mjlab`、`Mjlab-Velocity-Flat-Unitree-G1`、G1 MJCF 和 `VelocityOnPolicyRunner`；证据：`configs/environment.lock.toml`、`docs/mjlab_backend_lock.md`。
 - [x] 定位并下载项目内 G1 controller artifact candidate：官方 Unitree RL MJLab G1 velocity ONNX，存放于 ignored `checkpoints/unitree_rl_mjlab_g1_velocity_v0/`；证据：`docs/controller_checkpoint_selection.md`、`scripts/fetch_unitree_g1_velocity_checkpoint.sh`。
 - [x] 解决完整 MJLab dependency environment，并确认当前 runtime repo 能 import 选定 MJLab G1 task；证据：`scripts/mjlab_sync_and_smoke.sh` 使用 Python 3.12.13、`third_party/mjlab/uv.lock`、`torch==2.9.0+cu128`、`mujoco-warp==3.9.0.1`。
 - [x] 完成完整 MJLab G1 headless simulation smoke：`Mjlab-Velocity-Flat-Unitree-G1` 在 `cuda:0` reset + 16 zero-action steps，actor obs `[1,99]`、critic obs `[1,111]`、action `[1,29]`，reward finite，无 termination/timeout；证据：`scripts/mjlab_g1_smoke.py`。
-- [x] 定位公司 G1 edu 23DoF 官方 source：`g1_23dof_rev_1_0.urdf/xml`；证据：`docs/g1_edu_23dof_source_lock.md`。
-- [x] 实现 23DoF source fetch/verify script：R007b；证据：`scripts/fetch_unitree_g1_23dof_description.sh`、`tests/test_fetch_unitree_g1_23dof_description.py`、`.gitignore` 中 `robot_descriptions/`。
-- [x] 为 MJLab smoke 增加 profile/dim gate：R007c；证据：`scripts/mjlab_g1_smoke.py`、`tests/test_mjlab_g1_smoke.py`。
-- [x] 为 EDP manifest 增加 robot profile metadata：R009a；证据：`src/humanoid_locomotion_runtime/schemas.py`、`src/humanoid_locomotion_runtime/edp.py`、`tests/test_gate_b_schemas.py`、`tests/test_gate_b_edp.py`。
-- [ ] 完成 23DoF raw asset compile smoke：R007d。
-- [ ] 完成 23DoF MJLab wrapper/controller selection：R007e。
 - [ ] 实现最小 `stand_ready` / `safe_stop` / `track_velocity` smoke command。
 - [ ] 明确如果 G1 不通，MJLab/mujocolab-compatible classic MuJoCo fallback 的入口和接口差异。
 
@@ -205,12 +184,10 @@
 
 **次日验收**
 
-- [ ] 如果目标是公司 G1 edu 23DoF，必须有 23DoF profile smoke；如果只跑 29DoF reference，验收中必须明确标注 reference-only。
+- [ ] G1 至少能稳定站立和短时 velocity tracking。
 - [ ] 若不通，白天只修 backend，不做 failure protocol。
 
 ### 第 5 天：Controller-native baseline skeleton
-
-目标：先跑不带 recovery 学习的 controller-native baseline，确认无故障场景本身足够稳定。
 
 **白天人工**
 
@@ -230,11 +207,9 @@
 
 ### 第 6 天：Failure protocol 预注册草案
 
-目标：在训练任何 memory policy 之前，先写清楚会制造哪些失败、怎么触发、怎么判定成功失败，避免事后挑场景。
-
 **白天人工**
 
-- [ ] 将 failure taxonomy 写成 cause x temporal profile，而不是混合分类：
+- [ ] 将 failure taxonomy 写成 cause × temporal profile，而不是混合分类：
   - cause：path blockage、localization degradation、tracking degradation、balance disturbance、target/task event。
   - temporal profile：transient、persistent、recurrent、cumulative、progressive、impulse、change/loss/interruption。
 - [ ] 把 `user_interrupt` 明确写成 task-control event，不作为 failure family。
@@ -254,12 +229,10 @@
 
 ### 第 7 天：Protocol freeze gate
 
-目标：冻结 failure cells、seed split 和 severity 选择规则。没冻结前，不启动 baseline ladder。
-
 **白天人工**
 
 - [ ] 审核 Day 6 feasibility。
-- [ ] 冻结 cause x temporal-profile cells、seed split、severity 选择规则。
+- [ ] 冻结 cause × temporal-profile cells、seed split、severity 选择规则。
 - [ ] 写入 protocol doc/config；标明 negative-control family。
 - [ ] 更新 tracker R010-R017 状态。
 
@@ -287,7 +260,7 @@
 **晚上 ARIS**
 
 - [ ] R015: all-family severity calibration。
-- [ ] 生成每类 severity x success rate 表。
+- [ ] 生成每类 severity × success rate 表。
 
 **次日验收**
 
@@ -422,7 +395,7 @@
 **晚上 ARIS**
 
 - [ ] R018: snapshot/restore 单元测试和 deterministic branch smoke。
-- [ ] R030-R033 小规模 branch 或 paired matched-seed diagnostic run。
+- [ ] R030-R033 小规模 branch 或 paired matched diagnostic run。
 
 **次日验收**
 

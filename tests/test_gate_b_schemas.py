@@ -7,6 +7,7 @@ from pydantic import ValidationError
 
 from humanoid_locomotion_runtime.schemas import (
     BodyMemoryState,
+    EpisodeManifest,
     FailureEvent,
     LocomotionCommand,
     LocomotionStatus,
@@ -149,3 +150,48 @@ def test_oracle_annotation_accepts_privileged_evaluation_fields() -> None:
 
     assert annotation.oracle_action == "local_replan"
     assert annotation.privileged_metrics["branch_oracle_value"] == 1.0
+
+
+def test_episode_manifest_records_robot_profile_metadata() -> None:
+    manifest = EpisodeManifest(
+        episode_id="episode-001",
+        robot_profile_id="company_g1_edu_23dof",
+        robot_dof=23,
+        action_dim=23,
+        joint_order_sha256="a" * 64,
+        controller_profile_id="company_g1_velocity_controller_v0",
+    )
+
+    round_tripped = EpisodeManifest.model_validate_json(manifest.model_dump_json())
+
+    assert round_tripped.robot_profile_id == "company_g1_edu_23dof"
+    assert round_tripped.robot_dof == 23
+    assert round_tripped.action_dim == 23
+    assert round_tripped.joint_order_sha256 == "a" * 64
+    assert round_tripped.controller_profile_id == "company_g1_velocity_controller_v0"
+
+
+def test_episode_manifest_keeps_legacy_defaults_for_robot_profile_metadata() -> None:
+    manifest = EpisodeManifest.model_validate({"episode_id": "episode-legacy"})
+
+    assert manifest.robot_profile_id == "unselected"
+    assert manifest.robot_dof is None
+    assert manifest.action_dim is None
+    assert manifest.joint_order_sha256 is None
+    assert manifest.controller_profile_id == "unselected"
+
+
+def test_episode_manifest_rejects_invalid_joint_order_sha256() -> None:
+    with pytest.raises(ValidationError, match="joint_order_sha256"):
+        EpisodeManifest(
+            episode_id="episode-001",
+            joint_order_sha256="not-a-sha256",
+        )
+
+
+def test_episode_manifest_metadata_rejects_privileged_fields() -> None:
+    with pytest.raises(ValidationError, match="ground_truth_target_pose"):
+        EpisodeManifest(
+            episode_id="episode-001",
+            metadata={"profile_note": {"ground_truth_target_pose": [0.0, 0.0, 0.0]}},
+        )

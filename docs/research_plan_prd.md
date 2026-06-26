@@ -7,7 +7,8 @@
 ## 0. 项目记录
 
 - **项目名称**：Humanoid Locomotion Runtime。可以理解为“让人形机器人按语言目标行走、监控自己、出问题时恢复”的运行系统。
-- **初始平台**：MuJoCo + Unitree G1 humanoid model。也就是先在 MuJoCo 仿真里用 Unitree G1 人形机器人模型做证据。
+- **初始平台**：MuJoCo + 公司 Unitree G1 edu 23DoF profile。官方 `g1_23dof_rev_1_0.urdf/xml` source 已记录在 `docs/g1_edu_23dof_source_lock.md`，但还没有完成 project-local MJLab adapter、controller checkpoint 和 smoke。
+- **reference 平台**：当前已跑通的是 MJLab 29DoF G1 reference smoke。它能证明 backend health，不能直接作为公司 23DoF edu G1 evidence。
 - **fallback 平台**：如果 G1 controller 早期 smoke gate 过不了，优先切到 MJLab/mujocolab-compatible classic MuJoCo humanoid locomotion backend。意思是先找一个更容易跑通、但仍然是 classic MuJoCo 的人形行走后端，而不是默认切到 MuJoCo Playground。
 - **后续兼容目标**：`bxi_elf3` / `bxi_robotics` 和公司自研 humanoid body。它们是 V1/V2 的扩展验证目标，不作为 V0 论文主证据。
 - **主目标**：做一个可研究、可调试、可复现实验的人形机器人行走运行时。它把语言目标和受控的目标识别结果，转成可监控、可记录、可恢复的行走技能。
@@ -48,7 +49,7 @@
 
 ### 1.2 方案
 
-我们围绕成熟 Unitree G1 locomotion controller，在 MuJoCo 里构建 language-conditioned humanoid locomotion runtime。V0 包含以下模块：
+我们围绕成熟 Unitree G1 locomotion controller，在 MuJoCo 里构建 language-conditioned humanoid locomotion runtime。V0 的目标本体是公司 G1 edu 23DoF；在 23DoF controller smoke 前，29DoF MJLab G1 只能作为 reference backend。V0 包含以下模块：
 
 - controlled detector-like grounding：用受控检测结果模拟语言目标落地；
 - temporary object memory：短期记录目标、证据和安全停靠位置；
@@ -85,7 +86,7 @@ V0 通过需要同时满足：
 
 > 当成熟 humanoid controller 已经能自稳行走时，runtime 怎样在保留 typed safety、logging、replay 和 benchmark 可比性的同时，学习任务层恢复决策，并诊断 body/event memory 到底什么时候有用？
 
-V0 是单本体证据项目。它先用 Unitree G1；如果 G1 integration 没过 smoke gate，就切到 MJLab/mujocolab-compatible classic MuJoCo backend。V0 不声称 learned selector 可以泛化到其他 humanoid body。
+V0 是单本体证据项目。它先用公司 Unitree G1 edu 23DoF；如果 23DoF integration 没过 smoke gate，就切到明确标注的 MJLab/mujocolab-compatible classic MuJoCo reference backend。V0 不声称 learned selector 可以泛化到其他 humanoid body，也不把 29DoF reference 结果说成 23DoF target evidence。
 
 人形机器人和轮式机器人不同，任务进展和身体动态强耦合。runtime 需要看 balance margin、contact state、slip、fall risk、velocity/orientation tracking error、controller confidence、recovery latency 等信号，然后判断机器人应该继续、减速、停下、恢复平衡、重新 grounding、重新定位、replan，还是 abort。
 
@@ -723,8 +724,8 @@ Opus 4.8 rerun 后，当前最稳论文主线调整为：
 
 这些问题留给实现期验证：
 
-1. [ ] 哪个 Unitree G1 controller backend 能通过 controller smoke gate？
-2. [ ] G1 gate 失败时，具体使用哪个 MJLab/mujocolab-compatible humanoid environment 和 controller wrapper？
+1. [ ] 官方 Unitree RL MJLab G1 velocity ONNX candidate 能否通过本仓库 adapter 的 controller smoke gate？当前已知 ONNX input `[1,98]`、output `[1,29]`，MJLab actor obs `[1,99]`，需要 adapter。
+2. [x] V0 首选 MJLab/mujocolab-compatible backend reference：项目内 `third_party/mjlab` 的 `Mjlab-Velocity-Flat-Unitree-G1`，wrapper 为 `VelocityOnPolicyRunner`；证据见 `docs/mjlab_backend_lock.md`。
 3. [ ] NavigatorV0 使用哪个 MPC / optimization library？
 4. [ ] 第一版 `balance_margin` 如何数值化？
 5. [ ] 如果 backend 不暴露 confidence，`controller_confidence` 如何估计？
@@ -740,6 +741,9 @@ Opus 4.8 rerun 后，当前最稳论文主线调整为：
 ## 13. 已锁定决策
 
 - MuJoCo + Unitree G1 first。
+- V0 首选 MJLab/mujocolab-compatible backend reference 锁定为项目内 `third_party/mjlab` submodule 的 `Mjlab-Velocity-Flat-Unitree-G1`；G1 MJCF、task config 和 wrapper hashes 见 `configs/environment.lock.toml` 与 `docs/mjlab_backend_lock.md`。
+- 完整 MJLab dependency environment 和 G1 headless simulation smoke 已通过：`scripts/mjlab_sync_and_smoke.sh` 使用 Python 3.12.13、`third_party/mjlab/uv.lock`、A800 `cuda:0`，完成 `Mjlab-Velocity-Flat-Unitree-G1` reset + 16 zero-action steps；actor obs `[1,99]`、critic obs `[1,111]`、action `[1,29]`。
+- 当前 controller artifact candidate 为官方 Unitree RL MJLab G1 velocity ONNX，存放于 ignored `checkpoints/unitree_rl_mjlab_g1_velocity_v0/`，来源与 hash 见 `docs/controller_checkpoint_selection.md`；adapter smoke 通过前不能作为成熟 controller evidence。
 - G1 smoke gate 失败时，用 MJLab/mujocolab-compatible classic MuJoCo backend 作为 V0 evidence backend；MuJoCo Playground 仅保留为 deferred optional external reference。
 - `bxi_elf3` 和公司本体是后续兼容目标，不进入 V0 证据主线。
 - 使用成熟 G1 controller backend，但不能让它成为 single point of failure。

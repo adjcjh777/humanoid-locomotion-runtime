@@ -30,6 +30,7 @@ runs/
 reports/
 artifacts/
 logs/
+robot_descriptions/
 *.bag
 *.db3
 *.mcap

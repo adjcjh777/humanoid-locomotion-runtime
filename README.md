@@ -11,6 +11,10 @@
 - [研究计划 / PRD](docs/research_plan_prd.md)
 - [Gate A 工程地基记录](docs/gate_a_foundation.md)
 - [Gate B schema / EDP 记录](docs/gate_b_schema_edp.md)
+- [MJLab backend lock 记录](docs/mjlab_backend_lock.md)
+- [Controller checkpoint 选择记录](docs/controller_checkpoint_selection.md)
+- [G1 edu 23DoF source lock](docs/g1_edu_23dof_source_lock.md)
+- [G1 edu 23DoF 影响审计](docs/g1_edu_23dof_impact_audit.md)
 - [实验计划](refine-logs/EXPERIMENT_PLAN.md)
 - [每日实验时间线](refine-logs/DAILY_EXPERIMENT_TIMELINE.md)
 - [实验跟踪表](refine-logs/EXPERIMENT_TRACKER.md)
@@ -24,6 +28,14 @@
 - 使用 temporary object memory：先做短期目标记忆，但接口要兼容未来 persistent 3D semantic memory。
 - 使用 MPC / optimization local planner + SafetySupervisor：局部规划和安全兜底必须在 runtime 本地闭环里完成。
 - 论文主线是诊断性研究：优先用 decision-point snapshot branching 诊断 memory 在哪些 failure profile 中改变决策并改善恢复；snapshot 未实现前只能报告 paired matched-seed diagnostic。
+
+复现初始化：
+
+- [ ] 拉取代码后运行 `git submodule update --init --recursive`，初始化项目内 `third_party/mjlab`。
+- [ ] 如需本地 controller artifact，运行 `scripts/fetch_unitree_g1_velocity_checkpoint.sh`；脚本会把官方 Unitree RL MJLab G1 velocity ONNX candidate 放到 ignored `checkpoints/` 路径并校验 SHA256。
+- [ ] 运行 `scripts/mjlab_sync_and_smoke.sh`，用主项目 Python 3.12.13 同步 `third_party/mjlab/uv.lock` 并执行 headless G1 simulation smoke。
+- [ ] 公司现有 G1 是 edu 23DoF；官方 `g1_23dof_rev_1_0.urdf/xml` source 已记录在 `docs/g1_edu_23dof_source_lock.md`，但尚未接入 project-local MJLab runtime。
+- [ ] 在 controller smoke 通过前，不把该 ONNX candidate 当成成熟 controller evidence；当前 ONNX input `[1,98]` 与 MJLab actor obs `[1,99]` 不直接相同，且 ONNX output `[1,29]` 属于 29DoF reference path，不适配公司 23DoF edu G1。
 
 ## 预期项目结构
 

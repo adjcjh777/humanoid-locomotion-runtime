@@ -1,6 +1,6 @@
 schema_version = 1
-status = "gate-a-foundation-lock"
-locked_date = "2026-06-25"
+status = "gate-a-foundation-lock-plus-project-local-mjlab-g1-smoke"
+locked_date = "2026-06-26"
 
 [python]
 version = "3.12.13"
@@ -28,10 +28,37 @@ status = "deferred-optional-extra"
 note = "Primary MJLab/classic MuJoCo smoke uses `uv sync --extra sim`; install `--extra sim-playground` only if the deferred MuJoCo Playground path is explicitly selected."
 
 [mjlab_backend]
-source = "external MJLab/mujocolab or xiaoqibot MJLab stack"
-status = "preferred-v0-sim-backend-unselected"
+source = "project-local git submodule"
+status = "selected-backend-reference"
+local_path = "third_party/mjlab"
+package = "mjlab"
+package_version = "1.4.0"
+origin = "https://github.com/mujocolab/mjlab.git"
+upstream_project = "https://github.com/mujocolab/mjlab"
+ref = "main"
+commit = "efdcadc8b281553fd3e1be2a9a88db9553356e8a"
+commit_date = "2026-06-18"
+commit_describe = "v1.1.1-259-gefdcadc8"
+selected_task_id = "Mjlab-Velocity-Flat-Unitree-G1"
+fallback_task_id = "Mjlab-Velocity-Rough-Unitree-G1"
+selected_scope = "project-local submodule Unitree G1 velocity task, asset, and runner paths"
+worktree_note = "Open-source reproduction must initialize `third_party/mjlab` through git submodules; no sibling checkout is required."
 required_before = "controller smoke gate"
-note = "V0 should first use the user's MJLab/mujocolab-compatible MuJoCo stack. Lock the exact local/upstream commit, controller wrapper, and robot asset hash before controller smoke evidence."
+evidence = ["docs/mjlab_backend_lock.md"]
+note = "This selects the MJLab/mujocolab-compatible G1 backend reference inside the current repository. Full controller smoke still requires resolving the MJLab runtime dependency environment and validating the selected controller artifact through the runtime adapter."
+
+[mjlab_runtime_dependencies]
+status = "verified-full-mjlab-g1-headless-smoke"
+source_lockfile = "third_party/mjlab/uv.lock"
+python_version = "3.12.13"
+python_source = "main project `.venv/bin/python3`; pass explicitly through `uv --project third_party/mjlab ... --python .venv/bin/python3`"
+sync_command = "scripts/mjlab_sync_and_smoke.sh"
+smoke_command = "uv --project third_party/mjlab run --extra cu128 --no-dev --python .venv/bin/python3 python scripts/mjlab_g1_smoke.py --num-envs 1 --steps 16 --seed 1234"
+required_packages = ["tyro>=1.0.1", "torch>=2.7.0", "torchrunx>=0.3.4", "mujoco-warp>=3.9.0.1,~=3.9.0", "rsl-rl-lib==5.4.0"]
+verified_packages = { torch = "2.9.0+cu128", mujoco = "3.8.1", mujoco_warp = "3.9.0.1", warp = "1.14.0", tyro = "1.0.1", rsl_rl = "5.4.0" }
+verified_device = "cuda:0 on NVIDIA A800-SXM4-80GB; torch reports 8 CUDA devices"
+smoke_result = "PASS: Mjlab-Velocity-Flat-Unitree-G1 ManagerBasedRlEnv reset + 16 zero-action steps; action_shape=[1,29], actor_obs=[1,99], critic_obs=[1,111], reward finite, terminated_count=0, timeout_count=0"
+note = "The root `sim` extra intentionally stays lightweight for raw MuJoCo checks. Full MJLab simulation must use the project-local MJLab lock through `scripts/mjlab_sync_and_smoke.sh` or an equivalent command with explicit Python 3.12.13; do not run bare `uv --project third_party/mjlab run` because uv may choose a different interpreter."
 
 [mujoco_playground]
 source = "https://github.com/google-deepmind/mujoco_playground.git"
@@ -39,17 +66,79 @@ ref = "refs/tags/v0.2.0"
 commit = "124a73fa3303f75a62f8fe04d329b829ed0ebdfb"
 status = "deferred-optional-reference-not-primary-v0-requirement"
 
+[robot_profiles.company_g1_edu_23dof]
+status = "official-source-identified-integration-pending"
+role = "primary-deployment-target"
+source_repo = "https://github.com/unitreerobotics/unitree_rl_gym"
+source_commit = "276801e46c5d433564f24658bac64f254b7d2d4b"
+source_directory = "resources/robots/g1_description"
+urdf_path = "resources/robots/g1_description/g1_23dof_rev_1_0.urdf"
+mjcf_path = "resources/robots/g1_description/g1_23dof_rev_1_0.xml"
+urdf_sha256 = "cffe6149e0b29abed10b8c6a7e318003676ae4234224044e4af30946599d1ba9"
+mjcf_sha256 = "8ca62fcccdca91a431ca04f1a42f9c2fda241fdd5e13411168dc82de00f978de"
+dof_breakdown = "legs=6*2, waist=1, arms=5*2, hands=0"
+controlled_dof = 23
+base_joint = "floating_base_joint"
+joint_order = ["left_hip_pitch_joint", "left_hip_roll_joint", "left_hip_yaw_joint", "left_knee_joint", "left_ankle_pitch_joint", "left_ankle_roll_joint", "right_hip_pitch_joint", "right_hip_roll_joint", "right_hip_yaw_joint", "right_knee_joint", "right_ankle_pitch_joint", "right_ankle_roll_joint", "waist_yaw_joint", "left_shoulder_pitch_joint", "left_shoulder_roll_joint", "left_shoulder_yaw_joint", "left_elbow_joint", "left_wrist_roll_joint", "right_shoulder_pitch_joint", "right_shoulder_roll_joint", "right_shoulder_yaw_joint", "right_elbow_joint", "right_wrist_roll_joint"]
+evidence = ["docs/g1_edu_23dof_source_lock.md"]
+required_before = "company-G1 controller smoke, Gate C snapshot/restore, controller-native baseline"
+note = "Official Unitree 23DoF rev 1.0 source is identified for later hardware work, but it is not yet integrated into the project-local MJLab runtime and has no selected 23DoF controller checkpoint."
+
+[robot_profiles.mjlab_g1_29dof_reference]
+status = "verified-reference-smoke-not-company-target"
+role = "backend-health-reference"
+source_repo = "https://github.com/mujocolab/mjlab.git"
+source_commit = "efdcadc8b281553fd3e1be2a9a88db9553356e8a"
+mjcf_path = "third_party/mjlab/src/mjlab/asset_zoo/robots/unitree_g1/xmls/g1.xml"
+mjcf_model = "g1_29dof_rev_1_0"
+controlled_dof = 29
+smoke_result = "PASS: action_shape=[1,29], actor_obs=[1,99], critic_obs=[1,111]"
+evidence = ["docs/mjlab_backend_lock.md"]
+note = "This profile remains useful as a reproducible MJLab reference smoke, but it must not be reported as company G1 edu 23DoF evidence."
+
 [controller_checkpoint]
-status = "unselected"
-sha256 = ""
+status = "candidate-downloaded-pending-controller-smoke"
+format = "onnx"
+local_path = "checkpoints/unitree_rl_mjlab_g1_velocity_v0/policy.onnx"
+local_params_path = "checkpoints/unitree_rl_mjlab_g1_velocity_v0/deploy.yaml"
+git_policy = "local artifact under ignored checkpoints/; never commit model weights"
+source_repo = "https://github.com/unitreerobotics/unitree_rl_mjlab"
+source_commit = "1425b15f73bd4095f0df53709d7c389c3eb9e790"
+source_path = "deploy/robots/g1/config/policy/velocity/v0/exported/policy.onnx"
+source_params_path = "deploy/robots/g1/config/policy/velocity/v0/params/deploy.yaml"
+sha256 = "2a66ca6336eadb3c0b34b557763f3e06d01ff8fcf6260dd4cedbd69d6093fc28"
+params_sha256 = "01e1cf3f6ec44e9942494fbb4a9904df07201e14e5551a277f38d7c7d1bda28d"
 required_before = "controller smoke gate"
-note = "No controller checkpoint is selected or committed at Gate A; this field must be filled before learned or matched evaluation runs."
+evidence = ["docs/controller_checkpoint_selection.md"]
+note = "A project-local official Unitree RL MJLab G1 velocity ONNX candidate is present, but it is not mature controller evidence until the runtime adapter verifies observation/action shape and passes controller smoke. Zero/random-agent environment compile smoke may still be run separately if recorded as non-controller evidence."
+shape_check = "ONNX candidate input obs=[1,98], output actions=[1,29]. MJLab G1 actor smoke observation is [1,99], so a controller adapter is still required before trained-policy smoke."
+robot_profile_note = "This candidate is a 29DoF reference candidate and is not compatible with `company_g1_edu_23dof` without a separately validated adapter or a 23DoF checkpoint."
+
+[controller_wrapper]
+status = "selected-wrapper-no-checkpoint"
+task_registration = "third_party/mjlab/src/mjlab/tasks/velocity/config/g1/__init__.py"
+env_config = "third_party/mjlab/src/mjlab/tasks/velocity/config/g1/env_cfgs.py"
+rl_config = "third_party/mjlab/src/mjlab/tasks/velocity/config/g1/rl_cfg.py"
+runner = "third_party/mjlab/src/mjlab/tasks/velocity/rl/runner.py"
+task_registration_sha256 = "f4482cf1f1bb27989b0de3f1f45c0c1568185a632c9eb36cc18595cf95ac79cf"
+env_config_sha256 = "5d891ef40987118d1bb2d4bb8791922387d8fdae22752f1e1420dc31f4ddeabf"
+rl_config_sha256 = "dcf4a23e031064085e081798c4d3b5bd1cda6ec58ad0081907f2e72c9142a131"
+runner_sha256 = "fd5ab5b61c60516213724b65954e7eabc1a3ca2d4101019d0c53e33fac1285c4"
+note = "Wrapper selection means the runtime adapter should target MJLab's Unitree G1 velocity task and VelocityOnPolicyRunner for native MJLab smoke. The official Unitree ONNX candidate may require a deploy-style adapter before it can count as mature controller evidence."
 
 [robot_mjcf]
-status = "unselected"
-sha256 = ""
+status = "selected"
+path = "third_party/mjlab/src/mjlab/asset_zoo/robots/unitree_g1/xmls/g1.xml"
+sha256 = "febdcbeffbbf84051556ae41a5ac1b43fb479a5d76bdb3f54824dbc2721c20aa"
+asset_tree = "third_party/mjlab/src/mjlab/asset_zoo/robots/unitree_g1"
+asset_tree_manifest_sha256 = "067725caac9efe43e91d51c97e28bc75a04065d5be666fceeff8334831a107e4"
+mesh_asset_manifest_sha256 = "203eca02f0d048b9c6d9c4a3dddc2fb4c533e270dc107645c0caced76247f10b"
+constants_path = "third_party/mjlab/src/mjlab/asset_zoo/robots/unitree_g1/g1_constants.py"
+constants_sha256 = "856492f9cd74b32e76fedafc583e284d14542eacd20261adcebe5c5c2345a258"
 required_before = "controller smoke gate"
-note = "No robot XML/MJCF asset is selected or committed at Gate A; this field must be filled before controller backend evidence."
+compile_evidence = "Raw G1 MJCF compiled with `uv run --extra sim` and MuJoCo 3.10.0: nq=36, nv=35, nu=0. MJLab adds actuators through `g1_constants.py` / `get_g1_robot_cfg()`."
+full_mjlab_smoke_evidence = "Full MJLab G1 headless smoke passed via `scripts/mjlab_sync_and_smoke.sh`: ManagerBasedRlEnv on cuda:0, 16 zero-action steps, action_shape=[1,29], actor_obs=[1,99], critic_obs=[1,111]."
+note = "Unitree G1 is the V0 primary robot asset. Keep fallback humanoid assets out of the V0 evidence path unless this G1 controller smoke gate fails."
 
 [runtime_reproducibility]
 jax_default_matmul_precision = "highest-if-sim-playground-is-selected"
