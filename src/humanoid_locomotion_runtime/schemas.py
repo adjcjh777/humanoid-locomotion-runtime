@@ -206,6 +206,15 @@ class RecoveryActionRecord(StrictSchema):
     option_duration_s: float | None = Field(default=None, ge=0)
     extra_info: JsonDict = Field(default_factory=dict)
 
+    @field_validator("observation_hash", "memory_hash")
+    @classmethod
+    def _hash_fields_must_be_sha256(cls, value: str | None) -> str | None:
+        if value is not None and (
+            len(value) != 64 or any(character not in "0123456789abcdef" for character in value)
+        ):
+            raise ValueError("snapshot hash fields must be lowercase 64-character SHA256 digests")
+        return value
+
     @field_validator("extra_info")
     @classmethod
     def _extra_info_has_no_privileged_keys(cls, value: JsonDict) -> JsonDict:

@@ -1,0 +1,196 @@
+schema_version = 1
+protocol_id = "failure_protocol_v0"
+status = "frozen_pre_pilot_protocol"
+frozen_date = "2026-06-26"
+scope = "Gate D protocol/config only; no controller pilot, PPO, or paper claim is authorized."
+primary_endpoint = "recovery_success"
+paired_diagnostic_language = "paired matched-seed diagnostic until deterministic snapshot branching passes"
+
+[runtime_signal_boundary]
+legal_runtime_sources = [
+  "LocomotionCommand",
+  "LocomotionStatus",
+  "MemoryTarget",
+  "BodyMemoryState",
+  "FailureEvent",
+  "RuntimeManager summaries",
+  "SafetySupervisor summaries",
+]
+forbidden_privileged_signals = [
+  "mujoco_object_id",
+  "mujoco_object_ids",
+  "ground_truth_target_pose",
+  "simulator_semantic_label",
+  "simulator_semantic_labels",
+  "true_failure_cause",
+  "true_temporal_profile",
+  "true_failure_family",
+  "oracle_action",
+  "oracle_action_label",
+  "privileged_object_id",
+  "privileged_target_pose",
+]
+
+[failure_causes.path_blockage]
+family = "navigation_path"
+description = "The local traversable route is temporarily or repeatedly obstructed."
+legal_runtime_signals = ["runtime_context.planner_blocked", "FailureEvent.severity", "MemoryTarget.estimated_pose"]
+severity_knobs = ["blockage_duration_s", "blocked_corridor_width_m", "replan_budget"]
+success_criteria = ["planner finds a legal local route", "task progress resumes without safety override"]
+failure_criteria = ["no legal route before timeout", "safe_stop or abort_task is required"]
+
+[failure_causes.target_loss_or_ambiguity]
+family = "grounding_target"
+description = "The requested target is stale, low-confidence, or ambiguous in current grounding output."
+legal_runtime_signals = ["MemoryTarget.confidence", "MemoryTarget.last_seen_s", "runtime_context.grounding_ambiguity_score"]
+severity_knobs = ["target_confidence_drop", "target_staleness_s", "ambiguity_count"]
+success_criteria = ["target confidence becomes usable", "task command can proceed with a legal target estimate"]
+failure_criteria = ["target remains stale or ambiguous before timeout", "abort_task is selected after retry budget"]
+
+[failure_causes.localization_drift]
+family = "state_estimation"
+description = "Localization quality degrades enough that task progress should pause or refresh."
+legal_runtime_signals = ["LocomotionStatus.localization_quality", "BodyMemoryState.localization_quality", "runtime_context.localization_drift_hint"]
+severity_knobs = ["quality_drop", "drift_duration_s", "refresh_budget"]
+success_criteria = ["localization quality returns above threshold", "planner state remains consistent"]
+failure_criteria = ["quality remains below threshold", "safe_stop or abort_task is required"]
+
+[failure_causes.velocity_tracking_degradation]
+family = "controller_tracking"
+description = "Velocity tracking error accumulates or spikes while the low-level controller remains frozen."
+legal_runtime_signals = ["LocomotionStatus.tracking_error", "BodyMemoryState.tracking_error_trend", "LocomotionStatus.linear_velocity"]
+severity_knobs = ["tracking_error_scale", "trend_window_s", "commanded_speed_scale"]
+success_criteria = ["tracking error trend decreases", "base motion remains stable"]
+failure_criteria = ["tracking error remains saturated", "balance risk forces safe_stop"]
+
+[failure_causes.balance_risk_safety_stop]
+family = "body_stability"
+description = "Balance risk or contact pattern makes recovery or safe stop necessary."
+legal_runtime_signals = ["LocomotionStatus.stability_margin", "BodyMemoryState.balance_risk", "BodyMemoryState.recent_contact_events"]
+severity_knobs = ["balance_risk_scale", "contact_event_rate", "stop_latency_budget_s"]
+success_criteria = ["balance risk falls below threshold", "safe stop completes when requested"]
+failure_criteria = ["fall or unstable episode", "SafetySupervisor override escalates"]
+
+[temporal_profiles.transient]
+description = "Single short disturbance that should disappear without requiring long memory."
+minimum_duration_s = 0.1
+maximum_duration_s = 2.0
+
+[temporal_profiles.persistent]
+description = "Disturbance remains active until the option or task changes state."
+minimum_duration_s = 2.0
+maximum_duration_s = 20.0
+
+[temporal_profiles.recurrent]
+description = "Disturbance clears and returns multiple times in the same episode."
+minimum_recurrences = 2
+
+[temporal_profiles.cumulative_degradation]
+description = "Risk is only clear from trend/history, not a single current frame."
+minimum_trend_window_s = 4.0
+
+[task_control_events.user_interrupt]
+is_failure_family = false
+description = "Operator/task-control event; it may terminate a task but is not counted as a failure cause."
+legal_runtime_signals = ["RuntimeManager summaries", "LocomotionCommand.metadata"]
+
+[[failure_cells]]
+cell_id = "path_blockage_transient_negative_control"
+cause = "path_blockage"
+temporal_profile = "transient"
+role = "negative_control"
+expected_memory_effect = "small_or_none"
+legal_runtime_signals = ["runtime_context.planner_blocked", "FailureEvent.severity", "MemoryTarget.estimated_pose"]
+forbidden_privileged_signals = ["mujoco_object_id", "ground_truth_target_pose", "oracle_action"]
+severity_knobs = ["blockage_duration_s", "blocked_corridor_width_m"]
+success_criteria = ["local route resumes without memory-dependent decision"]
+failure_criteria = ["transient blockage still causes timeout or unsafe stop"]
+
+[[failure_cells]]
+cell_id = "path_blockage_recurrent_memory_check"
+cause = "path_blockage"
+temporal_profile = "recurrent"
+role = "memory_positive_candidate"
+expected_memory_effect = "body/event memory may reduce repeated ineffective continue decisions"
+legal_runtime_signals = ["FailureEvent.runtime_failure_kind", "FailureEvent.temporal_profile_hint", "runtime_context.planner_blocked"]
+forbidden_privileged_signals = ["mujoco_object_id", "true_failure_cause", "oracle_action"]
+severity_knobs = ["recurrence_count", "clear_interval_s", "replan_budget"]
+success_criteria = ["local_replan or slow_down prevents repeated stall"]
+failure_criteria = ["same stall recurs until abort_task or safety stop"]
+
+[[failure_cells]]
+cell_id = "target_ambiguity_persistent_refresh"
+cause = "target_loss_or_ambiguity"
+temporal_profile = "persistent"
+role = "memory_positive_candidate"
+expected_memory_effect = "recent target memory should distinguish refresh_target_grounding from abort_task"
+legal_runtime_signals = ["MemoryTarget.confidence", "MemoryTarget.last_seen_s", "runtime_context.grounding_ambiguity_score"]
+forbidden_privileged_signals = ["simulator_semantic_label", "ground_truth_target_pose", "oracle_action"]
+severity_knobs = ["target_confidence_drop", "target_staleness_s", "ambiguity_count"]
+success_criteria = ["refresh_target_grounding restores a usable target estimate"]
+failure_criteria = ["target remains ambiguous after retry budget"]
+
+[[failure_cells]]
+cell_id = "localization_drift_persistent_relocalize"
+cause = "localization_drift"
+temporal_profile = "persistent"
+role = "memory_positive_candidate"
+expected_memory_effect = "trend/history should favor relocalize over continue"
+legal_runtime_signals = ["LocomotionStatus.localization_quality", "BodyMemoryState.localization_quality", "runtime_context.localization_drift_hint"]
+forbidden_privileged_signals = ["true_temporal_profile", "ground_truth_target_pose", "oracle_action"]
+severity_knobs = ["quality_drop", "drift_duration_s"]
+success_criteria = ["relocalize recovers quality before task failure"]
+failure_criteria = ["quality remains below threshold until timeout"]
+
+[[failure_cells]]
+cell_id = "tracking_cumulative_degradation_slow_down"
+cause = "velocity_tracking_degradation"
+temporal_profile = "cumulative_degradation"
+role = "memory_positive_candidate"
+expected_memory_effect = "body trend should favor slow_down before balance risk saturates"
+legal_runtime_signals = ["LocomotionStatus.tracking_error", "BodyMemoryState.tracking_error_trend", "LocomotionStatus.linear_velocity"]
+forbidden_privileged_signals = ["true_failure_family", "mujoco_object_id", "oracle_action"]
+severity_knobs = ["tracking_error_scale", "trend_window_s", "commanded_speed_scale"]
+success_criteria = ["slow_down reduces tracking trend and avoids safe_stop"]
+failure_criteria = ["tracking error saturates or balance risk escalates"]
+
+[[failure_cells]]
+cell_id = "balance_impulse_safe_stop_boundary"
+cause = "balance_risk_safety_stop"
+temporal_profile = "transient"
+role = "safety_boundary"
+expected_memory_effect = "memory is secondary; SafetySupervisor override remains authoritative"
+legal_runtime_signals = ["LocomotionStatus.stability_margin", "BodyMemoryState.balance_risk", "BodyMemoryState.recent_contact_events"]
+forbidden_privileged_signals = ["mujoco_object_id", "ground_truth_target_pose", "oracle_action"]
+severity_knobs = ["balance_risk_scale", "contact_event_rate", "stop_latency_budget_s"]
+success_criteria = ["safe_stop completes when SafetySupervisor requests it"]
+failure_criteria = ["runtime action bypasses SafetySupervisor or fails to stop"]
+
+[[state_aliasing_cells]]
+cell_id = "tracking_vs_localization_same_current_observation_v0"
+role = "memory_positive"
+paired_conditions = ["tracking_history_branch", "localization_history_branch"]
+current_observation_similarity = "Both branches enter the decision epoch with matched tracking_error/localization_quality bins, similar velocity, and no privileged labels."
+history_difference = "tracking_history_branch has rising tracking_error_trend over the memory window; localization_history_branch has repeated localization_quality drops and relocalization hints."
+expected_action_difference = "tracking_history_branch expects slow_down; localization_history_branch expects relocalize."
+legal_input_list = [
+  "LocomotionStatus.tracking_error",
+  "LocomotionStatus.localization_quality",
+  "LocomotionStatus.linear_velocity",
+  "BodyMemoryState.tracking_error_trend",
+  "BodyMemoryState.localization_quality",
+  "FailureEvent.temporal_profile_hint",
+  "runtime_context.localization_drift_hint",
+]
+forbidden_privileged_signals = ["true_failure_cause", "true_temporal_profile", "oracle_action", "mujoco_object_id"]
+diagnostic_claim_boundary = "Supports memory-value paired diagnostic design only; no counterfactual or ATE wording before R018 deterministic restore passes."
+
+  [[state_aliasing_cells.conditions]]
+  condition_id = "tracking_history_branch"
+  history_summary = "Legal body memory shows cumulative tracking degradation while localization was stable earlier in the episode."
+  expected_action = "slow_down"
+
+  [[state_aliasing_cells.conditions]]
+  condition_id = "localization_history_branch"
+  history_summary = "Legal event/body memory shows repeated localization drops while current tracking error matches the paired branch."
+  expected_action = "relocalize"

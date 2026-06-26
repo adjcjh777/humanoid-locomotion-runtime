@@ -177,3 +177,24 @@
 | 2026-06-26 09:25 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | R007e 完成后的实验计划最新副本 |
 | 2026-06-26 09:25 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260626_092536.md | implementation | R007e 完成后的每日时间线 timestamp copy；controller smoke 和 baseline 仍 pending |
 | 2026-06-26 09:25 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | R007e 完成后的每日时间线最新副本 |
+| 2026-06-26 09:42 | manual | src/humanoid_locomotion_runtime/recovery_options.py | implementation | R019 recovery option/SMDP contract：8 个 high-level actions 的 initiation/mask/implementation/duration/termination/interrupt/retry/cooldown |
+| 2026-06-26 09:42 | manual | src/humanoid_locomotion_runtime/snapshot_branching.py | implementation | R018a snapshot manifest / branch metadata contract；contract-only，不表示 deterministic restore 已完成 |
+| 2026-06-26 09:42 | manual | src/humanoid_locomotion_runtime/seed_splits.py | implementation | R016 deterministic seed split helper；生成 tracked seed config，不生成 episodes |
+| 2026-06-26 09:42 | manual | scripts/generate_seed_splits.py | implementation | R016 seed split TOML 生成脚本 |
+| 2026-06-26 09:42 | manual | configs/failure_protocol.v0.toml | implementation | R010/R010a/R010b 机器可读 failure protocol：cause x temporal taxonomy、state-aliasing cell、privileged boundary |
+| 2026-06-26 09:42 | manual | configs/seed_splits.v0.toml | implementation | R016 deterministic dev/train/val/test seed split；状态为 no episode generation |
+| 2026-06-26 09:42 | manual | docs/gate_c_option_snapshot_contract.md | implementation | Gate C 记录：R019 DONE、R018a DONE for metadata contract、R018 restore 仍 TODO |
+| 2026-06-26 09:42 | manual | docs/failure_protocol_v0.md | implementation | Failure protocol v0 freeze 说明：R010/R010a/R010b/R016 完成边界和仍阻塞 pilots |
+| 2026-06-26 09:42 | manual | tests/test_recovery_options.py | implementation | R019 option/SMDP contract 覆盖、字段完整性、duration/retry/cooldown 和 leakage boundary 测试 |
+| 2026-06-26 09:42 | manual | tests/test_failure_protocol_config.py | implementation | R010/R010a/R010b protocol config、user_interrupt task-control、state-aliasing cell 测试 |
+| 2026-06-26 09:42 | manual | tests/test_snapshot_branching.py | implementation | R018a snapshot/branch metadata schema 和 hash/leakage boundary 测试 |
+| 2026-06-26 09:42 | manual | tests/test_seed_splits.py | implementation | R016 deterministic seed split config/script consistency 和 no-overlap 测试 |
+| 2026-06-26 09:42 | manual | src/humanoid_locomotion_runtime/schemas.py | implementation | RecoveryActionRecord snapshot hash fields 增加 SHA256 校验，保持 backward compatible |
+| 2026-06-26 09:42 | manual | src/humanoid_locomotion_runtime/__init__.py | implementation | 导出 recovery option、snapshot branching 和 seed split API |
+| 2026-06-26 09:42 | manual | refine-logs/WEEKEND_LONG_GOAL_ACCEPTANCE_20260629.md | implementation | 周一验收入口：记录 R019/R010/R010a/R010b/R018a/R016 证据、未完成项和验证命令 |
+| 2026-06-26 09:42 | manual | refine-logs/EXPERIMENT_TRACKER_20260626_094241.md | implementation | R010/R010a/R010b/R016/R018a/R019 更新后的 tracker timestamp copy |
+| 2026-06-26 09:42 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | R010/R010a/R010b/R016/R018a/R019 更新后的 tracker 最新副本；R018 仍 TODO |
+| 2026-06-26 09:42 | manual | refine-logs/EXPERIMENT_PLAN_20260626_094241.md | implementation | R010/R010a/R010b/R016/R018a/R019 更新后的实验计划 timestamp copy |
+| 2026-06-26 09:42 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | R010/R010a/R010b/R016/R018a/R019 更新后的实验计划最新副本 |
+| 2026-06-26 09:42 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260626_094241.md | implementation | Gate C/Gate D protocol freeze 更新后的每日时间线 timestamp copy |
+| 2026-06-26 09:42 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | Gate C/Gate D protocol freeze 更新后的每日时间线最新副本 |

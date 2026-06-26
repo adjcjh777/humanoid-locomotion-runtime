@@ -17,6 +17,12 @@ from humanoid_locomotion_runtime.edp import (
     validate_episode_data_package,
     write_sample_episode_data_package,
 )
+from humanoid_locomotion_runtime.recovery_options import (
+    RECOVERY_ACTIONS,
+    RECOVERY_OPTION_CONTRACTS,
+    RecoveryOptionContract,
+    validate_recovery_option_catalog,
+)
 from humanoid_locomotion_runtime.schemas import (
     BodyMemoryState,
     EpisodeManifest,
@@ -33,6 +39,19 @@ from humanoid_locomotion_runtime.schemas import (
     RuntimeEvent,
     assert_no_privileged_keys,
     serialize_policy_observation,
+)
+from humanoid_locomotion_runtime.seed_splits import (
+    DEFAULT_POLICY_TRAINING_SEEDS,
+    DEFAULT_ROOT_SEED,
+    DEFAULT_SCENARIO_SPLIT_COUNTS,
+    DEFAULT_STRIDE,
+    generate_seed_split_toml,
+    generate_stride_seed_splits,
+)
+from humanoid_locomotion_runtime.snapshot_branching import (
+    SnapshotBranchMetadata,
+    SnapshotManifest,
+    validate_sha256_digest,
 )
 
 __version__ = "0.1.0"
@@ -55,16 +74,29 @@ __all__ = [
     "ObservationTermContract",
     "OracleAnnotation",
     "PolicyObservation",
+    "RECOVERY_ACTIONS",
+    "RECOVERY_OPTION_CONTRACTS",
     "RecoveryActionRecord",
+    "RecoveryOptionContract",
     "ReplayArtifactRecord",
     "RuntimeEvent",
     "RuntimeEventLogger",
+    "SnapshotBranchMetadata",
+    "SnapshotManifest",
     "__version__",
     "assert_no_privileged_keys",
     "assert_valid_episode_data_package",
+    "DEFAULT_POLICY_TRAINING_SEEDS",
+    "DEFAULT_ROOT_SEED",
+    "DEFAULT_SCENARIO_SPLIT_COUNTS",
+    "DEFAULT_STRIDE",
+    "generate_seed_split_toml",
+    "generate_stride_seed_splits",
     "get_controller_contract",
     "joint_order_sha256",
     "serialize_policy_observation",
+    "validate_recovery_option_catalog",
+    "validate_sha256_digest",
     "validate_episode_data_package",
     "write_sample_episode_data_package",
 ]
