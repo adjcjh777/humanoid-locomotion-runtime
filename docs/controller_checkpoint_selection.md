@@ -12,6 +12,7 @@
 - [x] 来源、repo commit、路径和 SHA256 已写入 `configs/environment.lock.toml`。
 - [x] 已读取 ONNX graph shape 和 metadata：input `obs=[1,98]`，output `actions=[1,29]`。
 - [x] 公司 G1 edu 23DoF 官方 URDF/MJCF source 已记录在 `docs/g1_edu_23dof_source_lock.md`，但这不是 controller checkpoint。
+- [x] 公司 G1 edu 23DoF raw MuJoCo asset compile smoke 已通过，见 `docs/g1_edu_23dof_compile_smoke.md`；这仍不是 controller checkpoint 或 controller smoke。
 - [ ] ONNX candidate 与本仓库 runtime adapter 还未完成 shape/feature adapter；MJLab G1 actor obs 是 `[1,99]`，不是直接同形输入。
 - [ ] 当前 ONNX candidate output 是 29DoF，不能直接作为公司 23DoF edu controller evidence。
 - [ ] 还未通过 `stand_ready` / `track_velocity` controller smoke。

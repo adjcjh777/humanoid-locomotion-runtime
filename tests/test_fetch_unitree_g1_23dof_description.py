@@ -30,6 +30,11 @@ def test_fetch_unitree_g1_23dof_description_script_locks_official_source() -> No
     assert raw_base in script
     assert "g1_23dof_rev_1_0.urdf" in script
     assert "g1_23dof_rev_1_0.xml" in script
+    assert "MESH_ASSETS" in script
+    assert "torso_link_23dof_rev_1_0.STL" in script
+    assert "3cd0d56fde14b73c1623304684805029971c4f84b596f9914e823ca70a107fd2" in script
+    assert "left_wrist_roll_rubber_hand.STL" in script
+    assert "e81030abd023bd9e4a308ef376d814a2c12d684d8a7670c335bbd5cd7809c909" in script
     assert (
         "cffe6149e0b29abed10b8c6a7e318003676ae4234224044e4af30946599d1ba9"
         in script
@@ -43,6 +48,6 @@ def test_fetch_unitree_g1_23dof_description_script_locks_official_source() -> No
 def test_fetch_unitree_g1_23dof_description_script_warns_about_scope() -> None:
     script = read_script()
 
-    assert "official Unitree G1 edu 23DoF robot description only" in script
+    assert "official Unitree G1 edu 23DoF robot description and mesh assets only" in script
     assert "not a controller checkpoint" in script
     assert "keep downloaded robot descriptions out of git" in script

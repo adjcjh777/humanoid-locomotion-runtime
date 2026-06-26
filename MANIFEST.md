@@ -133,3 +133,25 @@
 | 2026-06-26 08:31 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | 子代理完成 R007b/R007c/R009a 后的 tracker 最新副本 |
 | 2026-06-26 08:31 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260626_083118.md | implementation | 子代理完成 R007b/R007c/R009a 后的每日时间线 timestamp copy；Gate C 前置仍等待 R007d/R007e 或 reference-only 决策 |
 | 2026-06-26 08:31 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | 子代理完成 R007b/R007c/R009a 后的每日时间线最新副本 |
+| 2026-06-26 08:50 | manual | docs/g1_edu_23dof_compile_smoke.md | implementation | R007d 下一步待办清单和完成证据：23DoF URDF/MJCF + 27 mesh assets fetch/verify，MuJoCo 3.10.0 raw compile PASS |
+| 2026-06-26 08:50 | manual | scripts/fetch_unitree_g1_23dof_description.sh | implementation | 扩展 23DoF fetch script：拉取并校验 URDF、MJCF 和 27 个官方 STL mesh assets；修复 `git check-ignore` 多路径误报 |
+| 2026-06-26 08:50 | manual | scripts/compile_unitree_g1_23dof_description.py | implementation | 新增 R007d raw asset compile smoke 入口；校验 23DoF joint order、`nu=23` 和 MuJoCo compile summary |
+| 2026-06-26 08:50 | manual | tests/test_fetch_unitree_g1_23dof_description.py | implementation | 测试 fetch script 的 mesh asset/hash lock 和非 checkpoint scope warning |
+| 2026-06-26 08:50 | manual | tests/test_unitree_g1_23dof_compile_smoke.py | implementation | 测试 23DoF compile smoke 脚本可在无 sim extra 下导入，并锁定 floating base + 23 controlled joint order |
+| 2026-06-26 08:50 | manual | configs/environment.lock.toml | implementation | `company_g1_edu_23dof` 状态更新为 raw asset compile smoke passed；记录 ignored asset manifest SHA256 和 compile command/result |
+| 2026-06-26 08:50 | manual | docs/g1_edu_23dof_source_lock.md | implementation | Source lock 同步 R007d：29 个 ignored assets、asset manifest hash、MuJoCo compile summary 和剩余 MJLab/controller blocker |
+| 2026-06-26 08:50 | manual | docs/gate_a_foundation.md | implementation | Gate A 记录同步 23DoF raw asset compile smoke passed，但仍不授权 MJLab adapter/controller/PPO |
+| 2026-06-26 08:50 | manual | docs/mjlab_backend_lock.md | implementation | Backend lock 同步 23DoF raw compile smoke；保留 29DoF MJLab smoke 只是 reference evidence 的边界 |
+| 2026-06-26 08:50 | manual | docs/controller_checkpoint_selection.md | implementation | Checkpoint 记录同步：R007d raw asset compile 不改变 29DoF ONNX candidate 的 pending-controller-smoke 状态 |
+| 2026-06-26 08:50 | manual | docs/research_plan_prd.md | implementation | PRD 同步 23DoF raw asset compile passed、project-local MJLab adapter/controller still pending |
+| 2026-06-26 08:50 | manual | docs/adr/ADR-20260626-g1-edu-23dof-primary-profile.md | implementation | ADR 同步 reference-only、Gate C blocked 和 R007d compile smoke completed |
+| 2026-06-26 08:50 | manual | docs/g1_edu_23dof_impact_audit.md | implementation | 影响审计同步 R007b/R007c/R007d/R009a 已完成项和剩余 R007e/Gate C blocker |
+| 2026-06-26 08:50 | manual | docs/glossary.md | implementation | 术语表补充 23DoF raw MuJoCo asset compile smoke 已完成 |
+| 2026-06-26 08:50 | manual | README.md | implementation | README 复现说明加入 23DoF fetch + compile smoke 命令 |
+| 2026-06-26 08:50 | manual | tests/test_gate_a_foundation.py | implementation | Gate A 测试同步 23DoF profile status、asset manifest hash 和 compile smoke result |
+| 2026-06-26 08:50 | manual | refine-logs/EXPERIMENT_PLAN_20260626_085015.md | implementation | R007d 完成后的实验计划 timestamp copy；R007e 仍 pending |
+| 2026-06-26 08:50 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | R007d 完成后的实验计划最新副本 |
+| 2026-06-26 08:50 | manual | refine-logs/EXPERIMENT_TRACKER_20260626_085015.md | implementation | R007d DONE 的 tracker timestamp copy；记录 compile smoke 证据和 R007e 下一步 |
+| 2026-06-26 08:50 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | R007d DONE 的 tracker 最新副本 |
+| 2026-06-26 08:50 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260626_085015.md | implementation | R007d 完成后的每日时间线 timestamp copy；Gate C 仍等待 R007e 或 reference-only 决策 |
+| 2026-06-26 08:50 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | R007d 完成后的每日时间线最新副本 |

@@ -67,7 +67,7 @@ commit = "124a73fa3303f75a62f8fe04d329b829ed0ebdfb"
 status = "deferred-optional-reference-not-primary-v0-requirement"
 
 [robot_profiles.company_g1_edu_23dof]
-status = "official-source-identified-integration-pending"
+status = "raw-asset-compile-smoke-passed-mjlab-controller-integration-pending"
 role = "primary-deployment-target"
 source_repo = "https://github.com/unitreerobotics/unitree_rl_gym"
 source_commit = "276801e46c5d433564f24658bac64f254b7d2d4b"
@@ -80,9 +80,15 @@ dof_breakdown = "legs=6*2, waist=1, arms=5*2, hands=0"
 controlled_dof = 23
 base_joint = "floating_base_joint"
 joint_order = ["left_hip_pitch_joint", "left_hip_roll_joint", "left_hip_yaw_joint", "left_knee_joint", "left_ankle_pitch_joint", "left_ankle_roll_joint", "right_hip_pitch_joint", "right_hip_roll_joint", "right_hip_yaw_joint", "right_knee_joint", "right_ankle_pitch_joint", "right_ankle_roll_joint", "waist_yaw_joint", "left_shoulder_pitch_joint", "left_shoulder_roll_joint", "left_shoulder_yaw_joint", "left_elbow_joint", "left_wrist_roll_joint", "right_shoulder_pitch_joint", "right_shoulder_roll_joint", "right_shoulder_yaw_joint", "right_elbow_joint", "right_wrist_roll_joint"]
-evidence = ["docs/g1_edu_23dof_source_lock.md"]
-required_before = "company-G1 controller smoke, Gate C snapshot/restore, controller-native baseline"
-note = "Official Unitree 23DoF rev 1.0 source is identified for later hardware work, but it is not yet integrated into the project-local MJLab runtime and has no selected 23DoF controller checkpoint."
+local_ignored_description_path = "robot_descriptions/unitree_g1_23dof_rev_1_0"
+local_asset_file_count = 29
+local_mesh_asset_count = 27
+local_asset_manifest_sha256 = "ff699c19c0d28feee34bb0af1e6a02e6c30850db0e21ad90bbcd277a7bb3a007"
+compile_smoke_command = "uv run --extra sim python scripts/compile_unitree_g1_23dof_description.py"
+compile_smoke_result = "PASS: MuJoCo 3.10.0 raw asset compile; nq=30, nv=29, nu=23, nbody=25, njnt=24, ngeom=60, nmesh=27, floating_base_joint plus 23 controlled joints"
+evidence = ["docs/g1_edu_23dof_source_lock.md", "docs/g1_edu_23dof_compile_smoke.md", "scripts/fetch_unitree_g1_23dof_description.sh", "scripts/compile_unitree_g1_23dof_description.py"]
+required_before = "23DoF MJLab wrapper/controller selection, company-G1 controller smoke, Gate C snapshot/restore, controller-native baseline"
+note = "Official Unitree 23DoF rev 1.0 source and raw MuJoCo asset compile are verified. It is still not integrated into the project-local MJLab runtime and has no selected 23DoF controller checkpoint."
 
 [robot_profiles.mjlab_g1_29dof_reference]
 status = "verified-reference-smoke-not-company-target"

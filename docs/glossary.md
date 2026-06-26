@@ -24,6 +24,7 @@ Robot profile 是一个可复查的机器人本体配置，不只是一个名字
 
 - [x] 23DoF official URDF/MJCF source path and hash
 - [x] 23DoF controlled joint names and order from official URDF
+- [x] 23DoF raw MuJoCo asset compile smoke
 - [ ] project-local MJLab asset/wrapper path and hash
 - [ ] 23DoF velocity controller artifact
 - [ ] 23DoF obs/action shape

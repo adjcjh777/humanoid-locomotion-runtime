@@ -91,7 +91,10 @@ def test_company_g1_23dof_source_is_recorded_separately_from_29dof_reference() -
 
     company_g1 = robot_profiles["company_g1_edu_23dof"]
     assert company_g1["role"] == "primary-deployment-target"
-    assert company_g1["status"] == "official-source-identified-integration-pending"
+    assert (
+        company_g1["status"]
+        == "raw-asset-compile-smoke-passed-mjlab-controller-integration-pending"
+    )
     assert company_g1["source_repo"] == "https://github.com/unitreerobotics/unitree_rl_gym"
     assert company_g1["source_commit"] == "276801e46c5d433564f24658bac64f254b7d2d4b"
     assert company_g1["urdf_path"].endswith("g1_23dof_rev_1_0.urdf")
@@ -106,6 +109,13 @@ def test_company_g1_23dof_source_is_recorded_separately_from_29dof_reference() -
     assert len(company_g1["joint_order"]) == 23
     assert company_g1["joint_order"][0] == "left_hip_pitch_joint"
     assert company_g1["joint_order"][-1] == "right_wrist_roll_joint"
+    assert company_g1["local_mesh_asset_count"] == 27
+    assert company_g1["local_asset_file_count"] == 29
+    assert company_g1["local_asset_manifest_sha256"] == (
+        "ff699c19c0d28feee34bb0af1e6a02e6c30850db0e21ad90bbcd277a7bb3a007"
+    )
+    assert company_g1["compile_smoke_result"].startswith("PASS: MuJoCo 3.10.0")
+    assert "nu=23" in company_g1["compile_smoke_result"]
 
     reference_g1 = robot_profiles["mjlab_g1_29dof_reference"]
     assert reference_g1["role"] == "backend-health-reference"

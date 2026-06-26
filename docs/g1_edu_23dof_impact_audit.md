@@ -86,7 +86,7 @@
 
 ## 需要修改的代码和测试
 
-- [ ] `scripts/mjlab_g1_smoke.py`
+- [x] `scripts/mjlab_g1_smoke.py`
   - 当前问题：只打印 action/obs shape，不检查是否符合目标 robot profile。
   - 修改：增加 `--expected-action-dim`、`--expected-actor-obs-dim`、`--expected-robot-profile`，维度不符直接失败。
 
@@ -98,15 +98,15 @@
   - 当前问题：脚本名和 echo 文案容易让人以为拿到的就是公司 G1 controller。
   - 修改：重命名或增加 warning，明确下载的是 29DoF reference candidate；新增 23DoF checkpoint fetch/verify 脚本前不允许升级 evidence。
 
-- [ ] `src/humanoid_locomotion_runtime/schemas.py`
+- [x] `src/humanoid_locomotion_runtime/schemas.py`
   - 当前问题：`EpisodeManifest` 只有 `robot_model`，无法强制记录 DoF/action dim/joint order hash。
   - 修改：新增或扩展 robot profile schema，例如 `robot_profile_id`、`robot_dof`、`action_dim`、`joint_order_sha256`、`controller_profile_id`。
 
-- [ ] `src/humanoid_locomotion_runtime/edp.py`
+- [x] `src/humanoid_locomotion_runtime/edp.py`
   - 当前问题：sample EDP 写 `robot_model="none"`，后续真实 EDP 若不含 profile 会混淆 23/29DoF。
   - 修改：sample 可以保留 none，但 validator 对真实 MuJoCo episodes 应要求 robot profile metadata。
 
-- [ ] `tests/test_gate_a_foundation.py`
+- [x] `tests/test_gate_a_foundation.py`
   - 当前问题：测试断言当前 checkpoint shape 包含 `input obs=[1,98]`，但没有断言这是 29DoF reference-only。
   - 修改：新增测试：primary profile 是 `company_g1_edu_23dof` 时，29DoF checkpoint 不能被标成 mature controller evidence。
 
@@ -123,15 +123,17 @@
 
 - [x] Gate A repo foundation 本身仍然有效。
 - [x] Gate B schema/leakage boundary 本身仍然有效。
-- [ ] Gate C 必须等待 robot profile lock；否则 snapshot/restore 会绑定错误 action/obs/controller state。
+- [x] R007d raw asset compile smoke 已通过；证据：`docs/g1_edu_23dof_compile_smoke.md`。
+- [ ] Gate C 必须等待 R007e / robot profile runtime contract；否则 snapshot/restore 会绑定错误 action/obs/controller state。
 - [ ] R020 controller-native baseline 必须等待 23DoF target smoke 或明确改成 29DoF reference baseline。
 - [ ] 所有论文 claim 里的 `Unitree G1` 必须改成具体 profile，避免 reviewer 追问 23/29DoF 不一致。
 
 ## 推荐执行顺序
 
-1. [ ] 向硬件/仿真负责人确认公司 23DoF edu joint list 和 MJCF 来源。
-2. [ ] 新增 `configs/robot_profiles/` 或等价 TOML section，锁定 `company_g1_edu_23dof`。
-3. [ ] 将现有 29DoF MJLab smoke 降级命名为 reference smoke。
+1. [x] 向硬件/仿真负责人确认公司 23DoF edu joint list 和 MJCF 来源。
+2. [x] 新增 `configs/robot_profiles/` 或等价 TOML section，锁定 `company_g1_edu_23dof`。
+3. [x] 将现有 29DoF MJLab smoke 降级命名为 reference smoke。
 4. [ ] 搜索或复制 23DoF edu controller checkpoint；若不存在，先决定是否训练/转换/暂用 29DoF reference。
-5. [ ] 修改 smoke scripts 和 Gate A tests，使 wrong-profile smoke 会失败。
-6. [ ] 同步 README、PRD、Gate A、backend lock、checkpoint selection、plan、timeline、tracker 和 timestamped companions。
+5. [x] 修改 smoke scripts 和 Gate A tests，使 wrong-profile smoke 会失败。
+6. [x] 完成 23DoF raw asset fetch/verify 和 MuJoCo compile smoke。
+7. [x] 同步 README、PRD、Gate A、backend lock、checkpoint selection、plan、timeline、tracker 和 timestamped companions。

@@ -1,7 +1,7 @@
 # MJLab Backend Lock 记录
 
 **日期**: 2026-06-26
-**状态**: project-local 29DoF reference backend / G1 asset / controller wrapper selected; full MJLab G1 headless simulation smoke passed; company 23DoF source identified but runtime integration pending
+**状态**: project-local 29DoF reference backend / G1 asset / controller wrapper selected; full MJLab G1 headless simulation smoke passed; company 23DoF raw asset compile smoke passed but runtime integration pending
 
 ## 结论
 
@@ -14,9 +14,9 @@
 - [x] 锁定 controller wrapper 入口：`third_party/mjlab/src/mjlab/tasks/velocity/rl/runner.py` 中的 `VelocityOnPolicyRunner`。
 - [x] 下载官方 Unitree RL MJLab G1 velocity ONNX controller artifact candidate 到本项目 ignored checkpoint 路径。
 - [x] 在当前 runtime repo 中解决完整 MJLab dependency environment，并运行 project-local MJLab G1 headless simulation smoke。
-- [x] 公司 G1 edu 23DoF 官方 source 已记录在 `docs/g1_edu_23dof_source_lock.md`。
+- [x] 公司 G1 edu 23DoF 官方 source 已记录在 `docs/g1_edu_23dof_source_lock.md`，raw MuJoCo asset compile smoke 记录在 `docs/g1_edu_23dof_compile_smoke.md`。
 - [ ] 验证 ONNX candidate 的 observation/action shape 与 runtime adapter 后，才能把它升级为 mature controller evidence。
-- [ ] 将官方 23DoF URDF/MJCF 接入 project-local MJLab runtime 并通过 23DoF smoke。
+- [ ] 将官方 23DoF URDF/MJCF 接入 project-local MJLab runtime 并通过 23DoF MJLab/controller smoke。
 
 ## 候选比较
 
@@ -83,11 +83,16 @@
   - critic observation shape: `[1, 111]`
   - reward finite
   - `terminated_count=0`, `timeout_count=0`
+- [x] 公司 23DoF raw asset compile smoke 通过：
+  - command summary: `uv run --extra sim python scripts/compile_unitree_g1_23dof_description.py`
+  - MuJoCo: `3.10.0`
+  - result: `nq=30`, `nv=29`, `nu=23`, `nbody=25`, `njnt=24`, `ngeom=60`, `nmesh=27`
+  - joint gate: `floating_base_joint` plus 23 controlled joints
 
 ## 未完成边界
 
 - [ ] 官方 Unitree ONNX controller artifact candidate 已下载，但还没有通过本仓库 runtime adapter 的 observation/action shape 检查。当前 ONNX input 是 `[1,98]`，MJLab actor obs 是 `[1,99]`，不能直接宣称 trained-controller smoke。
-- [ ] 当前 MJLab G1 headless smoke 是 29DoF reference smoke，不能直接代表公司 G1 edu 23DoF。
+- [ ] 当前 MJLab G1 headless smoke 是 29DoF reference smoke，不能直接代表公司 G1 edu 23DoF runtime/controller evidence；23DoF 目前只到 raw MuJoCo asset compile smoke。
 - [ ] `stand_ready`、`safe_stop`、`track_velocity` runtime adapter command 尚未实现。
 
 ## 下一步怎么做
