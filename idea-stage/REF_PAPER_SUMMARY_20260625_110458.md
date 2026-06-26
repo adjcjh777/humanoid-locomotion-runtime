@@ -1,5 +1,7 @@
 # 相关文献综述：Humanoid Locomotion Runtime Recovery
 
+> 归档读法：这是 2026-06-25 早期文献摘要快照，保留原始候选文献和验证状态。日常阅读请优先看已补充白话读法的最新副本 `idea-stage/REF_PAPER_SUMMARY.md`，以及对应 timestamp copy `idea-stage/REF_PAPER_SUMMARY_20260626_123900.md`。
+
 **生成时间**：2026-06-25 11:04 +0800  
 **输入文档**：`docs/research_plan_prd.md`  
 **使用 skill**：`research-lit`  
@@ -53,4 +55,3 @@
 - 但每个组件都有强先例，单纯组合难以支撑强 novelty。
 - 最有价值的可防御方向不是“我提出了 body memory”，而是“在哪些 humanoid failure family 中，event/recovery memory 比 instant state 真有必要”。
 - 需要 mandatory oracle upper bound 和 RACER-style VLM supervisor baseline，否则 reviewer 会认为没有解释为什么不用更自然的 VLM/LLM recovery supervisor。
-

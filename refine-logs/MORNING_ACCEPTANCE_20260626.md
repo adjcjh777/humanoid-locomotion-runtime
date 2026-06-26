@@ -6,6 +6,13 @@
 **Branch / commit**: `main` at `c849a9f707e5`
 **Raw output root**: `runs/night_handoff/20260625T093553Z/` (git ignored by `.gitignore:29`)
 
+## Plain Summary
+
+- 这次夜间检查证明 repo sync 和 tracker summary 能跑通。
+- 环境 smoke 没跑通：GPU 可见，但 `uv run --extra sim` 卡在依赖同步，没进入 MuJoCo/JAX import 检查。
+- 磁盘 gate 没过：可用空间约 109 GiB，低于 200 GiB threshold，所以没有跑 synthetic rollout。
+- 结论是 HOLD M0 automation gate：不能启动 MuJoCo/G1 controller smoke、PPO、failure pilot 或 batch rollout。
+
 ## Scope Check
 
 - [x] Read and followed `AGENTS.md`.

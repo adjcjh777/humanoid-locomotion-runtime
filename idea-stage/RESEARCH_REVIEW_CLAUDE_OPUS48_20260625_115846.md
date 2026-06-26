@@ -2,6 +2,8 @@
 
 > ARIS local rerun metadata: generated on 2026-06-25 11:58 CST with `claude-opus-4-8`.
 
+> 归档读法：这是 2026-06-25 的 Opus research review 快照，保留原始评审意见。日常阅读请优先看兼容旧文件名且已补充白话读法的最新副本 `idea-stage/RESEARCH_REVIEW_CLAUDE_GLM52.md`，以及对应 timestamp copy `idea-stage/RESEARCH_REVIEW_CLAUDE_GLM52_20260626_123900.md`。
+
 ## 1. Overall assessment
 
 可发表潜力：中等偏上，**前提是把论文重写成一篇"诊断性研究"而不是"方法贡献"**。当前计划的方法新颖度（5.5/10）撑不起 CoRL/CoRL-main 或 ICRA oral 级别的 method paper，但 I3（memory-value diagnostic）这条"记忆只在特定失败族中通过改变高层决策产生条件性收益"的 claim，如果用 matched-seed counterfactual 严格证出来，足以成为一篇扎实的 **RA-L / IROS / 或 CoRL-Workshop / NeurIPS Robot-Learning Workshop** 级别的实证论文。

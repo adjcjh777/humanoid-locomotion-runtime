@@ -7,6 +7,14 @@
 **Raw output root**: `runs/night_handoff_rerun/20260626T013950Z/` (git ignored)
 **Operator override**: 用户确认当前无法清理磁盘，并判断约 100GB free space 足够 M0 synthetic smoke。因此 R004 本次允许在低 footprint synthetic-only 模式下重跑；该 override 不自动放行真实 rollout、batch experiments、checkpoints、videos 或 replay dumps。
 
+## Plain Summary
+
+- 这次 rerun 只证明 M0 低占用 synthetic smoke 和 handoff 可以通过。
+- R002 环境检查通过：Python 3.12.13、package import、MuJoCo 3.10.0、8 张 A800 可见。
+- R004 在用户授权下用约 100GB 剩余空间跑了低占用 synthetic-only microbenchmark。
+- 这个 override 不放行真实 rollout、batch experiments、checkpoints、videos 或 replay dumps。
+- 下一步仍是选择并锁定 MJLab/mujocolab backend、robot asset 和 controller wrapper。
+
 ## Scope Check
 
 - [x] Read and followed `AGENTS.md`.

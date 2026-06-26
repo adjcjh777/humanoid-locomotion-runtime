@@ -1,5 +1,7 @@
 # 实验跟踪表
 
+> 归档读法：这是 2026-06-25 的历史 tracker 快照，保留当时的 run 状态和备注。日常查看 run-level 状态请优先看已通俗化的最新副本 `refine-logs/EXPERIMENT_TRACKER.md`，以及对应 timestamp copy `refine-logs/EXPERIMENT_TRACKER_20260626_123244.md`。
+
 | Run ID | 里程碑 | 目的 | 系统 / 变体 | Split | 指标 | 优先级 | 白天/夜间负责人 | 状态 | 备注 |
 |--------|--------|------|-------------|-------|------|--------|------------------|------|------|
 | R000 | M0 | A800/5090 public-safe machine profile | A800_SINGLE_HOST + RTX5090_BACKUP_HOST | n/a | host policy documented | MUST | 白天：人工 | DONE | 公共安全机器档案已写入 `docs/a800_machine_profile.md` 和 `docs/rtx5090_machine_profile.md`；A800 canonical，5090 backup；私有 SSH/路径/GPU 占用不进仓库 |

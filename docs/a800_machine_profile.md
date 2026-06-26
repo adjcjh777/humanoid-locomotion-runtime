@@ -5,6 +5,8 @@
 **用途**: 本仓库的 canonical experiment host。5090 只作为 backup，除非用户明确改变 host policy。
 **安全范围**: 公开仓库只保留匿名化运维信息。hostname、用户名、私有 IP、SSH alias、绝对路径、token、jump-host、实时 GPU 占用和本机 ARIS 路径都必须放在仓库外的 private ops 记录中。
 
+白话摘要：A800 是默认主实验机。这里记录的是可以公开的机器类别和使用规则，不记录任何能连接服务器的私有信息。批量实验前，必须先确认磁盘、环境锁定和 artifact retention。
+
 ## 访问与网络策略
 
 - 这台 A800 不提供公网直连入口。

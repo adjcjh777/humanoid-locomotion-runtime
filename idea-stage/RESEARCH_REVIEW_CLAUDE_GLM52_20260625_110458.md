@@ -1,5 +1,7 @@
 # Claude Code Research Review: GLM 5.2 Max Effort
 
+> 归档读法：这是 2026-06-25 早期 research review 快照，保留原始评审意见。日常阅读请优先看已补充白话读法的最新副本 `idea-stage/RESEARCH_REVIEW_CLAUDE_GLM52.md`，以及对应 timestamp copy `idea-stage/RESEARCH_REVIEW_CLAUDE_GLM52_20260626_123900.md`。
+
 **生成时间**：2026-06-25 11:04 +0800  
 **使用 skill**：`research-review`  
 **Reviewer command**：`claude -p --model 'glm-5.2[1M]' --effort max --permission-mode dontAsk --tools ""`  
@@ -64,4 +66,3 @@
 - **Gate 3（投稿前）**：`rl_full_body_memory` 在预注册应受益 family 上以预注册 margin 超过 `rl_instant_state`；oracle gap 已报告。
 
 Gate 3 失败则无 method 贡献，应 abandon 或转 benchmark/protocol paper。
-

@@ -2,6 +2,8 @@
 
 > ARIS local rerun metadata: generated on 2026-06-25 11:58 CST with `claude-opus-4-8`. Local `tools/arxiv_fetch.py` still returned HTTP 429, so Codex collected source candidates through web/project/arXiv pages and passed them into Claude. Claude did not browse directly; verification labels below should be treated as conservative and rechecked before formal citation.
 
+> 归档读法：这是 2026-06-25 的文献摘要快照，保留原始候选文献和验证状态。日常阅读请优先看已补充白话读法的最新副本 `idea-stage/REF_PAPER_SUMMARY.md`，以及对应 timestamp copy `idea-stage/REF_PAPER_SUMMARY_20260626_123900.md`。
+
 ## 1. Executive Summary：5 个最危险的近邻
 
 1. **RACER (2409.14674)** —— 最危险。它已经把"语言引导的失败恢复策略"做成了完整故事。我们若用"language-conditioned recovery"作主卖点会被直接对标。**差异化只能落在：典型化离散动作空间 + 在 frozen locomotion controller 之上，而非操作/IL 的连续纠正。**

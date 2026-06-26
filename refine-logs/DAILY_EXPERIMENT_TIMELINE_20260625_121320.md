@@ -1,5 +1,7 @@
 # 每日实验时间线
 
+> 归档读法：这是 2026-06-25 的历史快照，保留当时的原始时间线表述。日常阅读请优先看已通俗化的最新副本 `refine-logs/DAILY_EXPERIMENT_TIMELINE.md`，以及对应 timestamp copy `refine-logs/DAILY_EXPERIMENT_TIMELINE_20260626_123244.md`。
+
 **日期**: 2026-06-25
 **主机策略**: A800 单机主线。5090 只作为备用，不主动分裂实验环境。
 **工作节奏**: 白天由人完成设计、实现、审查、gate 决策；晚上交给 ARIS 做可自动化的 smoke / queue / monitor / summarize。

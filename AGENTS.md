@@ -1,5 +1,13 @@
 # AGENTS.md
 
+这份文件是给后续 agent 和协作者看的“项目规则”。白话版核心意思是：
+
+- 先把这个项目当成一个可复现的人形机器人行走运行时，不要把它改成端到端 VLA 或炫技 demo。
+- 底层行走 controller 先保持冻结；学习只发生在高层 recovery decision。
+- 所有安全动作必须经过 `RuntimeManager` 和 `SafetySupervisor`。
+- MuJoCo 真值、oracle action 和人工标签只能用于 evaluation，不能进入 runtime decision。
+- 实验按 gate 推进，gate 没过就停下来修当前阶段，不进入 PPO、大规模实验或论文主结论。
+
 ## 语言规则
 
 - 除非用户明确要求其他语言，内部进展更新和面向用户的回复都使用中文。
@@ -74,7 +82,7 @@
 - `rule_recovery_tuned` 只能作为 deployable heuristic baseline / fallback，不再称为 debugging oracle；真正 oracle 必须是 evaluation-only privileged 或 snapshot branch oracle。
 - 主文 baseline 必须包含 ordinary history models：`frame_stack_raw_history` 和 `GRU_raw_history`。VLM baseline 可以作为附录或后续分支，不能替代 GRU baseline。
 - Memory effect 必须拆成两类 estimand：训练/模型效应（不同 policy）和决策时 memory-content 效应（同一 policy 的 correct/null/shuffled/stale memory intervention）。若做 test-time mask，训练时必须加入 memory dropout 或 `memory_available` mask。
-- Failure taxonomy 必须拆成 cause × temporal profile。`user_interrupt` 是 task-control event，不作为 failure family。
+- Failure taxonomy 必须拆成 cause x temporal profile。`user_interrupt` 是 task-control event，不作为 failure family。
 - Negative control 的“无收益”必须用 smallest effect size of interest 和 equivalence / TOST 风格证据支持；不能把 p 值不显著写成没有效果。
 - final evaluation 必须预注册 primary endpoint、policy training seeds、scenario seeds、cluster/hierarchical bootstrap 和 multiplicity control。
 - 环境必须锁定 Python、MuJoCo、MJLab/mujocolab backend reference、controller checkpoint、robot XML/MJCF 版本与 hash；JAX/JAXLIB 只在显式选择 MuJoCo Playground deferred fallback 时才作为额外锁定项。A800/5090 的 live ops 细节放 private ops，不进公开 repo。

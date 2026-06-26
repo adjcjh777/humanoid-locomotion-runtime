@@ -2,6 +2,14 @@
 
 > 由 ARIS skills 维护，用于记录研究生命周期中生成的各类 artifacts。表头保持英文以兼容下游工具。
 
+读法：
+
+- `Timestamp` 是产物登记时间，不一定等于实验发生时间。
+- `Skill` 表示来源；`manual` 代表人工整理或文档维护。
+- `File` 是可复查文件路径。
+- `Stage` 表示它属于 idea discovery、implementation 等哪个阶段。
+- `Description` 用白话说明这个文件为什么存在，以及是否是最新副本或历史快照。
+
 | Timestamp | Skill | File | Stage | Description |
 |-----------|-------|------|-------|-------------|
 | 2026-06-25 11:04 | /research-lit | idea-stage/REF_PAPER_SUMMARY_20260625_110458.md | idea-discovery | humanoid locomotion recovery runtime 文献综述 |
@@ -42,3 +50,19 @@
 | 2026-06-26 12:32 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | 每日实验时间线通俗化最新副本 |
 | 2026-06-26 12:32 | manual | refine-logs/EXPERIMENT_TRACKER_20260626_123244.md | implementation | 实验 tracker 通俗化 timestamp copy；补充 run-level 状态读法 |
 | 2026-06-26 12:32 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | 实验 tracker 通俗化最新副本 |
+| 2026-06-26 12:39 | manual | AGENTS.md | implementation | 项目规则通俗化导读；保留 runtime safety、evaluation leakage、gate 和 ARIS 工作流规则 |
+| 2026-06-26 12:39 | manual | CONTEXT.md | implementation | 项目术语上下文补充读法说明 |
+| 2026-06-26 12:39 | manual | docs/a800_machine_profile.md | implementation | A800 公开机器档案补充白话摘要；不加入私有连接信息 |
+| 2026-06-26 12:39 | manual | docs/rtx5090_machine_profile.md | implementation | RTX 5090 公开机器档案补充白话摘要；强调 backup host 边界 |
+| 2026-06-26 12:39 | manual | refine-logs/MORNING_ACCEPTANCE_20260626.md | implementation | 首次 morning acceptance summary 补充白话结论；保留原始指标和 gate decision |
+| 2026-06-26 12:39 | manual | refine-logs/MORNING_ACCEPTANCE_RERUN_20260626.md | implementation | rerun morning acceptance summary 补充白话结论；保留 100GB override 边界 |
+| 2026-06-26 12:39 | manual | idea-stage/IDEA_REPORT_20260626_123900.md | idea-discovery | idea report 通俗化 timestamp copy；新增白话读法，不改研究建议 |
+| 2026-06-26 12:39 | manual | idea-stage/IDEA_REPORT.md | idea-discovery | idea report 通俗化最新副本 |
+| 2026-06-26 12:39 | manual | idea-stage/NOVELTY_CHECK_20260626_123900.md | idea-discovery | novelty check 通俗化 timestamp copy；新增白话读法，不改评分和风险 |
+| 2026-06-26 12:39 | manual | idea-stage/NOVELTY_CHECK.md | idea-discovery | novelty check 通俗化最新副本 |
+| 2026-06-26 12:39 | manual | idea-stage/REF_PAPER_SUMMARY_20260626_123900.md | idea-discovery | 文献摘要通俗化 timestamp copy；新增近邻工作读法和核验提醒 |
+| 2026-06-26 12:39 | manual | idea-stage/REF_PAPER_SUMMARY.md | idea-discovery | 文献摘要通俗化最新副本 |
+| 2026-06-26 12:39 | manual | idea-stage/RESEARCH_REVIEW_CLAUDE_GLM52_20260626_123900.md | idea-discovery | research review 通俗化 timestamp copy；新增外部评审读法，不改结论 |
+| 2026-06-26 12:39 | manual | idea-stage/RESEARCH_REVIEW_CLAUDE_GLM52.md | idea-discovery | research review 通俗化最新副本 |
+| 2026-06-26 12:39 | manual | refine-logs/*_20260625_121320.md | implementation | 旧实验计划/时间线/tracker 快照补充归档读法，指向通俗化最新副本 |
+| 2026-06-26 12:39 | manual | idea-stage/*20260625*.md | idea-discovery | 旧 idea-stage 快照补充归档读法，保留原始研究结论并指向通俗化最新副本 |
