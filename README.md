@@ -13,7 +13,7 @@
 
 当前 V0 范围：
 
-- 仿真优先：MuJoCo + Unitree G1；若 G1 smoke gate 失败，切到 MuJoCo Playground humanoid backend。
+- 仿真优先：MuJoCo + Unitree G1；若 G1 controller smoke gate 失败，优先切到 MJLab/mujocolab-compatible classic MuJoCo backend。
 - 底层控制器冻结：不训练 gait、joint、actuator 或 residual low-level policy。
 - 只学习高层 supervisory recovery selector，动作空间限定为 typed recovery actions。
 - V0 主实验使用 controlled detector-like grounding；真实 open-vocabulary detector 保留为 demo / V1+。

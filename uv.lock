@@ -97,6 +97,9 @@ dependencies = [
 
 [package.optional-dependencies]
 sim = [
+    { name = "mujoco" },
+]
+sim-playground = [
     { name = "jax", extra = ["cuda12"] },
     { name = "jaxlib" },
     { name = "mujoco" },
@@ -110,13 +113,14 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "jax", extras = ["cuda12"], marker = "extra == 'sim'", specifier = "==0.10.2" },
-    { name = "jaxlib", marker = "extra == 'sim'", specifier = "==0.10.2" },
+    { name = "jax", extras = ["cuda12"], marker = "extra == 'sim-playground'", specifier = "==0.10.2" },
+    { name = "jaxlib", marker = "extra == 'sim-playground'", specifier = "==0.10.2" },
     { name = "mujoco", marker = "extra == 'sim'", specifier = "==3.10.0" },
+    { name = "mujoco", marker = "extra == 'sim-playground'", specifier = "==3.10.0" },
     { name = "pydantic", specifier = "==2.13.4" },
     { name = "typing-extensions", specifier = "==4.15.0" },
 ]
-provides-extras = ["sim"]
+provides-extras = ["sim", "sim-playground"]
 
 [package.metadata.requires-dev]
 dev = [

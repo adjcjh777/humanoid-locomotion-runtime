@@ -33,5 +33,5 @@
 ## 当前前置风险
 
 - **磁盘风险**：批量 rollout 前必须先定义并验证 artifact retention policy。
-- **环境风险**：正式实现前必须锁定 Python、MuJoCo、JAX/JAXLIB、CUDA wheel、controller checkpoint、robot XML/MJCF 的版本和 hash。
+- **环境风险**：正式实现前必须锁定 Python、MuJoCo、MJLab/mujocolab backend reference、controller checkpoint、robot XML/MJCF 的版本和 hash；JAX/JAXLIB 只在显式选择 MuJoCo Playground deferred fallback 时锁定。
 - **复现风险**：不要把 “同 seed 双 run” 写成因果 counterfactual；严格反事实需要 snapshot branching。

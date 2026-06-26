@@ -19,6 +19,9 @@ dependencies = [
 
 [project.optional-dependencies]
 sim = [
+  "mujoco==3.10.0",
+]
+sim-playground = [
   "jax[cuda12]==0.10.2",
   "jaxlib==0.10.2",
   "mujoco==3.10.0",

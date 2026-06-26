@@ -12,7 +12,7 @@
 ### Gate A: repo foundation + environment lock
 
 - [x] 加入 `pyproject.toml`、`uv.lock`、`src/`、`tests/`、CI、LICENSE；证据：`docs/gate_a_foundation.md`、`refine-logs/EXPERIMENT_TRACKER.md` R008。
-- [x] 锁定 Python、MuJoCo、JAX/JAXLIB、CUDA wheel；controller checkpoint 和 robot XML/MJCF hash 在 `configs/environment.lock.toml` 中明确为未选择阻塞字段。
+- [x] 锁定 Python、MuJoCo 和 MJLab/classic MuJoCo first backend policy；JAX/JAXLIB 仅作为 deferred Playground extra，controller checkpoint 和 robot XML/MJCF hash 在 `configs/environment.lock.toml` 中明确为未选择阻塞字段。
 - [x] 清理 public repo：`.aris/meta/`、`.aris/traces/`、raw agent prompt/response 不进 git；证据：`.gitignore`、`git ls-files .aris` 为空。
 - [x] 机器 profile 保持匿名化；hostname、用户名、绝对路径、私有 SSH/IP/ARIS path 写入 private ops；证据：`docs/a800_machine_profile.md`、`docs/rtx5090_machine_profile.md`。
 - [x] 配置 artifact retention policy；磁盘 microbenchmark 成为正式前置 gate；证据：`configs/artifact_retention.toml`、R004 保持 TODO 且标为 MUST。
@@ -115,7 +115,7 @@
 **晚上 ARIS**
 
 - [ ] R001: repo sync dry-run。
-- [ ] R002: environment smoke。
+- [ ] R002: environment smoke；primary smoke 检查 Python/MuJoCo/MJLab-classic import/GPU，不把 JAX 作为前置条件。
 - [x] R003: artifact write smoke；证据：`write_sample_episode_data_package()`、`tests/test_gate_b_edp.py`，本次由白天 tmp-path 单元测试完成，不提交 generated outputs。
 - [ ] R005: nightly handoff dry-run。
 
@@ -171,7 +171,7 @@
 
 - [ ] 集成或定位 G1 model/controller backend。
 - [ ] 实现最小 `stand_ready` / `safe_stop` / `track_velocity` smoke command。
-- [ ] 明确如果 G1 不通，MuJoCo Playground fallback 的入口和接口差异。
+- [ ] 明确如果 G1 不通，MJLab/mujocolab-compatible classic MuJoCo fallback 的入口和接口差异。
 
 **晚上 ARIS**
 

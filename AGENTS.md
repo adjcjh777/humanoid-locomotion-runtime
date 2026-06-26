@@ -9,7 +9,7 @@
 
 - 本仓库是独立的 **Humanoid Locomotion Runtime** 项目。
 - 权威计划文件是 [docs/research_plan_prd.md](docs/research_plan_prd.md)。
-- V0 目标是 MuJoCo + Unitree G1 + 成熟 locomotion controller；如果 G1 smoke gate 失败，切换到 MuJoCo Playground humanoid locomotion backend。
+- V0 目标是 MuJoCo + Unitree G1 + 成熟 locomotion controller；如果 G1 controller smoke gate 失败，优先切换到 MJLab/mujocolab-compatible classic MuJoCo backend，而不是默认切到 MuJoCo Playground。
 - V0 是语言条件 humanoid locomotion runtime，不是端到端 foundation-scale VLA。
 - V0 的学习只发生在 task/failure 层的 supervisory recovery；任何 learned policy 都不能替代底层 gait、joint 或 actuator control。
 
@@ -77,7 +77,7 @@
 - Failure taxonomy 必须拆成 cause × temporal profile。`user_interrupt` 是 task-control event，不作为 failure family。
 - Negative control 的“无收益”必须用 smallest effect size of interest 和 equivalence / TOST 风格证据支持；不能把 p 值不显著写成没有效果。
 - final evaluation 必须预注册 primary endpoint、policy training seeds、scenario seeds、cluster/hierarchical bootstrap 和 multiplicity control。
-- 环境必须锁定 Python、MuJoCo、JAX/JAXLIB、CUDA wheel、controller checkpoint、robot XML/MJCF 版本与 hash；A800/5090 的 live ops 细节放 private ops，不进公开 repo。
+- 环境必须锁定 Python、MuJoCo、MJLab/mujocolab backend reference、controller checkpoint、robot XML/MJCF 版本与 hash；JAX/JAXLIB 只在显式选择 MuJoCo Playground deferred fallback 时才作为额外锁定项。A800/5090 的 live ops 细节放 private ops，不进公开 repo。
 
 ## 可确认待办规则
 

@@ -9,7 +9,7 @@
 - [x] `src/` 和 `tests/` 建立最小可运行 package 与 Gate A 校验。
 - [x] `.github/workflows/ci.yml` 建立 CI：`uv sync --locked`、`ruff check`、`pytest`。
 - [x] `LICENSE` 已加入。
-- [x] `configs/environment.lock.toml` 锁定 Python、uv、MuJoCo、JAX/JAXLIB、CUDA wheel extra 和 `mujoco_playground` tag/commit。
+- [x] `configs/environment.lock.toml` 锁定 Python、uv、MuJoCo 和 MJLab/mujocolab-first backend policy；JAX/JAXLIB 只作为 deferred MuJoCo Playground extra。
 - [x] `configs/artifact_retention.toml` 定义 generated artifacts、raw agent traces 和 disk gate 策略。
 - [x] `.aris/meta/`、`.aris/traces/`、机器 hostname、用户名、绝对路径、实时 GPU 占用保持在公开仓库外。
 

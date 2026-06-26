@@ -17,20 +17,27 @@ typing_extensions = { version = "4.15.0", source = "PyPI" }
 pytest = { version = "9.1.1", source = "PyPI" }
 ruff = { version = "0.15.19", source = "PyPI" }
 mujoco = { version = "3.10.0", source = "PyPI", optional_extra = "sim" }
-jax = { version = "0.10.2", source = "PyPI", optional_extra = "sim[cuda12]" }
-jaxlib = { version = "0.10.2", source = "PyPI", optional_extra = "sim" }
+jax = { version = "0.10.2", source = "PyPI", optional_extra = "sim-playground[cuda12]", status = "deferred-optional" }
+jaxlib = { version = "0.10.2", source = "PyPI", optional_extra = "sim-playground", status = "deferred-optional" }
 
 [cuda_wheel]
-provider = "jax[cuda12]"
-jax_version = "0.10.2"
-status = "pinned-optional-extra"
-note = "Install with `uv sync --extra sim` only on hosts intended for simulator/GPU work."
+provider = "none-required-for-mjlab-classic-smoke"
+playground_provider = "jax[cuda12]"
+playground_jax_version = "0.10.2"
+status = "deferred-optional-extra"
+note = "Primary MJLab/classic MuJoCo smoke uses `uv sync --extra sim`; install `--extra sim-playground` only if the deferred MuJoCo Playground path is explicitly selected."
+
+[mjlab_backend]
+source = "external MJLab/mujocolab or xiaoqibot MJLab stack"
+status = "preferred-v0-sim-backend-unselected"
+required_before = "controller smoke gate"
+note = "V0 should first use the user's MJLab/mujocolab-compatible MuJoCo stack. Lock the exact local/upstream commit, controller wrapper, and robot asset hash before controller smoke evidence."
 
 [mujoco_playground]
 source = "https://github.com/google-deepmind/mujoco_playground.git"
 ref = "refs/tags/v0.2.0"
 commit = "124a73fa3303f75a62f8fe04d329b829ed0ebdfb"
-status = "pinned-source-reference-not-vendored"
+status = "deferred-optional-reference-not-primary-v0-requirement"
 
 [controller_checkpoint]
 status = "unselected"
@@ -45,6 +52,6 @@ required_before = "controller smoke gate"
 note = "No robot XML/MJCF asset is selected or committed at Gate A; this field must be filled before controller backend evidence."
 
 [runtime_reproducibility]
-jax_default_matmul_precision = "highest"
-deterministic_evaluation_backend = "cpu-mujoco-or-validated-deterministic-backend"
+jax_default_matmul_precision = "highest-if-sim-playground-is-selected"
+deterministic_evaluation_backend = "cpu-mujoco-classic-or-validated-deterministic-backend"
 raw_traces_in_git = false

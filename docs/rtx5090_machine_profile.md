@@ -33,4 +33,4 @@
 
 - **主机策略风险**：5090 是 backup，不是默认主线；除非用户明确改变策略，否则不要把主实验迁移到 5090。
 - **磁盘风险**：批量 rollout 前必须先定义并验证 artifact retention policy。
-- **环境风险**：正式实现前必须锁定 Python、MuJoCo、JAX/JAXLIB、CUDA wheel、controller checkpoint、robot XML/MJCF 的版本和 hash。
+- **环境风险**：正式实现前必须锁定 Python、MuJoCo、MJLab/mujocolab backend reference、controller checkpoint、robot XML/MJCF 的版本和 hash；JAX/JAXLIB 只在显式选择 MuJoCo Playground deferred fallback 时锁定。

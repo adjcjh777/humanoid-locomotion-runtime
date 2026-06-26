@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import re
 import tomllib
 from pathlib import Path
 
@@ -32,17 +31,21 @@ def test_python_and_core_versions_are_pinned() -> None:
     assert (ROOT / ".python-version").read_text(encoding="utf-8").strip() == "3.12.13"
     assert environment["python"]["version"] == "3.12.13"
     assert environment["packages"]["mujoco"]["version"] == "3.10.0"
-    assert environment["packages"]["jax"]["version"] == "0.10.2"
-    assert environment["packages"]["jaxlib"]["version"] == "0.10.2"
+    assert pyproject["project"]["optional-dependencies"]["sim"] == ["mujoco==3.10.0"]
+    assert "jax[cuda12]==0.10.2" in pyproject["project"]["optional-dependencies"][
+        "sim-playground"
+    ]
 
 
-def test_mujoco_playground_reference_is_exact_commit() -> None:
+def test_mjlab_is_primary_sim_backend_and_playground_is_deferred() -> None:
     environment = load_toml("configs/environment.lock.toml")
+    mjlab = environment["mjlab_backend"]
     playground = environment["mujoco_playground"]
 
-    assert playground["ref"] == "refs/tags/v0.2.0"
-    assert re.fullmatch(r"[0-9a-f]{40}", playground["commit"])
-    assert playground["status"] == "pinned-source-reference-not-vendored"
+    assert mjlab["status"] == "preferred-v0-sim-backend-unselected"
+    assert mjlab["required_before"] == "controller smoke gate"
+    assert playground["status"] == "deferred-optional-reference-not-primary-v0-requirement"
+    assert environment["cuda_wheel"]["status"] == "deferred-optional-extra"
 
 
 def test_controller_and_robot_assets_are_explicitly_blocked_until_selected() -> None:
