@@ -14,6 +14,12 @@
 
 **当前 Go/No-Go**：现在可以推进最小代码脚手架、schema/leakage boundary、EDP、option contract、snapshot/restore testbed 和 failure protocol freeze。现在不能启动 PPO、大规模实验或论文主结论。
 
+**Mac 本机分工**：Mac 工作室只推进不会污染 A800 主实验线的事项。当前清单见 `refine-logs/MAC_SAFE_WORKLIST.md`。
+
+- [ ] Mac 可做：本机工具链对齐、纯 Python contract tests、Gate C backend-neutral contract/testbed、RuntimeManager typed command skeleton、leakage boundary tests、A800 handoff 文档和 citation audit。
+- [ ] Mac 不做：A800 runtime smoke、23DoF controller smoke、failure pilots、severity calibration、baseline ladder、PPO、大规模 rollout 或论文主结论证据。
+- [ ] 若 Mac 产生临时 outputs，必须保持在 ignored 目录；提交前用 `git status --short` 确认 raw runs/logs/checkpoints/weights/datasets 未进入 git。
+
 ## Claim 映射
 
 | Claim | 为什么重要 | 最小可信证据 | 对应实验块 |
@@ -55,6 +61,7 @@
 - [x] R019: recovery option/SMDP contract 完成；证据：`src/humanoid_locomotion_runtime/recovery_options.py`、`tests/test_recovery_options.py`、`docs/gate_c_option_snapshot_contract.md`。
 - [x] R018a: snapshot manifest / branch metadata contract 完成；证据：`src/humanoid_locomotion_runtime/snapshot_branching.py`、`tests/test_snapshot_branching.py`、`docs/gate_c_option_snapshot_contract.md`。
 - [ ] R018: deterministic simulator/runtime snapshot restore、common random numbers branch smoke 和 branch oracle 仍未完成。
+- [ ] Mac 可先补 R018 的 backend-neutral testbed 和 fake deterministic restore contract，但不能把该工作记为 simulator/runtime restore smoke。
 
 ## 实验块
 

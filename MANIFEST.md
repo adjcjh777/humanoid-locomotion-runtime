@@ -198,3 +198,9 @@
 | 2026-06-26 09:42 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | R010/R010a/R010b/R016/R018a/R019 更新后的实验计划最新副本 |
 | 2026-06-26 09:42 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260626_094241.md | implementation | Gate C/Gate D protocol freeze 更新后的每日时间线 timestamp copy |
 | 2026-06-26 09:42 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | Gate C/Gate D protocol freeze 更新后的每日时间线最新副本 |
+| 2026-06-27 12:08 | manual | refine-logs/MAC_SAFE_WORKLIST_20260627_120833.md | implementation | Mac 本机安全工作清单 timestamp copy；列出 Mac 可做事项、A800-only 项和禁止写法；M-MAC-001/M-MAC-002/M-MAC-007 已完成并记录证据 |
+| 2026-06-27 12:08 | manual | refine-logs/MAC_SAFE_WORKLIST.md | implementation | Mac 本机安全工作清单最新副本；记录本机 uv/Python 对齐、纯 Python contract tests 通过和相关文档入口同步 |
+| 2026-06-27 12:08 | manual | README.md | implementation | README 增加 Mac/A800 当前主机分工入口 |
+| 2026-06-27 12:08 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | 实验计划同步 Mac 本机分工和 Gate C backend-neutral 工作边界 |
+| 2026-06-27 12:08 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | 每日时间线同步 Mac 本机工作入口和 smoke 证据边界 |
+| 2026-06-27 12:08 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 增加 Mac-safe checklist 入口，强调 Mac work 不替代 run-level A800 evidence |

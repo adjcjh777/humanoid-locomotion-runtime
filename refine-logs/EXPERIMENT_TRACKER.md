@@ -9,6 +9,8 @@
 - `系统 / 变体` 表示这次跑哪种方法或配置。
 - `Split` 表示使用哪组 seeds 或数据划分。
 - `状态` 只记录事实，不记录愿望。
+- Mac 本机安全工作不替代 run-level 实验证据；当前可做清单见 `refine-logs/MAC_SAFE_WORKLIST.md`。
+- Mac 可做的 contract/testbed/handoff 工作必须保留为 `M-MAC-*` checklist，不得把 Mac 本地检查写成 A800 smoke、pilot 或 baseline DONE。
 
 | Run ID | 里程碑 | 目的 | 系统 / 变体 | Split | 指标 | 优先级 | 白天/夜间负责人 | 状态 | 备注 |
 |--------|--------|------|-------------|-------|------|--------|------------------|------|------|

@@ -19,6 +19,7 @@
 - [实验计划](refine-logs/EXPERIMENT_PLAN.md)
 - [每日实验时间线](refine-logs/DAILY_EXPERIMENT_TIMELINE.md)
 - [实验跟踪表](refine-logs/EXPERIMENT_TRACKER.md)
+- [Mac 本机安全工作清单](refine-logs/MAC_SAFE_WORKLIST.md)
 
 当前 V0 范围：
 
@@ -29,6 +30,12 @@
 - 使用 temporary object memory：先做短期目标记忆，但接口要兼容未来 persistent 3D semantic memory。
 - 使用 MPC / optimization local planner + SafetySupervisor：局部规划和安全兜底必须在 runtime 本地闭环里完成。
 - 论文主线是诊断性研究：优先用 decision-point snapshot branching 诊断 memory 在哪些 failure profile 中改变决策并改善恢复；snapshot 未实现前只能报告 paired matched-seed diagnostic。
+
+当前主机分工：
+
+- [ ] Mac 本机优先做工具链对齐、纯 Python contract tests、Gate C backend-neutral interface、RuntimeManager typed command skeleton、leakage boundary 测试和 A800 handoff 文档；详见 `refine-logs/MAC_SAFE_WORKLIST.md`。
+- [ ] A800 继续作为主实验机，负责 MJLab/runtime smoke、controller smoke、failure pilots、severity calibration、baseline ladder、snapshot branch diagnostics 和所有会被写成实验事实的 rollout evidence。
+- [ ] Mac 上的本地检查不能写成 `A800_SINGLE_HOST` 证据，也不能把 `mjlab_g1_29dof_reference` 冒充为 `company_g1_edu_23dof` controller evidence。
 
 复现初始化：
 

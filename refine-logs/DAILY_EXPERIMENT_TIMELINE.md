@@ -13,6 +13,12 @@
 
 **审核后修正**: 下面的 28 天安排只是参考节奏。任何 gate 未通过，不进入下一阶段，也不启动 PPO、大规模实验或论文主结论。
 
+**Mac 本机工作入口**: 当前 Mac 只做不会影响 A800 主实验线的工作，详细清单见 `refine-logs/MAC_SAFE_WORKLIST.md`。
+
+- [ ] Mac 白天可做：工具链对齐、纯 Python contract tests、Gate C backend-neutral interface、RuntimeManager typed command skeleton、leakage boundary tests 和 A800 handoff 文档。
+- [ ] Mac 不跑：A800 runtime smoke、23DoF controller smoke、failure pilots、severity calibration、baseline ladder、PPO 或任何主结论 rollout。
+- [ ] Mac 产出的本地临时文件必须保持 git 外；提交前检查 `git status --short`。
+
 ## Gate-driven 总时间线
 
 ### Gate A: repo foundation + environment lock
@@ -86,12 +92,14 @@
 ### 10:00-12:30 白天构建块 A
 
 - [ ] 做需要人判断的代码/协议/配置。
+- [ ] 若在 Mac 本机工作，优先执行 `refine-logs/MAC_SAFE_WORKLIST.md` 的 M-MAC-001 到 M-MAC-004，不改写 A800 实验证据。
 - [ ] 更新 tracker 的 `Status` 和 `Notes`。
 - [ ] 对任何会影响论文 claim 的变更写清楚 reason。
 
 ### 14:00-18:30 白天构建块 B
 
 - [ ] 补测试、跑小规模本地/A800 smoke。
+- [ ] 若 smoke 在 Mac 本机执行，必须标记为 local inspection；只有 A800 或明确实验主机结果才能作为 runtime/controller evidence。
 - [ ] 产出 night handoff：要跑哪些 run id、输入 config、成功标准、失败处理。
 - [ ] commit/push 后再让 ARIS 夜间接管。
 
