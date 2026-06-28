@@ -1,0 +1,108 @@
+{
+  "verdict": "WARN",
+  "hallucination_rate": 0.0,
+  "pending_rate": 0.1,
+  "warnings": [
+    "transient_failures_present"
+  ],
+  "papers": [
+    {
+      "id": "racer_2024",
+      "status": "verified",
+      "method": "arxiv",
+      "confidence": "high",
+      "reason": null,
+      "identifiers": {
+        "arxiv_id": "2409.14674"
+      }
+    },
+    {
+      "id": "reflect_robofail_2023",
+      "status": "verified",
+      "method": "arxiv",
+      "confidence": "high",
+      "reason": null,
+      "identifiers": {
+        "arxiv_id": "2306.15724"
+      }
+    },
+    {
+      "id": "failure_aware_rl_2026",
+      "status": "verified",
+      "method": "arxiv",
+      "confidence": "high",
+      "reason": null,
+      "identifiers": {
+        "arxiv_id": "2601.07821"
+      }
+    },
+    {
+      "id": "real_world_humanoid_2024",
+      "status": "verified",
+      "method": "arxiv",
+      "confidence": "high",
+      "reason": null,
+      "identifiers": {
+        "arxiv_id": "2303.03381"
+      }
+    },
+    {
+      "id": "challenging_terrain_humanoid_2024",
+      "status": "verified",
+      "method": "arxiv",
+      "confidence": "high",
+      "reason": null,
+      "identifiers": {
+        "arxiv_id": "2410.03654"
+      }
+    },
+    {
+      "id": "vp_nav_2021",
+      "status": "verified",
+      "method": "arxiv",
+      "confidence": "high",
+      "reason": null,
+      "identifiers": {
+        "arxiv_id": "2112.02094"
+      }
+    },
+    {
+      "id": "rma_2021",
+      "status": "verified",
+      "method": "arxiv",
+      "confidence": "high",
+      "reason": null,
+      "identifiers": {
+        "arxiv_id": "2107.04034"
+      }
+    },
+    {
+      "id": "serf_2026",
+      "status": "verified",
+      "method": "arxiv",
+      "confidence": "high",
+      "reason": null,
+      "identifiers": {
+        "arxiv_id": "2606.12956"
+      }
+    },
+    {
+      "id": "flare_2026",
+      "status": "verify_pending",
+      "method": null,
+      "confidence": null,
+      "reason": "s2_verify_pending",
+      "identifiers": {}
+    },
+    {
+      "id": "code_as_monitor",
+      "status": "verified",
+      "method": "arxiv",
+      "confidence": "high",
+      "reason": null,
+      "identifiers": {
+        "arxiv_id": "2412.04455"
+      }
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "racer_2024",
+    "arxiv_id": "2409.14674",
+    "doi": null,
+    "title": "RACER: Rich Language-Guided Failure Recovery Policies for Imitation Learning"
+  },
+  {
+    "id": "reflect_robofail_2023",
+    "arxiv_id": "2306.15724",
+    "doi": null,
+    "title": "REFLECT: Summarizing Robot Experiences for Failure Explanation and Correction"
+  },
+  {
+    "id": "failure_aware_rl_2026",
+    "arxiv_id": "2601.07821",
+    "doi": null,
+    "title": "Failure-Aware Reinforcement Learning: Reliable Offline-to-Online Reinforcement Learning with Self-Recovery from Interventions"
+  },
+  {
+    "id": "real_world_humanoid_2024",
+    "arxiv_id": "2303.03381",
+    "doi": "10.1126/scirobotics.adi9579",
+    "title": "Real-World Humanoid Locomotion with Reinforcement Learning"
+  },
+  {
+    "id": "challenging_terrain_humanoid_2024",
+    "arxiv_id": "2410.03654",
+    "doi": null,
+    "title": "Learning Humanoid Locomotion over Challenging Terrain"
+  },
+  {
+    "id": "vp_nav_2021",
+    "arxiv_id": "2112.02094",
+    "doi": null,
+    "title": "Coupling Vision and Proprioception for Navigation of Legged Robots"
+  },
+  {
+    "id": "rma_2021",
+    "arxiv_id": "2107.04034",
+    "doi": null,
+    "title": "RMA: Rapid Motor Adaptation for Legged Robots"
+  },
+  {
+    "id": "serf_2026",
+    "arxiv_id": "2606.12956",
+    "doi": null,
+    "title": "SERF: Spatiotemporal Environment and Robot Feature Map for Long-Horizon Mobile Manipulation"
+  },
+  {
+    "id": "flare_2026",
+    "arxiv_id": null,
+    "doi": null,
+    "title": "FLARE: A Failure-Aware Framework for Autonomous Correction and Recovery in Visual-Language Robotic Manipulation"
+  },
+  {
+    "id": "code_as_monitor",
+    "arxiv_id": "2412.04455",
+    "doi": null,
+    "title": "Code-as-Monitor: Constraint-aware Visual Programming for Reactive and Proactive Robotic Failure Detection"
+  }
+]

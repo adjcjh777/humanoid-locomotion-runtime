@@ -231,3 +231,13 @@
 | 2026-06-28 17:10 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | 每日时间线同步 run id、decision pair matching 和 Mac/A800 验收边界 |
 | 2026-06-28 17:10 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260628_171025.md | implementation | 每日时间线 timestamp copy |
 | 2026-06-28 17:10 | manual | README.md | implementation | README 主机分工同步新增 Mac-safe skeleton 与 A800-only evidence boundary |
+| 2026-06-28 17:52 | /research-lit | refine-logs/LITERATURE_CANDIDATES_20260628.json | research | R048/R071a 文献驱动实验设计候选论文清单；9/10 后续由 verifier 或官方页面支撑 |
+| 2026-06-28 17:52 | /research-lit | refine-logs/LITERATURE_VERIFICATION_20260628.json | research | ARIS `verify_papers.py` 输出；9 篇 arXiv high-confidence，FLARE 仍 verify_pending，hallucination_rate 0.0 |
+| 2026-06-28 17:52 | /research-lit | refine-logs/LITERATURE_INFORMED_EXPERIMENT_DESIGN.md | research | R048/R071a 最新副本：按 failure recovery、humanoid/legged locomotion、navigation、memory/map 和 monitor 文献改进指标、baseline 和 gate |
+| 2026-06-28 17:52 | /research-lit | refine-logs/LITERATURE_INFORMED_EXPERIMENT_DESIGN_20260628_175221.md | research | R048/R071a timestamp copy |
+| 2026-06-28 17:52 | /research-lit | refine-logs/EXPERIMENT_PLAN.md | implementation | 实验计划同步 literature-informed metric/baseline audit，新增 R028/R029/R048/R071a 边界；真实 rollout 仍 TODO |
+| 2026-06-28 17:52 | /research-lit | refine-logs/EXPERIMENT_PLAN_20260628_175221.md | implementation | 实验计划 timestamp copy |
+| 2026-06-28 17:52 | /research-lit | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 新增 R028 safety monitor baseline、R029 causal transformer raw-history baseline、R048/R071a 完成证据 |
+| 2026-06-28 17:52 | /research-lit | refine-logs/EXPERIMENT_TRACKER_20260628_175221.md | implementation | tracker timestamp copy |
+| 2026-06-28 17:52 | /research-lit | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | 每日时间线同步新增 safety monitor、causal transformer raw-history 和文献驱动指标 |
+| 2026-06-28 17:52 | /research-lit | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260628_175221.md | implementation | 每日时间线 timestamp copy |
