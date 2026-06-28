@@ -19,6 +19,8 @@
 - [实验计划](refine-logs/EXPERIMENT_PLAN.md)
 - [每日实验时间线](refine-logs/DAILY_EXPERIMENT_TIMELINE.md)
 - [实验跟踪表](refine-logs/EXPERIMENT_TRACKER.md)
+- [Mac 本机安全工作清单](refine-logs/MAC_SAFE_WORKLIST.md)
+- [A800 night handoff after Mac-safe work](refine-logs/A800_NIGHT_HANDOFF_MAC_SAFE_20260628.md)
 
 当前 V0 范围：
 
@@ -29,6 +31,12 @@
 - 使用 temporary object memory：先做短期目标记忆，但接口要兼容未来 persistent 3D semantic memory。
 - 使用 MPC / optimization local planner + SafetySupervisor：局部规划和安全兜底必须在 runtime 本地闭环里完成。
 - 论文主线是诊断性研究：优先用 decision-point snapshot branching 诊断 memory 在哪些 failure profile 中改变决策并改善恢复；snapshot 未实现前只能报告 paired matched-seed diagnostic。
+
+当前主机分工：
+
+- [x] Mac 本机已完成工具链对齐、纯 Python contract tests、Gate C backend-neutral fake restore testbed、RuntimeManager typed command skeleton、leakage-boundary tests、A800 handoff 文档和 citation audit；详见 `refine-logs/MAC_SAFE_WORKLIST.md`。
+- [ ] A800 仍负责真实 MJLab/runtime smoke、23DoF controller smoke、R018 deterministic simulator/runtime restore、R011-R017 pilots、R020-R027 baselines、memory diagnostics 和所有 rollout-derived claims。
+- [ ] Mac 上的 fake backend、mock restore、local citation audit 或 scoped pytest 不能写成 `A800_SINGLE_HOST` evidence、controller smoke evidence 或论文实验结果。
 
 复现初始化：
 

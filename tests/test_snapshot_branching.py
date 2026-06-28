@@ -5,8 +5,12 @@ from pydantic import ValidationError
 
 from humanoid_locomotion_runtime.schemas import RecoveryActionRecord
 from humanoid_locomotion_runtime.snapshot_branching import (
+    CommonRandomStream,
+    DecisionEpoch,
+    FakeDeterministicSnapshotProvider,
     SnapshotBranchMetadata,
     SnapshotManifest,
+    runtime_payload_sha256,
 )
 
 
@@ -133,4 +137,118 @@ def test_recovery_action_record_branch_hash_fields_are_checked() -> None:
             available_actions=["continue", "slow_down"],
             policy_name="contract_test",
             observation_hash="bad",
+        )
+
+
+def test_decision_epoch_and_common_random_stream_record_backend_neutral_contract() -> None:
+    epoch = DecisionEpoch(
+        decision_id="dec-001",
+        episode_id="episode-001",
+        timestamp_s=10.0,
+        trigger="failure_trigger",
+        scenario_seed=202606260,
+        exogenous_noise_seed=202606261,
+        observation_hash=digest("a"),
+        memory_hash=digest("b"),
+        active_option="slow_down",
+    )
+    stream = CommonRandomStream(
+        scenario_seed=epoch.scenario_seed,
+        exogenous_noise_seed=epoch.exogenous_noise_seed,
+    )
+
+    assert epoch.trigger == "failure_trigger"
+    assert stream.stream_id == "crn-v0"
+    assert stream.deterministic_replay_required is True
+
+    with pytest.raises(ValidationError, match="ground_truth_target_pose"):
+        DecisionEpoch(
+            decision_id="dec-bad",
+            episode_id="episode-001",
+            timestamp_s=10.0,
+            trigger="option_timeout",
+            scenario_seed=1,
+            exogenous_noise_seed=2,
+            observation_hash=digest("a"),
+            memory_hash=digest("b"),
+            metadata={"nested": {"ground_truth_target_pose": [0, 0, 0]}},
+        )
+
+
+def test_runtime_payload_hash_rejects_privileged_nested_fields() -> None:
+    assert runtime_payload_sha256({"planner": {"blocked": False}}) != runtime_payload_sha256(
+        {"planner": {"blocked": True}}
+    )
+
+    with pytest.raises(ValueError, match="mujoco_object_id"):
+        runtime_payload_sha256({"runtime": [{"mujoco_object_id": "object-42"}]})
+
+
+def test_fake_deterministic_snapshot_provider_roundtrips_without_claiming_r018() -> None:
+    provider = FakeDeterministicSnapshotProvider(
+        robot_profile_id="company_g1_edu_23dof",
+        controller_profile_id="company_g1_edu_23dof_controller_pending_r007e",
+    )
+    epoch = DecisionEpoch(
+        decision_id="dec-001",
+        episode_id="episode-001",
+        timestamp_s=1.0,
+        trigger="failure_trigger",
+        scenario_seed=202606260,
+        exogenous_noise_seed=202606261,
+        observation_hash=digest("a"),
+        memory_hash=digest("b"),
+        active_option="slow_down",
+    )
+
+    manifest = provider.capture(
+        snapshot_id="snap-001",
+        epoch=epoch,
+        simulator_state={"qpos_hash_input": [1, 2, 3]},
+        runtime_components={
+            "planner": {"route_id": "route-001"},
+            "memory": {"target_ids": ["target-001"]},
+            "active_option": {"action": "slow_down", "elapsed_s": 0.5},
+        },
+    )
+    restored = provider.restore("snap-001")
+    branch = provider.branch(
+        base_snapshot_id="snap-001",
+        branch_id="branch-safe-stop",
+        action="safe_stop",
+        policy_training_seed=61001,
+    )
+
+    assert restored == manifest
+    assert manifest.restore_status == "contract_only_no_restore"
+    assert manifest.metadata["testbed_scope"] == "fake_backend_only"
+    assert set(manifest.runtime_state_hashes) == {"active_option", "memory", "planner"}
+    assert branch.base_snapshot_id == "snap-001"
+    assert branch.action == "safe_stop"
+    assert branch.common_random_stream_id == "crn-v0"
+    assert branch.metadata["testbed_scope"] == "fake_backend_only"
+
+
+def test_fake_snapshot_provider_applies_leakage_boundary_to_runtime_components() -> None:
+    provider = FakeDeterministicSnapshotProvider(
+        robot_profile_id="company_g1_edu_23dof",
+        controller_profile_id="company_g1_edu_23dof_controller_pending_r007e",
+    )
+    epoch = DecisionEpoch(
+        decision_id="dec-001",
+        episode_id="episode-001",
+        timestamp_s=1.0,
+        trigger="failure_trigger",
+        scenario_seed=202606260,
+        exogenous_noise_seed=202606261,
+        observation_hash=digest("a"),
+        memory_hash=digest("b"),
+    )
+
+    with pytest.raises(ValueError, match="oracle_action"):
+        provider.capture(
+            snapshot_id="snap-bad",
+            epoch=epoch,
+            simulator_state={"legal": True},
+            runtime_components={"planner": {"oracle_action": "safe_stop"}},
         )

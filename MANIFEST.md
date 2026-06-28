@@ -198,3 +198,18 @@
 | 2026-06-26 09:42 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | R010/R010a/R010b/R016/R018a/R019 更新后的实验计划最新副本 |
 | 2026-06-26 09:42 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260626_094241.md | implementation | Gate C/Gate D protocol freeze 更新后的每日时间线 timestamp copy |
 | 2026-06-26 09:42 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | Gate C/Gate D protocol freeze 更新后的每日时间线最新副本 |
+| 2026-06-28 13:11 | manual | src/humanoid_locomotion_runtime/snapshot_branching.py | implementation | M-MAC-003：新增 `DecisionEpoch`、`CommonRandomStream`、`SnapshotProvider` protocol、`FakeDeterministicSnapshotProvider` 和 runtime payload hash；fake backend only，不表示 R018 restore 完成 |
+| 2026-06-28 13:11 | manual | src/humanoid_locomotion_runtime/runtime_manager.py | implementation | M-MAC-004：新增 Mac-safe `RuntimeManager`、`SafetySupervisor`、`RuntimeCommandEnvelope` 和 `FakeRuntimeBackend` skeleton；不接真实 controller |
+| 2026-06-28 13:11 | manual | tests/test_snapshot_branching.py | implementation | M-MAC-003/M-MAC-005：覆盖 fake deterministic restore roundtrip、common random stream contract 和 nested privileged leakage boundary |
+| 2026-06-28 13:11 | manual | tests/test_runtime_manager.py | implementation | M-MAC-004/M-MAC-005：覆盖 typed command routing、SafetySupervisor block、fake backend 防绕过和 envelope metadata leakage boundary |
+| 2026-06-28 13:11 | manual | docs/gate_c_option_snapshot_contract.md | implementation | Gate C 记录同步 Mac fake restore / RuntimeManager skeleton 证据，同时保留 R018 deterministic restore TODO |
+| 2026-06-28 13:11 | manual | refine-logs/MAC_SAFE_WORKLIST.md | implementation | Mac 本机安全工作清单最新副本；M-MAC-001 到 M-MAC-008 已完成，A800-only evidence 边界保留 |
+| 2026-06-28 13:11 | manual | refine-logs/MAC_SAFE_WORKLIST_20260628_131100.md | implementation | Mac 本机安全工作清单 timestamp copy |
+| 2026-06-28 13:11 | manual | refine-logs/A800_NIGHT_HANDOFF_MAC_SAFE_20260628.md | implementation | M-MAC-006：A800 接手 handoff，覆盖 R018、23DoF controller smoke、R011-R017 pilots 的成功标准和停止条件 |
+| 2026-06-28 13:11 | manual | refine-logs/CITATION_AUDIT_20260628.md | implementation | M-MAC-008：高风险近邻文献官方来源核验草案；正式 BibTeX/venue/DOI 精读仍属 R071 |
+| 2026-06-28 13:11 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 R018 Mac fake testbed 和 R071 citation audit draft；真实 R018/R071 仍 TODO |
+| 2026-06-28 13:11 | manual | refine-logs/EXPERIMENT_TRACKER_20260628_131100.md | implementation | tracker timestamp copy |
+| 2026-06-28 13:11 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | 实验计划同步 Mac/A800 分工和 Gate C fake testbed 证据 |
+| 2026-06-28 13:11 | manual | refine-logs/EXPERIMENT_PLAN_20260628_131100.md | implementation | 实验计划 timestamp copy |
+| 2026-06-28 13:11 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | 每日时间线同步 Mac 工作入口、decision epoch 和 common random stream contract |
+| 2026-06-28 13:11 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260628_131100.md | implementation | 每日时间线 timestamp copy |

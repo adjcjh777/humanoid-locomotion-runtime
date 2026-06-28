@@ -23,6 +23,13 @@ from humanoid_locomotion_runtime.recovery_options import (
     RecoveryOptionContract,
     validate_recovery_option_catalog,
 )
+from humanoid_locomotion_runtime.runtime_manager import (
+    FakeRuntimeBackend,
+    RuntimeCommandEnvelope,
+    RuntimeManager,
+    SafetyDecision,
+    SafetySupervisor,
+)
 from humanoid_locomotion_runtime.schemas import (
     BodyMemoryState,
     EpisodeManifest,
@@ -49,8 +56,12 @@ from humanoid_locomotion_runtime.seed_splits import (
     generate_stride_seed_splits,
 )
 from humanoid_locomotion_runtime.snapshot_branching import (
+    CommonRandomStream,
+    DecisionEpoch,
+    FakeDeterministicSnapshotProvider,
     SnapshotBranchMetadata,
     SnapshotManifest,
+    runtime_payload_sha256,
     validate_sha256_digest,
 )
 
@@ -67,6 +78,8 @@ __all__ = [
     "EpisodeMetrics",
     "EpisodeReplayIndex",
     "FailureEvent",
+    "FakeDeterministicSnapshotProvider",
+    "FakeRuntimeBackend",
     "LocomotionCommand",
     "LocomotionStatus",
     "MJLAB_G1_29DOF_REFERENCE_CONTRACT",
@@ -76,11 +89,17 @@ __all__ = [
     "PolicyObservation",
     "RECOVERY_ACTIONS",
     "RECOVERY_OPTION_CONTRACTS",
+    "RuntimeCommandEnvelope",
+    "RuntimeManager",
     "RecoveryActionRecord",
     "RecoveryOptionContract",
     "ReplayArtifactRecord",
     "RuntimeEvent",
     "RuntimeEventLogger",
+    "SafetyDecision",
+    "SafetySupervisor",
+    "CommonRandomStream",
+    "DecisionEpoch",
     "SnapshotBranchMetadata",
     "SnapshotManifest",
     "__version__",
@@ -94,6 +113,7 @@ __all__ = [
     "generate_stride_seed_splits",
     "get_controller_contract",
     "joint_order_sha256",
+    "runtime_payload_sha256",
     "serialize_policy_observation",
     "validate_recovery_option_catalog",
     "validate_sha256_digest",
