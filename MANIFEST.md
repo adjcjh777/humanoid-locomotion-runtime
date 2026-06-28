@@ -213,3 +213,21 @@
 | 2026-06-28 13:11 | manual | refine-logs/EXPERIMENT_PLAN_20260628_131100.md | implementation | 实验计划 timestamp copy |
 | 2026-06-28 13:11 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | 每日时间线同步 Mac 工作入口、decision epoch 和 common random stream contract |
 | 2026-06-28 13:11 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260628_131100.md | implementation | 每日时间线 timestamp copy |
+| 2026-06-28 17:10 | manual | src/humanoid_locomotion_runtime/grounding_memory.py | implementation | M-MAC-009：controlled detector-like grounding adapter 与 TemporaryObjectMemory skeleton；runtime-legal only，不表示真实 detector evidence |
+| 2026-06-28 17:10 | manual | src/humanoid_locomotion_runtime/navigator.py | implementation | M-MAC-010：NavigatorV0 纯几何 local planner skeleton；blocked route 产出 FailureEvent，不表示 MPC/controller smoke evidence |
+| 2026-06-28 17:10 | manual | src/humanoid_locomotion_runtime/dashboard.py | implementation | M-MAC-011：dashboard/replay in-memory publisher skeleton；只允许 high-level command surface，不控制 low-level joints |
+| 2026-06-28 17:10 | manual | src/humanoid_locomotion_runtime/analysis.py | implementation | M-MAC-012：stable run id naming、DecisionFlipRecord、decision pair matching 和 flip-rate helper |
+| 2026-06-28 17:10 | manual | tests/test_grounding_memory.py | implementation | M-MAC-009 tests：target selection、TTL query/expiry、snapshot payload 和 privileged leakage rejection |
+| 2026-06-28 17:10 | manual | tests/test_navigator.py | implementation | M-MAC-010 tests：direct route、single-obstacle detour、blocked route failure event 和 privileged obstacle metadata rejection |
+| 2026-06-28 17:10 | manual | tests/test_dashboard.py | implementation | M-MAC-011 tests：dashboard summary、high-level command creation、low-level metadata rejection 和 leakage boundary |
+| 2026-06-28 17:10 | manual | tests/test_analysis.py | implementation | M-MAC-012 tests：run id format、matched decision flips、required decision metadata 和 leakage boundary |
+| 2026-06-28 17:10 | manual | refine-logs/STATISTICAL_DESIGN_FREEZE_20260628.md | implementation | M-MAC-013 / R047a：统计设计草案，冻结 endpoint、seed、bootstrap、multiplicity 和 SEI 字段；final R047 仍 pending |
+| 2026-06-28 17:10 | manual | refine-logs/MAC_SAFE_WORKLIST.md | implementation | Mac 本机安全工作清单最新副本；新增 M-MAC-009 到 M-MAC-013，并更新全量验证结果 |
+| 2026-06-28 17:10 | manual | refine-logs/MAC_SAFE_WORKLIST_20260628_171025.md | implementation | Mac 本机安全工作清单 timestamp copy |
+| 2026-06-28 17:10 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 R009b/R034a/R047a；真实 R034/R047 仍 TODO |
+| 2026-06-28 17:10 | manual | refine-logs/EXPERIMENT_TRACKER_20260628_171025.md | implementation | tracker timestamp copy |
+| 2026-06-28 17:10 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | 实验计划同步新增 Mac-safe skeleton 和 R047a 边界 |
+| 2026-06-28 17:10 | manual | refine-logs/EXPERIMENT_PLAN_20260628_171025.md | implementation | 实验计划 timestamp copy |
+| 2026-06-28 17:10 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | 每日时间线同步 run id、decision pair matching 和 Mac/A800 验收边界 |
+| 2026-06-28 17:10 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260628_171025.md | implementation | 每日时间线 timestamp copy |
+| 2026-06-28 17:10 | manual | README.md | implementation | README 主机分工同步新增 Mac-safe skeleton 与 A800-only evidence boundary |

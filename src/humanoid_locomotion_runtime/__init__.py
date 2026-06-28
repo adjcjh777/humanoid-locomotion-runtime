@@ -1,5 +1,11 @@
 """Humanoid Locomotion Runtime research scaffold."""
 
+from humanoid_locomotion_runtime.analysis import (
+    DecisionFlipRecord,
+    decision_flip_rate,
+    extract_decision_flips,
+    format_run_id,
+)
 from humanoid_locomotion_runtime.controller_contracts import (
     COMPANY_G1_23DOF_CONTROLLER_CONTRACT,
     COMPANY_G1_23DOF_JOINT_ORDER,
@@ -9,6 +15,12 @@ from humanoid_locomotion_runtime.controller_contracts import (
     get_controller_contract,
     joint_order_sha256,
 )
+from humanoid_locomotion_runtime.dashboard import (
+    ALLOWED_DASHBOARD_COMMAND_MODES,
+    DashboardFrame,
+    DashboardSummary,
+    ViserDashboardPublisher,
+)
 from humanoid_locomotion_runtime.edp import (
     EDPValidationResult,
     EpisodeDataPackageWriter,
@@ -16,6 +28,17 @@ from humanoid_locomotion_runtime.edp import (
     assert_valid_episode_data_package,
     validate_episode_data_package,
     write_sample_episode_data_package,
+)
+from humanoid_locomotion_runtime.grounding_memory import (
+    ControlledGroundingAdapter,
+    ControlledGroundingRecord,
+    GroundingSelection,
+    TemporaryObjectMemory,
+)
+from humanoid_locomotion_runtime.navigator import (
+    LocalObstacle,
+    LocalRoute,
+    NavigatorV0,
 )
 from humanoid_locomotion_runtime.recovery_options import (
     RECOVERY_ACTIONS,
@@ -68,10 +91,16 @@ from humanoid_locomotion_runtime.snapshot_branching import (
 __version__ = "0.1.0"
 
 __all__ = [
+    "ALLOWED_DASHBOARD_COMMAND_MODES",
     "BodyMemoryState",
     "COMPANY_G1_23DOF_CONTROLLER_CONTRACT",
     "COMPANY_G1_23DOF_JOINT_ORDER",
+    "ControlledGroundingAdapter",
+    "ControlledGroundingRecord",
     "ControllerProfileContract",
+    "DashboardFrame",
+    "DashboardSummary",
+    "DecisionFlipRecord",
     "EDPValidationResult",
     "EpisodeDataPackageWriter",
     "EpisodeManifest",
@@ -80,10 +109,14 @@ __all__ = [
     "FailureEvent",
     "FakeDeterministicSnapshotProvider",
     "FakeRuntimeBackend",
+    "GroundingSelection",
+    "LocalObstacle",
+    "LocalRoute",
     "LocomotionCommand",
     "LocomotionStatus",
     "MJLAB_G1_29DOF_REFERENCE_CONTRACT",
     "MemoryTarget",
+    "NavigatorV0",
     "ObservationTermContract",
     "OracleAnnotation",
     "PolicyObservation",
@@ -102,6 +135,8 @@ __all__ = [
     "DecisionEpoch",
     "SnapshotBranchMetadata",
     "SnapshotManifest",
+    "TemporaryObjectMemory",
+    "ViserDashboardPublisher",
     "__version__",
     "assert_no_privileged_keys",
     "assert_valid_episode_data_package",
@@ -109,6 +144,9 @@ __all__ = [
     "DEFAULT_ROOT_SEED",
     "DEFAULT_SCENARIO_SPLIT_COUNTS",
     "DEFAULT_STRIDE",
+    "decision_flip_rate",
+    "extract_decision_flips",
+    "format_run_id",
     "generate_seed_split_toml",
     "generate_stride_seed_splits",
     "get_controller_contract",

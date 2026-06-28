@@ -34,9 +34,9 @@
 
 当前主机分工：
 
-- [x] Mac 本机已完成工具链对齐、纯 Python contract tests、Gate C backend-neutral fake restore testbed、RuntimeManager typed command skeleton、leakage-boundary tests、A800 handoff 文档和 citation audit；详见 `refine-logs/MAC_SAFE_WORKLIST.md`。
+- [x] Mac 本机已完成工具链对齐、纯 Python contract tests、Gate C backend-neutral fake restore testbed、RuntimeManager typed command skeleton、controlled grounding + temporary object memory、NavigatorV0 local planner skeleton、dashboard/replay publisher skeleton、fixed run id / decision-flip analysis skeleton、leakage-boundary tests、A800 handoff 文档、citation audit 和 R047a statistical-design draft；详见 `refine-logs/MAC_SAFE_WORKLIST.md`。
 - [ ] A800 仍负责真实 MJLab/runtime smoke、23DoF controller smoke、R018 deterministic simulator/runtime restore、R011-R017 pilots、R020-R027 baselines、memory diagnostics 和所有 rollout-derived claims。
-- [ ] Mac 上的 fake backend、mock restore、local citation audit 或 scoped pytest 不能写成 `A800_SINGLE_HOST` evidence、controller smoke evidence 或论文实验结果。
+- [ ] Mac 上的 fake backend、mock restore、local planner、dashboard skeleton、decision-flip unit test、local citation audit 或 scoped pytest 不能写成 `A800_SINGLE_HOST` evidence、controller smoke evidence 或论文实验结果。
 
 复现初始化：
 
