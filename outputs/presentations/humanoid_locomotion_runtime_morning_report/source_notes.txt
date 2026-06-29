@@ -1,10 +1,15 @@
 Humanoid Locomotion Runtime morning report deck source notes
 Date: 2026-06-29
 Base branch: main
-Base commit: 6f1cd3c Promote G1 23DoF RSL-RL training script
+Base commit: 15be6d6 Add morning report deck
 
 Deck:
 - humanoid_locomotion_runtime_morning_report_20260629.pptx
+
+Revision intent:
+- Reworked the deck from a progress-check style report into a system-introduction and innovation-focused report.
+- Removed the previous short "one sentence / most important for reporting" framing.
+- Expanded the system explanation and made the four innovation points the main narrative: high-level recovery learning above a frozen controller, body/event memory, built-in runtime safety boundary, and evaluation-first experiment design.
 
 Local repo sources used:
 - README.md
@@ -15,7 +20,7 @@ Local repo sources used:
 - refine-logs/MAC_SAFE_WORKLIST.md
 - refine-logs/EXPERIMENT_TRACKER.md
 - tests/test_unitree_g1_23dof_training_framework.py
-- git log / git show for main updates from 9b66263 to 6f1cd3c
+- git log / git show for main updates from 9b66263 to 15be6d6
 
 Generated images embedded in the deck:
 - assets/system_overview.png
