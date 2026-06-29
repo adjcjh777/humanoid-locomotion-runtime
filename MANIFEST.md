@@ -241,3 +241,12 @@
 | 2026-06-28 17:52 | /research-lit | refine-logs/EXPERIMENT_TRACKER_20260628_175221.md | implementation | tracker timestamp copy |
 | 2026-06-28 17:52 | /research-lit | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | 每日时间线同步新增 safety monitor、causal transformer raw-history 和文献驱动指标 |
 | 2026-06-28 17:52 | /research-lit | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260628_175221.md | implementation | 每日时间线 timestamp copy |
+| 2026-06-29 03:05 | manual | .gitmodules | implementation | 新增 repo-local 官方 Unitree RL MJLab 子模块，用于 company G1 edu 23DoF controller training framework |
+| 2026-06-29 03:05 | manual | third_party/unitree_rl_mjlab | implementation | 官方 Unitree RL MJLab submodule，锁定 `1425b15f73bd4095f0df53709d7c389c3eb9e790`；训练产物仍保持 git 外 |
+| 2026-06-29 03:05 | manual | scripts/setup_unitree_g1_23dof_training.sh | implementation | 当前仓库内 23DoF controller training 环境检查脚本：默认复用 mamba env `robot`，不直接新建虚拟环境，列出 `Unitree-G1-23Dof-Flat` |
+| 2026-06-29 03:05 | manual | scripts/run_unitree_g1_23dof_training_smoke.sh | implementation | 当前仓库内最小 23DoF training smoke 脚本；默认 mamba env `robot`、GPU 4、64 env、1 iteration、tensorboard/no-wandb-upload |
+| 2026-06-29 03:05 | manual | scripts/unitree_train_mamba_wrapper.py | implementation | 当前仓库内 Unitree train wrapper；复用 mamba env 时兼容旧 torch 不支持 `torch.onnx.export(dynamo=...)` |
+| 2026-06-29 03:05 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 23DoF controller 自训框架说明；明确复用 mamba env 和 training smoke 不等于 controller evidence |
+| 2026-06-29 03:05 | manual | refine-logs/G1_23DOF_CONTROLLER_TRAINING_FRAMEWORK_20260629.md | implementation | 23DoF controller 自训框架当日 handoff/checklist |
+| 2026-06-29 03:05 | manual | tests/test_unitree_g1_23dof_training_framework.py | implementation | 锁定训练框架必须在当前 repo 下，禁止回退到 `/mnt/nvme2n1p1` 外部训练目录 |
+| 2026-06-29 03:05 | manual | pyproject.toml | implementation | Ruff 排除官方 `third_party/unitree_rl_mjlab` submodule，避免把外部依赖代码当成本仓库 lint 目标 |

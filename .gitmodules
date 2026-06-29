@@ -1,3 +1,6 @@
 [submodule "third_party/mjlab"]
 	path = third_party/mjlab
 	url = https://github.com/mujocolab/mjlab.git
+[submodule "third_party/unitree_rl_mjlab"]
+	path = third_party/unitree_rl_mjlab
+	url = https://github.com/unitreerobotics/unitree_rl_mjlab.git

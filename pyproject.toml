@@ -43,6 +43,9 @@ testpaths = ["tests"]
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+exclude = [
+  "third_party/unitree_rl_mjlab",
+]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
