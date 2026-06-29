@@ -250,3 +250,5 @@
 | 2026-06-29 03:05 | manual | refine-logs/G1_23DOF_CONTROLLER_TRAINING_FRAMEWORK_20260629.md | implementation | 23DoF controller 自训框架当日 handoff/checklist |
 | 2026-06-29 03:05 | manual | tests/test_unitree_g1_23dof_training_framework.py | implementation | 锁定训练框架必须在当前 repo 下，禁止回退到 `/mnt/nvme2n1p1` 外部训练目录 |
 | 2026-06-29 03:05 | manual | pyproject.toml | implementation | Ruff 排除官方 `third_party/unitree_rl_mjlab` submodule，避免把外部依赖代码当成本仓库 lint 目标 |
+| 2026-06-29 04:20 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 补记 2026-06-29 3000-iter 训练 run：`2026-06-29_03-37-37_a800_g1_23dof_simtest_20260629T033722Z`，num_envs=512、max_iterations=3000、seed=42，iter 0→2999 reward -0.62→17.98、ep_len 10.90→945.39、fell_over=0.0000，throughput 15,369 steps/s，耗时 00:41:40；产物存 submodule `logs/`，由 `.gitignore` 排除；仍不等于 mature controller evidence |
+| 2026-06-29 04:20 | manual | refine-logs/G1_23DOF_CONTROLLER_TRAINING_FRAMEWORK_20260629.md | implementation | 当日 handoff 同步 3000-iter run 已完成项、下一步 ONNX shape 检查 + play 回放 + project-local smoke、Gate 边界保留 |

@@ -69,6 +69,21 @@ PYTHONPATH=$PWD CUDA_VISIBLE_DEVICES=4 MUJOCO_GL=egl mamba run -n robot python .
 - [x] 维度：actor obs `80`，action `23`，critic obs `95`；ONNX input `obs [1,80]`，output `actions [1,23]`。
 - [ ] 这只是 1 iteration smoke，不能当成可用 locomotion controller。
 
+## 2026-06-29 3000-iter 训练记录
+
+- [x] 训练命令：`GPU_ID=4 NUM_ENVS=512 MAX_ITERATIONS=3000 SAVE_INTERVAL=300 RUN_NAME=a800_g1_23dof_simtest_20260629T033722Z bash scripts/run_unitree_g1_23dof_training_smoke.sh`。
+- [x] Run dir：`third_party/unitree_rl_mjlab/logs/rsl_rl/g1_23dof_velocity/2026-06-29_03-37-37_a800_g1_23dof_simtest_20260629T033722Z/`。
+- [x] Runtime env：Warp `1.12.0`，CUDA Toolkit `12.9`，Driver `13.0`，device `cuda:0` on NVIDIA A800-SXM4-80GB (79 GiB, sm_80)。
+- [x] 训练参数：`num_envs=512`，`num_steps_per_env=24`，`max_iterations=3000`，`save_interval=300`，`seed=42`，`logger=tensorboard`，`upload_model=False`。
+- [x] Total steps：`36,864,000`；throughput：`15,369 steps/s`；iteration time：`0.83s`；总耗时：`00:41:40`。
+- [x] 收敛曲线：iter 0 `mean_reward=-0.62, ep_len=10.90` → iter 2999 `mean_reward=17.98, ep_len=945.39`，`fell_over` 从早期回落到 `0.0000`（最终 iter `Episode_Termination/fell_over=0.0000`，`time_out=1.8333`）。
+- [x] 最终 reward 分解：`track_linear_velocity=0.4138`、`track_angular_velocity=0.4163`、`pose=0.6624`、`foot_gait=0.3476`；惩罚项 `action_rate_l2=-0.5787`、`joint_acc_l2=-0.0882`。
+- [x] 最终 metrics：`mean_action_acc=0.9249`、`twist/error_vel_xy=1.2278`、`twist/error_vel_yaw=2.3078`、`angular_momentum_mean=1.1093`、`slip_velocity_mean=0.1595`、`landing_force_mean=178.8440`。
+- [x] 产物：`model_0/300/600/900/1200/1500/1800/2100/2400/2700/2999.pt`（每个约 5.09 MB）+ `policy.onnx`（838,027 bytes）+ `events.out.tfevents.*`（6.9 MB）+ `params/{agent,env}.yaml` + `git/`。
+- [x] 训练 logs 由 submodule `.gitignore` 排除，不进本仓库 git；本仓库侧的 smoke log 副本在 `runs/unitree_g1_23dof_training/a800_g1_23dof_simtest_20260629T033722Z.log`（由 `.gitignore` 排除）。
+- [ ] 这只是 3000-iter 初步收敛 candidate，不等于 `company_g1_edu_23dof` mature controller evidence。
+- [ ] ONNX shape 检查、`play.py` 回放、project-local `stand_ready` / `track_velocity` smoke 仍 TODO；通过前 `mature_controller_evidence` 保持 `false`。
+
 ## 不要混淆
 
 - [x] 这个训练框架是在当前仓库内搭起来的，不依赖 `/mnt/nvme2n1p1/...` 外部训练目录。
