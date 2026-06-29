@@ -1,0 +1,31 @@
+Humanoid Locomotion Runtime morning report deck source notes
+Date: 2026-06-29
+Base branch: main
+Base commit: 6f1cd3c Promote G1 23DoF RSL-RL training script
+
+Deck:
+- humanoid_locomotion_runtime_morning_report_20260629.pptx
+
+Local repo sources used:
+- README.md
+- MANIFEST.md
+- docs/research_plan_prd.md
+- docs/g1_edu_23dof_training_framework.md
+- refine-logs/G1_23DOF_CONTROLLER_TRAINING_FRAMEWORK_20260629.md
+- refine-logs/MAC_SAFE_WORKLIST.md
+- refine-logs/EXPERIMENT_TRACKER.md
+- tests/test_unitree_g1_23dof_training_framework.py
+- git log / git show for main updates from 9b66263 to 6f1cd3c
+
+Generated images embedded in the deck:
+- assets/system_overview.png
+  Prompt summary: humanoid robot walking toward a target in a clean MuJoCo-like robotics simulation lab, with language, RGB-D, and safe path overlays; no embedded text.
+- assets/runtime_safety.png
+  Prompt summary: RuntimeManager and SafetySupervisor visual metaphor with high-level command cards, safety shield, audit trail, and robot walking safely; no embedded text.
+- assets/overnight_training.png
+  Prompt summary: overnight GPU training scene for a 23-DoF humanoid locomotion controller, with server, simulation monitor, checkpoint blocks, and validation gate; no embedded text.
+
+Claim boundary preserved:
+- The deck says the repo-local 23DoF training entrypoint and 1-iteration sanity smoke exist.
+- The deck does not claim a mature 23DoF controller, Gate C controller smoke pass, baseline/PPO readiness, or paper result readiness.
+- Generated logs, checkpoints, ONNX files, tfevents, and raw run artifacts are not included in git.
