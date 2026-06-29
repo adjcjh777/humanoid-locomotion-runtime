@@ -244,9 +244,12 @@
 | 2026-06-29 03:05 | manual | .gitmodules | implementation | 新增 repo-local 官方 Unitree RL MJLab 子模块，用于 company G1 edu 23DoF controller training framework |
 | 2026-06-29 03:05 | manual | third_party/unitree_rl_mjlab | implementation | 官方 Unitree RL MJLab submodule，锁定 `1425b15f73bd4095f0df53709d7c389c3eb9e790`；训练产物仍保持 git 外 |
 | 2026-06-29 03:05 | manual | scripts/setup_unitree_g1_23dof_training.sh | implementation | 当前仓库内 23DoF controller training 环境检查脚本：默认复用 mamba env `robot`，不直接新建虚拟环境，列出 `Unitree-G1-23Dof-Flat` |
-| 2026-06-29 03:05 | manual | scripts/run_unitree_g1_23dof_training_smoke.sh | implementation | 当前仓库内最小 23DoF training smoke 脚本；默认 mamba env `robot`、GPU 4、64 env、1 iteration、tensorboard/no-wandb-upload |
+| 2026-06-29 03:05 | manual | scripts/run_unitree_g1_23dof_training.sh | implementation | 当前仓库内 23DoF RSL-RL 训练入口的初始脚本；默认 mamba env `robot`、tensorboard/no-wandb-upload；后续 04:45 记录将默认参数改为正式训练规模 |
 | 2026-06-29 03:05 | manual | scripts/unitree_train_mamba_wrapper.py | implementation | 当前仓库内 Unitree train wrapper；复用 mamba env 时兼容旧 torch 不支持 `torch.onnx.export(dynamo=...)` |
 | 2026-06-29 03:05 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 23DoF controller 自训框架说明；明确复用 mamba env 和 training smoke 不等于 controller evidence |
 | 2026-06-29 03:05 | manual | refine-logs/G1_23DOF_CONTROLLER_TRAINING_FRAMEWORK_20260629.md | implementation | 23DoF controller 自训框架当日 handoff/checklist |
 | 2026-06-29 03:05 | manual | tests/test_unitree_g1_23dof_training_framework.py | implementation | 锁定训练框架必须在当前 repo 下，禁止回退到 `/mnt/nvme2n1p1` 外部训练目录 |
 | 2026-06-29 03:05 | manual | pyproject.toml | implementation | Ruff 排除官方 `third_party/unitree_rl_mjlab` submodule，避免把外部依赖代码当成本仓库 lint 目标 |
+| 2026-06-29 04:45 | manual | scripts/run_unitree_g1_23dof_training.sh | implementation | 将 23DoF RSL-RL 入口从 smoke 脚本改为正式训练脚本；默认 `4096 envs / 10001 iterations / save_interval=500`，仍不提交 raw logs、checkpoints、ONNX 或 tfevents |
+| 2026-06-29 04:45 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 同步正式训练入口命令和验收边界；短 sanity run 只能通过显式覆盖参数触发 |
+| 2026-06-29 04:45 | manual | refine-logs/G1_23DOF_CONTROLLER_TRAINING_FRAMEWORK_20260629.md | implementation | 当日 handoff 同步正式训练脚本、后台训练入口和次日验收项 |

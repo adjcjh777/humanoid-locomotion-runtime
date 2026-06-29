@@ -7,10 +7,10 @@ CONDA_ENV_NAME="${UNITREE_RL_MJLAB_CONDA_ENV:-robot}"
 
 TASK="${TASK:-Unitree-G1-23Dof-Flat}"
 PHYSICAL_GPU_ID="${PHYSICAL_GPU_ID:-${GPU_ID:-4}}"
-NUM_ENVS="${NUM_ENVS:-64}"
-MAX_ITERATIONS="${MAX_ITERATIONS:-1}"
-SAVE_INTERVAL="${SAVE_INTERVAL:-1}"
-RUN_NAME="${RUN_NAME:-a800_g1_23dof_smoke_$(date -u +%Y%m%dT%H%M%SZ)}"
+NUM_ENVS="${NUM_ENVS:-4096}"
+MAX_ITERATIONS="${MAX_ITERATIONS:-10001}"
+SAVE_INTERVAL="${SAVE_INTERVAL:-500}"
+RUN_NAME="${RUN_NAME:-a800_g1_23dof_train_$(date -u +%Y%m%dT%H%M%SZ)}"
 LOG_DIR="$ROOT_DIR/runs/unitree_g1_23dof_training"
 LOG_FILE="$LOG_DIR/${RUN_NAME}.log"
 
@@ -57,6 +57,8 @@ CMD=(
   echo "physical_gpu_id=$PHYSICAL_GPU_ID"
   echo "num_envs=$NUM_ENVS"
   echo "max_iterations=$MAX_ITERATIONS"
+  echo "save_interval=$SAVE_INTERVAL"
+  echo "run_name=$RUN_NAME"
   echo "train_repo=$TRAIN_REPO"
   echo "conda_env=$CONDA_ENV_NAME"
   echo "log_file=$LOG_FILE"
@@ -71,7 +73,7 @@ CMD=(
   "${CMD[@]}" 2>&1 | tee -a "$LOG_FILE"
 )
 
-echo "Smoke finished. Candidate training outputs under:" | tee -a "$LOG_FILE"
+echo "Training finished. Candidate training outputs under:" | tee -a "$LOG_FILE"
 find "$TRAIN_REPO/logs/rsl_rl/g1_23dof_velocity" \
   -maxdepth 1 \
   -type d \

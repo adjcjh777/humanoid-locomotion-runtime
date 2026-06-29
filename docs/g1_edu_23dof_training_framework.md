@@ -1,7 +1,7 @@
 # G1 edu 23DoF Controller Training Framework
 
 **日期**: 2026-06-29
-**状态**: repo-local framework scaffolded; full controller training not yet run
+**状态**: repo-local full-training entrypoint scaffolded; controller evidence still pending
 
 这份文档只说明怎么在当前仓库里训练 `company_g1_edu_23dof` 的 locomotion controller。它不表示 controller 已经成熟，也不表示 Gate C controller smoke 已通过。
 
@@ -11,7 +11,7 @@
 - [x] Python 环境固定复用 mamba/conda env `robot`；可用 `UNITREE_RL_MJLAB_CONDA_ENV=<env>` 覆盖。
 - [x] 环境搭建脚本只检查已有 mamba env 和任务注册，不直接新建虚拟环境。
 - [x] 训练日志、checkpoint 和导出的 ONNX 保留在 `third_party/unitree_rl_mjlab/logs/`，由子模块自己的 `.gitignore` 排除。
-- [x] 本项目额外的 smoke log 放在 `runs/unitree_g1_23dof_training/`，不提交 git。
+- [x] 本项目额外的训练 console log 放在 `runs/unitree_g1_23dof_training/`，不提交 git。
 
 ## 当前锁定任务
 
@@ -35,26 +35,22 @@
 bash scripts/setup_unitree_g1_23dof_training.sh
 ```
 
-先跑很小的启动 smoke：
+正式训练入口默认使用 `4096 envs / 10001 iterations / save_interval=500`：
 
 ```bash
-GPU_ID=4 NUM_ENVS=64 MAX_ITERATIONS=1 bash scripts/run_unitree_g1_23dof_training_smoke.sh
+GPU_ID=4 bash scripts/run_unitree_g1_23dof_training.sh
 ```
 
-后续正式训练才使用官方规模：
+如果只想做一次显式短 sanity run，必须手动覆盖参数，避免误把短跑当成正式训练：
 
 ```bash
-cd third_party/unitree_rl_mjlab
-PYTHONPATH=$PWD CUDA_VISIBLE_DEVICES=4 MUJOCO_GL=egl mamba run -n robot python ../../scripts/unitree_train_mamba_wrapper.py Unitree-G1-23Dof-Flat \
-  --env.scene.num-envs=4096 \
-  --agent.logger=tensorboard \
-  --agent.upload-model=False
+GPU_ID=4 NUM_ENVS=64 MAX_ITERATIONS=1 SAVE_INTERVAL=1 RUN_NAME=a800_g1_23dof_sanity_$(date -u +%Y%m%dT%H%M%SZ) bash scripts/run_unitree_g1_23dof_training.sh
 ```
 
 ## 验收边界
 
 - [x] `scripts/setup_unitree_g1_23dof_training.sh` 能复用 mamba env `robot` 并列出 `Unitree-G1-23Dof-Flat`。
-- [x] `scripts/run_unitree_g1_23dof_training_smoke.sh` 能完成 1 iteration smoke，并产生 `model_*.pt` / `policy.onnx`。
+- [x] `scripts/run_unitree_g1_23dof_training.sh` 是当前仓库内的正式 RSL-RL 训练入口，默认 `4096 envs / 10001 iterations / save_interval=500`，并产生 `model_*.pt` / `policy.onnx`。
 - [x] 用 `onnx` 检查导出的 `policy.onnx` input/output shape：`obs [1, 80] -> actions [1, 23]`。
 - [ ] 用官方 `scripts/play.py Unitree-G1-23Dof-Flat --checkpoint_file=...` 做短回放。
 - [ ] 把通过 shape/play 的 candidate 拷贝到本项目 ignored `checkpoints/` 下，再跑 project-local controller smoke。
@@ -63,7 +59,7 @@ PYTHONPATH=$PWD CUDA_VISIBLE_DEVICES=4 MUJOCO_GL=egl mamba run -n robot python .
 ## 2026-06-29 Smoke 记录
 
 - [x] 环境检查：`robot` env，Python 3.10.0，torch `2.3.0+cu121`，CUDA visible 8，MuJoCo `3.8.0`，MuJoCo-Warp `3.8.1`。
-- [x] 训练启动：`GPU_ID=4 NUM_ENVS=64 MAX_ITERATIONS=1 SAVE_INTERVAL=1 bash scripts/run_unitree_g1_23dof_training_smoke.sh`。
+- [x] 训练 loop 短 sanity run：`GPU_ID=4 NUM_ENVS=64 MAX_ITERATIONS=1 SAVE_INTERVAL=1 bash scripts/run_unitree_g1_23dof_training.sh`。
 - [x] 成功 run dir：`third_party/unitree_rl_mjlab/logs/rsl_rl/g1_23dof_velocity/2026-06-29_03-19-20_a800_g1_23dof_smoke_wrapper_20260629T031905Z/`。
 - [x] 产物：`model_0.pt` 约 4.9 MB，`policy.onnx` 约 819 KB。
 - [x] 维度：actor obs `80`，action `23`，critic obs `95`；ONNX input `obs [1,80]`，output `actions [1,23]`。

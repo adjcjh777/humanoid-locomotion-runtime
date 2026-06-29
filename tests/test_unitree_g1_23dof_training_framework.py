@@ -15,14 +15,14 @@ def test_training_scripts_use_current_repo_paths() -> None:
   setup_script = (
     ROOT / "scripts" / "setup_unitree_g1_23dof_training.sh"
   ).read_text(encoding="utf-8")
-  smoke_script = (
-    ROOT / "scripts" / "run_unitree_g1_23dof_training_smoke.sh"
+  training_script = (
+    ROOT / "scripts" / "run_unitree_g1_23dof_training.sh"
   ).read_text(encoding="utf-8")
   wrapper = (ROOT / "scripts" / "unitree_train_mamba_wrapper.py").read_text(
     encoding="utf-8"
   )
 
-  combined = setup_script + smoke_script + wrapper
+  combined = setup_script + training_script + wrapper
   assert "ROOT_DIR" in combined
   assert "third_party/unitree_rl_mjlab" in combined
   assert "Unitree-G1-23Dof-Flat" in combined
@@ -33,8 +33,12 @@ def test_training_scripts_use_current_repo_paths() -> None:
   assert "kwargs.pop(\"dynamo\", None)" in wrapper
   assert ".venvs" not in combined
   assert "uv venv" not in combined
-  assert "--agent.logger=tensorboard" in smoke_script
-  assert "--agent.upload-model=False" in smoke_script
+  assert "NUM_ENVS=\"${NUM_ENVS:-4096}\"" in training_script
+  assert "MAX_ITERATIONS=\"${MAX_ITERATIONS:-10001}\"" in training_script
+  assert "SAVE_INTERVAL=\"${SAVE_INTERVAL:-500}\"" in training_script
+  assert "--agent.logger=tensorboard" in training_script
+  assert "--agent.upload-model=False" in training_script
+  assert "Training finished. Candidate training outputs under:" in training_script
   assert "/mnt/nvme2n1p1" not in combined
 
 

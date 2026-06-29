@@ -74,10 +74,9 @@ Training repo:
 Mamba env:
   $CONDA_ENV_NAME
 
-Tiny smoke:
-  bash scripts/run_unitree_g1_23dof_training_smoke.sh
+Full training:
+  bash scripts/run_unitree_g1_23dof_training.sh
 
-Full training example:
-  cd $TRAIN_REPO
-  PYTHONPATH=$TRAIN_REPO CUDA_VISIBLE_DEVICES=4 MUJOCO_GL=egl mamba run -n $CONDA_ENV_NAME python $ROOT_DIR/scripts/unitree_train_mamba_wrapper.py Unitree-G1-23Dof-Flat --env.scene.num-envs=4096 --agent.logger=tensorboard --agent.upload-model=False
+Short sanity run, only when explicitly needed:
+  NUM_ENVS=64 MAX_ITERATIONS=1 SAVE_INTERVAL=1 RUN_NAME=a800_g1_23dof_sanity_\$(date -u +%Y%m%dT%H%M%SZ) bash scripts/run_unitree_g1_23dof_training.sh
 EOF
