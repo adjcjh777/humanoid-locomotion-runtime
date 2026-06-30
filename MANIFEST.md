@@ -448,3 +448,4 @@
 | 2026-06-30 09:00 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline synchronized to Stage B packed GPU5 migration |
 | 2026-06-30 09:00 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260630_090007.md | implementation | daily timeline timestamp copy for Stage B packed GPU5 migration |
 | 2026-06-30 09:00 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_B_HANDOFF_20260630.md | implementation | Stage B packed GPU5 health check: iteration 54/10001, GPU5 ~7550 MiB/100%, GPU1/2/3 released, no OOM |
+| 2026-06-30 09:23 | manual | refine-logs/G1_23DOF_WORK_REPORT_20260629_20260630.html | report | standalone HTML report summarizing 2026-06-29/2026-06-30 23DoF controller training framework, Stage A/B runs, eval status, gate boundary, and next checks |

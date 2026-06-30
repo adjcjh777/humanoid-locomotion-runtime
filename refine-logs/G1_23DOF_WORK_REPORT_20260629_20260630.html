@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>G1 23DoF Locomotion Controller Work Report - 2026-06-29 to 2026-06-30</title>
+  <style>
+    :root {
+      --ink: #15202b;
+      --muted: #5d6875;
+      --line: #d9e0e7;
+      --paper: #f7f8fb;
+      --panel: #ffffff;
+      --accent: #116b5f;
+      --accent-2: #294a8f;
+      --warn: #a44d16;
+      --danger: #9b2727;
+      --ok: #1f6f43;
+      --code: #eef2f6;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+    }
+
+    header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 24px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(280px, 0.8fr);
+      gap: 24px;
+      align-items: end;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 36px 0 14px;
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 20px 0 8px;
+      font-size: 17px;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 8px 0;
+    }
+
+    a {
+      color: var(--accent-2);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 5px;
+      background: var(--code);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.92em;
+    }
+
+    .subtitle {
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .meta {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 14px;
+    }
+
+    .meta div {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 6px 0;
+      border-bottom: 1px solid #edf1f4;
+    }
+
+    .meta div:last-child {
+      border-bottom: 0;
+    }
+
+    .label {
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px;
+    }
+
+    .metric {
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 650;
+      border: 1px solid transparent;
+    }
+
+    .status.ok {
+      color: var(--ok);
+      background: #e9f6ef;
+      border-color: #bfe4cc;
+    }
+
+    .status.warn {
+      color: var(--warn);
+      background: #fff2e8;
+      border-color: #f2cfb2;
+    }
+
+    .status.stop {
+      color: var(--danger);
+      background: #fdecec;
+      border-color: #efc1c1;
+    }
+
+    .band {
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--accent);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 16px 18px;
+      margin: 14px 0;
+    }
+
+    .band.warn {
+      border-left-color: var(--warn);
+    }
+
+    .band.stop {
+      border-left-color: var(--danger);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 18px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th,
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      color: #283642;
+      background: #edf3f8;
+      font-weight: 700;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    ul {
+      margin: 8px 0 16px;
+      padding-left: 22px;
+    }
+
+    li {
+      margin: 5px 0;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: 130px minmax(0, 1fr);
+      gap: 12px 18px;
+      margin: 12px 0;
+    }
+
+    .time {
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+
+    .event {
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .event:last-child {
+      border-bottom: 0;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    .source-list {
+      columns: 2;
+      column-gap: 28px;
+    }
+
+    footer {
+      margin-top: 36px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .timeline {
+        grid-template-columns: 1fr;
+      }
+
+      .source-list {
+        columns: 1;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .wrap {
+        padding: 22px 16px;
+      }
+
+      h1 {
+        font-size: 27px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      table {
+        display: block;
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap hero">
+      <div>
+        <h1>G1 edu 23DoF Locomotion Controller 工作报告</h1>
+        <p class="subtitle">
+          覆盖 2026-06-29 至 2026-06-30 的 repo-local 23DoF locomotion controller 训练框架、真实训练、回放观察、policy 改进、Stage A/Stage B 多 seed 实验和当前验收边界。
+        </p>
+      </div>
+      <div class="meta">
+        <div><span class="label">生成时间</span><strong>2026-06-30 09:23 UTC</strong></div>
+        <div><span class="label">目标 robot profile</span><strong>company_g1_edu_23dof</strong></div>
+        <div><span class="label">当前 gate</span><strong>Gate C 前置 controller bootstrap</strong></div>
+        <div><span class="label">当前结论</span><strong>candidate pending, not mature evidence</strong></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section>
+      <h2>一页结论</h2>
+      <div class="grid">
+        <div class="card">
+          <div class="metric">6</div>
+          <div class="small">两天内相关 commit，最新为 <code>ace44eb</code></div>
+        </div>
+        <div class="card">
+          <div class="metric">1 + 3 + 3</div>
+          <div class="small">1 个 6/29 full run，3 个 Stage A seed，3 个 Stage B seed</div>
+        </div>
+        <div class="card">
+          <div class="metric">80 -> 23</div>
+          <div class="small">最终 ONNX / actor deploy shape contract 保持不漂移</div>
+        </div>
+        <div class="card">
+          <div class="metric">model_5000</div>
+          <div class="small">Stage A 当前 fixed-forward best，不是最终轮</div>
+        </div>
+      </div>
+
+      <div class="band warn">
+        <strong>最重要的判断：</strong>
+        已经从“能不能跑 23DoF RSL-RL”推进到“能多 seed 训练、能按 command-grid 选 checkpoint、能解释为什么斜走、能继续做 Stage B 通用 velocity controller”。但还不能把任何 checkpoint 写成 mature controller evidence，也不能把 Gate C 标记为 done。
+      </div>
+
+      <div class="band">
+        <strong>当前正在跑：</strong>
+        Stage B <code>Unitree-G1-23Dof-VelocityBalancedFlat</code> seeds <code>201/202/203</code> 已打包在 GPU <code>5</code> 单卡三任务运行；截至 2026-06-30 09:23 UTC 三路均约到 <code>303/10001</code>，GPU 5 约 <code>7551 MiB / 81920 MiB</code>、util <code>100%</code>。训练后 eval watcher <code>g1vb_pack_eval_after_train_20260630T085653Z</code> 已在等待 final checkpoint。
+      </div>
+    </section>
+
+    <section>
+      <h2>边界和验收口径</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>项</th>
+            <th>当前状态</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>23DoF vs 29DoF</td>
+            <td><span class="status ok">明确分离</span></td>
+            <td><code>company_g1_edu_23dof</code> 是目标；MJLab 29DoF 只作为 reference/backend health，不冒充 23DoF evidence。</td>
+          </tr>
+          <tr>
+            <td>学习边界</td>
+            <td><span class="status ok">Gate C 前置例外</span></td>
+            <td>本阶段允许训练底层 23DoF locomotion controller；一旦选出 mature candidate，后续 recovery 研究必须冻结 controller。</td>
+          </tr>
+          <tr>
+            <td>raw artifacts</td>
+            <td><span class="status ok">保持 ignored</span></td>
+            <td>训练 logs、checkpoints、ONNX、eval JSON 保存在 <code>runs/</code> 或 submodule <code>logs/</code>，不进 git。</td>
+          </tr>
+          <tr>
+            <td>Gate C</td>
+            <td><span class="status warn">仍 blocked</span></td>
+            <td>还缺 Stage B eval、candidate deploy contract/hash、官方 play 和 project-local <code>stand_ready</code>/<code>track_velocity</code> smoke。</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>2026-06-29：从 smoke 到正式 4096-env 训练</h2>
+      <div class="timeline">
+        <div class="time">白天 / 晚上</div>
+        <div class="event">
+          <h3>复用训练环境，避免新建 venv</h3>
+          <p>
+            检查并复用 mamba env <code>robot</code>，确认包含 torch <code>2.3.0+cu121</code>、MuJoCo、MuJoCo-Warp、RSL-RL、ONNX、TensorBoard 等当前 MJLab 训练路径需要的依赖。没有创建 repo-local <code>.venvs</code>。
+          </p>
+        </div>
+
+        <div class="time">03:19 UTC</div>
+        <div class="event">
+          <h3>训练 loop smoke 通过</h3>
+          <p>
+            使用 <code>NUM_ENVS=64</code>、<code>MAX_ITERATIONS=1</code> 走通 repo-local wrapper，产生 <code>model_0.pt</code> 和 <code>policy.onnx</code>。验证 actor obs/action 为 <code>80 -> 23</code>，critic obs 为 <code>95</code>。这只证明训练入口可用，不是 controller evidence。
+          </p>
+        </div>
+
+        <div class="time">10:01 UTC</div>
+        <div class="event">
+          <h3>正式规模 23DoF full run 完成</h3>
+          <p>
+            run <code>a800_g1_23dof_4096env_10001iter_20260629T100128Z</code> 使用 <code>Unitree-G1-23Dof-Flat</code>、GPU <code>4</code>、seed <code>42</code>、<code>4096 envs</code>、<code>10001 iterations</code>、<code>save_interval=500</code>。
+          </p>
+          <p>
+            最终 logged metrics：<code>Mean reward 34.57</code>、<code>Mean episode length 990.10</code>、<code>fell_over 0.0833</code>。输出 <code>model_10000.pt</code> 和 <code>policy.onnx</code>，并整理到 acceptance 文档。
+          </p>
+        </div>
+
+        <div class="time">回放观察</div>
+        <div class="event">
+          <h3>发现 play/Viser 中斜走现象</h3>
+          <p>
+            对 <code>model_4500.pt</code> 等 checkpoint 的回放观察显示在 Viser 中经常斜着走。这触发了后续策略调整：不能只按最终 reward 或单次回放观感选 checkpoint，需要固定 command-grid eval 来量化 lateral drift、yaw error、velocity error 和 done fraction。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>2026-06-30：训练策略重构和多 seed 实验</h2>
+
+      <div class="two-col">
+        <div class="card">
+          <h3>代码侧新增能力</h3>
+          <ul>
+            <li>新增 <code>src/humanoid_locomotion_runtime/unitree_g1_23dof_profiles.py</code>，在不修改 Unitree submodule tracked source 的情况下注册 repo-local MJLab tasks。</li>
+            <li>新增 <code>Unitree-G1-23Dof-ForwardFlat</code>，用于 Stage A fixed-straight/stand 稳定性训练。</li>
+            <li>新增 <code>Unitree-G1-23Dof-VelocityBalancedFlat</code>，用于 Stage B 通用 velocity controller。</li>
+            <li>新增 binned velocity command sampler，明确采样 <code>stand</code>、<code>straight_forward</code>、<code>yaw_only</code>、<code>lateral_only</code>、<code>combined</code>。</li>
+            <li>新增 <code>command_axis_leakage_penalty</code>，约束命令为 0 的轴上不要出现实际速度串扰。</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>工具侧新增能力</h3>
+          <ul>
+            <li><code>scripts/eval_unitree_g1_23dof_command_grid.py</code>：固定 stand/forward/yaw/lateral command grid 评估 checkpoint。</li>
+            <li><code>scripts/summarize_unitree_g1_23dof_eval.py</code>：汇总 eval JSON，支持 <code>--group-by checkpoint</code> 和 seed allowlist。</li>
+            <li><code>scripts/run_unitree_g1_23dof_stage_b_eval_queue.sh</code>：训练结束后自动等待 final checkpoint，再评估关键 checkpoints。</li>
+            <li><code>scripts/run_unitree_g1_23dof_training.sh</code>：默认 task 切到 <code>VelocityBalancedFlat</code>，<code>SAVE_INTERVAL=250</code>，支持显式 seed。</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Stage A：ForwardFlat 多 seed 训练和 checkpoint selection</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Seed</th>
+            <th>GPU</th>
+            <th>Run name</th>
+            <th>状态</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>101</td>
+            <td>1</td>
+            <td><code>a800_g1_23dof_forwardflat_seed101_4096env_10001iter_20260630T034920Z</code></td>
+            <td><span class="status ok">complete</span></td>
+          </tr>
+          <tr>
+            <td>102</td>
+            <td>2</td>
+            <td><code>a800_g1_23dof_forwardflat_seed102_4096env_10001iter_20260630T034920Z</code></td>
+            <td><span class="status ok">complete</span></td>
+          </tr>
+          <tr>
+            <td>103</td>
+            <td>3</td>
+            <td><code>a800_g1_23dof_forwardflat_seed103_4096env_10001iter_20260630T034920Z</code></td>
+            <td><span class="status ok">complete</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="band">
+        <strong>Stage A 结果：</strong>
+        三个 seed 均完成到 <code>Learning iteration 10000/10001</code>，最终 ONNX 均验证为 <code>obs [1,80] -> actions [1,23]</code>。关键 checkpoint 从 <code>model_250.pt</code> 到 <code>model_10000.pt</code> 已做三 seed command-grid eval。
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Checkpoint</th>
+            <th>结论</th>
+            <th>原因</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>model_5000.pt</code></td>
+            <td><span class="status ok">当前 fixed-forward best</span></td>
+            <td>forward fast <code>done_fraction=0.0</code>，mean forward displacement 约 <code>9.315m</code>，mean abs lateral 约 <code>0.290m</code>，max abs lateral across seeds 约 <code>4.417m</code>。</td>
+          </tr>
+          <tr>
+            <td><code>model_9500.pt</code></td>
+            <td><span class="status warn">接近但略弱</span></td>
+            <td>max abs lateral across seeds 约 <code>4.094m</code>，但 mean abs lateral 和 selection penalty 仍弱于 <code>model_5000.pt</code>。</td>
+          </tr>
+          <tr>
+            <td><code>model_10000.pt</code></td>
+            <td><span class="status warn">不能默认接受最终轮</span></td>
+            <td>final checkpoint 弱于 <code>model_5000.pt</code>，说明必须按 eval 选 checkpoint，而不是默认最后一轮。</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="band warn">
+        <strong>Stage A 仍未过 mature gate：</strong>
+        fixed-forward 明显改善，但 yaw/lateral commands 仍不稳定，且 max lateral drift 仍偏大。Stage A 只能说明直行候选的筛选趋势，不能替代通用 velocity controller。
+      </div>
+
+      <h3>Stage B：VelocityBalancedFlat 多 seed 训练</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>阶段</th>
+            <th>GPU 策略</th>
+            <th>状态</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>初始启动</td>
+            <td>GPU 1/2/3，各跑一个 seed</td>
+            <td><span class="status warn">superseded</span></td>
+            <td>early runs 到 iteration 约 <code>783/10001</code>，reward <code>41.58-43.72</code>，fell_over <code>0.0</code>，但因显存占用很小而按资源利用要求停止。</td>
+          </tr>
+          <tr>
+            <td>当前 authoritative run</td>
+            <td>GPU 5 单卡三任务</td>
+            <td><span class="status ok">running</span></td>
+            <td>seeds <code>201/202/203</code> 同时运行，GPU 5 约 <code>7551 MiB</code>，util <code>100%</code>，GPU 1/2/3 已释放。</td>
+          </tr>
+          <tr>
+            <td>Post-training eval</td>
+            <td>GPU 5 eval queue</td>
+            <td><span class="status warn">waiting</span></td>
+            <td><code>g1vb_pack_eval_after_train_20260630T085653Z</code> 等待 packed runs 训练完成和 <code>model_10000.pt</code> 出现，再批量评估关键 checkpoints。</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Seed</th>
+            <th>Latest observed iteration</th>
+            <th>Mean reward</th>
+            <th>Fell over</th>
+            <th>ETA</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>201</td>
+            <td><code>303/10001</code></td>
+            <td><code>10.09</code></td>
+            <td><code>0.6250</code></td>
+            <td><code>14:28:06</code></td>
+          </tr>
+          <tr>
+            <td>202</td>
+            <td><code>303/10001</code></td>
+            <td><code>7.94</code></td>
+            <td><code>0.5417</code></td>
+            <td><code>14:30:04</code></td>
+          </tr>
+          <tr>
+            <td>203</td>
+            <td><code>303/10001</code></td>
+            <td><code>13.27</code></td>
+            <td><code>0.5000</code></td>
+            <td><code>14:27:46</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>两天内提交记录</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Commit</th>
+            <th>时间</th>
+            <th>内容</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>24a41db</code></td>
+            <td>2026-06-29 16:55 +0800</td>
+            <td>新增 repo-local G1 23DoF controller training framework。</td>
+          </tr>
+          <tr>
+            <td><code>6f1cd3c</code></td>
+            <td>2026-06-29 17:53 +0800</td>
+            <td>提升 G1 23DoF RSL-RL training script，推动真实训练入口。</td>
+          </tr>
+          <tr>
+            <td><code>15be6d6</code></td>
+            <td>2026-06-29 18:47 +0800</td>
+            <td>新增 morning report deck。</td>
+          </tr>
+          <tr>
+            <td><code>5a706f1</code></td>
+            <td>2026-06-29 19:10 +0800</td>
+            <td>修订 morning report deck。</td>
+          </tr>
+          <tr>
+            <td><code>ebb9738</code></td>
+            <td>2026-06-30 11:02 +0800</td>
+            <td>记录 G1 23DoF training candidate acceptance。</td>
+          </tr>
+          <tr>
+            <td><code>ace44eb</code></td>
+            <td>2026-06-30 17:14 +0800</td>
+            <td>新增 23DoF controller training profiles 和 eval queue。</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>验证和未完成项</h2>
+      <div class="two-col">
+        <div class="card">
+          <h3>已验证</h3>
+          <ul>
+            <li><code>git diff --check</code> 通过。</li>
+            <li><code>bash -n</code> 覆盖训练脚本、setup 脚本和 Stage B eval queue。</li>
+            <li><code>uv run ruff check</code> 覆盖新增 profile、wrapper、eval、summary、测试。</li>
+            <li><code>uv run pytest tests/test_unitree_g1_23dof_training_framework.py</code> 通过。</li>
+            <li><code>python -m py_compile</code> 覆盖新增 Python 脚本。</li>
+            <li>Stage A final ONNX shape：三 seed 均为 <code>obs [1,80] -> actions [1,23]</code>。</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>未完成 / 明早验收重点</h3>
+          <ul>
+            <li>确认 Stage B packed seeds <code>201/202/203</code> 是否完成到 <code>10000/10001</code>。</li>
+            <li>读取 Stage B eval queue 输出，按 command-grid 聚合比较 checkpoints。</li>
+            <li>确认是否存在一个同时满足 fixed-forward 和 yaw/lateral command stability 的 candidate。</li>
+            <li>若有 candidate，再做 deploy config/hash/shape summary、官方 play 和 project-local controller smoke。</li>
+            <li>若 Stage B 仍斜走或 yaw/lateral 不稳，继续调整 reward、command bins、curriculum，而不是推进 Gate C。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="band stop">
+        <strong>不能提前写的结论：</strong>
+        目前不能说 23DoF controller 已成熟，不能说 Gate C done，不能启动 R020 controller-native baseline、failure pilots、supervisory PPO 或论文主结论。
+      </div>
+    </section>
+
+    <section>
+      <h2>关键文件索引</h2>
+      <ul class="source-list">
+        <li><code>docs/g1_edu_23dof_training_framework.md</code></li>
+        <li><code>refine-logs/G1_23DOF_CONTROLLER_TRAINING_ACCEPTANCE_20260630.md</code></li>
+        <li><code>refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md</code></li>
+        <li><code>refine-logs/G1_23DOF_CONTROLLER_STAGE_A_HANDOFF_20260630.md</code></li>
+        <li><code>refine-logs/G1_23DOF_CONTROLLER_STAGE_B_HANDOFF_20260630.md</code></li>
+        <li><code>refine-logs/EXPERIMENT_TRACKER.md</code></li>
+        <li><code>src/humanoid_locomotion_runtime/unitree_g1_23dof_profiles.py</code></li>
+        <li><code>scripts/eval_unitree_g1_23dof_command_grid.py</code></li>
+        <li><code>scripts/summarize_unitree_g1_23dof_eval.py</code></li>
+        <li><code>scripts/run_unitree_g1_23dof_stage_b_eval_queue.sh</code></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>
+        This report is a curated tracked artifact. Raw training logs, checkpoints, ONNX exports and eval JSON are intentionally kept out of git.
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
