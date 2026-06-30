@@ -22,8 +22,16 @@
 
 - [x] 运行 `bash scripts/setup_unitree_g1_23dof_training.sh`，确认 mamba env `robot` 可复用并能列出 `Unitree-G1-23Dof-Flat`。
 - [x] 运行 `GPU_ID=4 NUM_ENVS=64 MAX_ITERATIONS=1 bash scripts/run_unitree_g1_23dof_training.sh`，验证训练 loop 能启动和导出 artifact。
-- [ ] 用 `screen` 或 `tmux` 后台启动正式训练：`GPU_ID=4 bash scripts/run_unitree_g1_23dof_training.sh`。
-- [ ] 次日验收 `runs/unitree_g1_23dof_training/<RUN_NAME>.log`、submodule `logs/rsl_rl/g1_23dof_velocity/<RUN_DIR>/`、最终 `policy.onnx` shape 和 `model_*.pt` 产物。
+- [x] 用正式入口启动 full-training candidate：`GPU_ID=4 bash scripts/run_unitree_g1_23dof_training.sh`；accepted run name 为 `a800_g1_23dof_4096env_10001iter_20260629T100128Z`。
+- [x] 次日验收 `runs/unitree_g1_23dof_training/a800_g1_23dof_4096env_10001iter_20260629T100128Z.log`、submodule `logs/rsl_rl/g1_23dof_velocity/2026-06-29_10-01-43_a800_g1_23dof_4096env_10001iter_20260629T100128Z/`、最终 `policy.onnx` 和 `model_10000.pt` 产物；curated summary 见 `refine-logs/G1_23DOF_CONTROLLER_TRAINING_ACCEPTANCE_20260630.md`。
+
+## 2026-06-30 验收摘要
+
+- [x] 训练参数：`Unitree-G1-23Dof-Flat`、GPU 4、mamba env `robot`、`4096 envs`、`10001 iterations`、`save_interval=500`、seed `42`。
+- [x] 末轮训练日志：`Mean reward: 34.57`、`Mean episode length: 990.10`、`Episode_Termination/fell_over: 0.0833`。
+- [x] 候选产物：`model_10000.pt` 和 `policy.onnx`，均保留在 ignored submodule logs，不提交 git。
+- [ ] 下一步是官方 `scripts/play.py Unitree-G1-23Dof-Flat --checkpoint_file=...` 短回放。
+- [ ] 通过 play 后，复制候选到本项目 ignored `checkpoints/`，再跑 project-local 23DoF controller smoke。
 
 ## Gate 边界
 

@@ -8,6 +8,7 @@ def test_unitree_training_submodule_is_repo_local() -> None:
 
   assert "third_party/unitree_rl_mjlab" in gitmodules
   assert "unitreerobotics/unitree_rl_mjlab.git" in gitmodules
+  assert "ignore = untracked" in gitmodules
   assert "/mnt/nvme2n1p1" not in gitmodules
 
 

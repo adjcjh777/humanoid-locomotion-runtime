@@ -1,7 +1,7 @@
 # G1 edu 23DoF Controller Training Framework
 
 **日期**: 2026-06-29
-**状态**: repo-local full-training entrypoint scaffolded; controller evidence still pending
+**状态**: repo-local full-training entrypoint scaffolded; 2026-06-29 full-training candidate produced; controller evidence still pending
 
 这份文档只说明怎么在当前仓库里训练 `company_g1_edu_23dof` 的 locomotion controller。它不表示 controller 已经成熟，也不表示 Gate C controller smoke 已通过。
 
@@ -64,6 +64,16 @@ GPU_ID=4 NUM_ENVS=64 MAX_ITERATIONS=1 SAVE_INTERVAL=1 RUN_NAME=a800_g1_23dof_san
 - [x] 产物：`model_0.pt` 约 4.9 MB，`policy.onnx` 约 819 KB。
 - [x] 维度：actor obs `80`，action `23`，critic obs `95`；ONNX input `obs [1,80]`，output `actions [1,23]`。
 - [ ] 这只是 1 iteration smoke，不能当成可用 locomotion controller。
+
+## 2026-06-29 Full Training Candidate 记录
+
+- [x] 正式训练 run 完成：`a800_g1_23dof_4096env_10001iter_20260629T100128Z`。
+- [x] 训练设置来自实际 log/params：`Unitree-G1-23Dof-Flat`、GPU 4、mamba env `robot`、`4096 envs`、`10001 iterations`、`save_interval=500`、seed `42`。
+- [x] 产物保留在 ignored submodule logs：`third_party/unitree_rl_mjlab/logs/rsl_rl/g1_23dof_velocity/2026-06-29_10-01-43_a800_g1_23dof_4096env_10001iter_20260629T100128Z/`。
+- [x] 最终产物包含 `model_10000.pt` 和 `policy.onnx`；console log 保留在 ignored `runs/unitree_g1_23dof_training/a800_g1_23dof_4096env_10001iter_20260629T100128Z.log`。
+- [x] 末轮训练摘要：`Mean reward: 34.57`、`Mean episode length: 990.10`、`Episode_Termination/fell_over: 0.0833`。
+- [x] curated 验收摘要：`refine-logs/G1_23DOF_CONTROLLER_TRAINING_ACCEPTANCE_20260630.md`。
+- [ ] 这只是 controller candidate，不是成熟 controller evidence；仍需官方 `play.py` 短回放和 project-local `stand_ready` / `track_velocity` controller smoke。
 
 ## 不要混淆
 

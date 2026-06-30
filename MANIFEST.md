@@ -253,3 +253,14 @@
 | 2026-06-29 04:45 | manual | scripts/run_unitree_g1_23dof_training.sh | implementation | 将 23DoF RSL-RL 入口从 smoke 脚本改为正式训练脚本；默认 `4096 envs / 10001 iterations / save_interval=500`，仍不提交 raw logs、checkpoints、ONNX 或 tfevents |
 | 2026-06-29 04:45 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 同步正式训练入口命令和验收边界；短 sanity run 只能通过显式覆盖参数触发 |
 | 2026-06-29 04:45 | manual | refine-logs/G1_23DOF_CONTROLLER_TRAINING_FRAMEWORK_20260629.md | implementation | 当日 handoff 同步正式训练脚本、后台训练入口和次日验收项 |
+| 2026-06-30 03:00 | manual | refine-logs/G1_23DOF_CONTROLLER_TRAINING_ACCEPTANCE_20260630.md | implementation | 23DoF full-training candidate 验收 timestamp copy；记录 accepted run、ignored raw paths、最终训练指标和 controller-smoke 边界 |
+| 2026-06-30 03:00 | manual | refine-logs/G1_23DOF_CONTROLLER_TRAINING_ACCEPTANCE.md | implementation | 23DoF full-training candidate 验收 latest copy |
+| 2026-06-30 03:00 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 同步 2026-06-29 full-training candidate 记录；仍保持 play/controller smoke pending |
+| 2026-06-30 03:00 | manual | refine-logs/G1_23DOF_CONTROLLER_TRAINING_FRAMEWORK_20260629.md | implementation | 同步 2026-06-30 验收摘要和下一步 play/controller smoke |
+| 2026-06-30 03:00 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 23DoF full-training candidate 已产出，但 mature controller evidence 仍 pending |
+| 2026-06-30 03:00 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | 实验计划同步 candidate 已产出和 controller-smoke gate 边界 |
+| 2026-06-30 03:00 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | 每日时间线同步 candidate 验收、play 回放和 project-local smoke 下一步 |
+| 2026-06-30 03:00 | manual | refine-logs/EXPERIMENT_TRACKER_20260630_030003.md | implementation | tracker timestamp copy for 23DoF candidate acceptance sync |
+| 2026-06-30 03:00 | manual | refine-logs/EXPERIMENT_PLAN_20260630_030003.md | implementation | experiment plan timestamp copy for 23DoF candidate acceptance sync |
+| 2026-06-30 03:00 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260630_030003.md | implementation | daily timeline timestamp copy for 23DoF candidate acceptance sync |
+| 2026-06-30 03:00 | manual | .gitmodules | implementation | 为 `third_party/unitree_rl_mjlab` 设置 `ignore = untracked`，避免训练缓存/log 副产物污染父仓库状态 |
