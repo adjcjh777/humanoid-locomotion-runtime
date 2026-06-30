@@ -41,3 +41,12 @@
 - [ ] Do not start R020 controller-native baseline, failure pilots, PPO supervisor, or paper claims from this candidate alone.
 - [ ] Next required check: official `scripts/play.py Unitree-G1-23Dof-Flat --checkpoint_file=...` replay.
 - [ ] After play passes, copy the selected candidate into ignored project `checkpoints/` and run project-local `stand_ready` / `track_velocity` 23DoF controller smoke.
+
+## 2026-06-30 Follow-up
+
+- [x] 由于 `model_4500.pt` 在 Viser 中出现斜走观察，后续不默认接受最终 checkpoint 或单一 play 观感。
+- [x] 新增 policy-improvement TODO：`refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md`。
+- [x] 新增 repo-local task profiles：`Unitree-G1-23Dof-ForwardFlat` 和 `Unitree-G1-23Dof-VelocityBalancedFlat`。
+- [x] 新增 command-grid eval 脚本，用固定 stand/forward/yaw/lateral commands 量化 lateral drift、yaw error、velocity error 和 done fraction。
+- [ ] 重新评估旧 candidate 的 `model_3000.pt`、`model_4000.pt`、`model_4500.pt`、`model_10000.pt`。
+- [ ] 启动 Stage A / Stage B multi-seed 训练后，再用 eval 选 checkpoint。

@@ -5,11 +5,14 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TRAIN_REPO="${UNITREE_RL_MJLAB_ROOT:-$ROOT_DIR/third_party/unitree_rl_mjlab}"
 CONDA_ENV_NAME="${UNITREE_RL_MJLAB_CONDA_ENV:-robot}"
 
-TASK="${TASK:-Unitree-G1-23Dof-Flat}"
+# Upstream baseline remains Unitree-G1-23Dof-Flat; the repo-local default uses
+# the direct-yaw balanced profile for the next controller-improvement series.
+TASK="${TASK:-Unitree-G1-23Dof-VelocityBalancedFlat}"
 PHYSICAL_GPU_ID="${PHYSICAL_GPU_ID:-${GPU_ID:-4}}"
 NUM_ENVS="${NUM_ENVS:-4096}"
 MAX_ITERATIONS="${MAX_ITERATIONS:-10001}"
-SAVE_INTERVAL="${SAVE_INTERVAL:-500}"
+SAVE_INTERVAL="${SAVE_INTERVAL:-250}"
+SEED="${SEED:-42}"
 RUN_NAME="${RUN_NAME:-a800_g1_23dof_train_$(date -u +%Y%m%dT%H%M%SZ)}"
 LOG_DIR="$ROOT_DIR/runs/unitree_g1_23dof_training"
 LOG_FILE="$LOG_DIR/${RUN_NAME}.log"
@@ -47,6 +50,7 @@ CMD=(
   "--env.scene.num-envs=$NUM_ENVS"
   "--agent.max-iterations=$MAX_ITERATIONS"
   "--agent.save-interval=$SAVE_INTERVAL"
+  "--agent.seed=$SEED"
   "--agent.run-name=$RUN_NAME"
   --agent.logger=tensorboard
   --agent.upload-model=False
@@ -58,6 +62,7 @@ CMD=(
   echo "num_envs=$NUM_ENVS"
   echo "max_iterations=$MAX_ITERATIONS"
   echo "save_interval=$SAVE_INTERVAL"
+  echo "seed=$SEED"
   echo "run_name=$RUN_NAME"
   echo "train_repo=$TRAIN_REPO"
   echo "conda_env=$CONDA_ENV_NAME"
@@ -74,8 +79,9 @@ CMD=(
 )
 
 echo "Training finished. Candidate training outputs under:" | tee -a "$LOG_FILE"
-find "$TRAIN_REPO/logs/rsl_rl/g1_23dof_velocity" \
-  -maxdepth 1 \
+find "$TRAIN_REPO/logs/rsl_rl" \
+  -mindepth 2 \
+  -maxdepth 2 \
   -type d \
   -name "*$RUN_NAME" \
   -exec find {} \

@@ -260,7 +260,191 @@
 | 2026-06-30 03:00 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 23DoF full-training candidate 已产出，但 mature controller evidence 仍 pending |
 | 2026-06-30 03:00 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | 实验计划同步 candidate 已产出和 controller-smoke gate 边界 |
 | 2026-06-30 03:00 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | 每日时间线同步 candidate 验收、play 回放和 project-local smoke 下一步 |
-| 2026-06-30 03:00 | manual | refine-logs/EXPERIMENT_TRACKER_20260630_030003.md | implementation | tracker timestamp copy for 23DoF candidate acceptance sync |
-| 2026-06-30 03:00 | manual | refine-logs/EXPERIMENT_PLAN_20260630_030003.md | implementation | experiment plan timestamp copy for 23DoF candidate acceptance sync |
-| 2026-06-30 03:00 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260630_030003.md | implementation | daily timeline timestamp copy for 23DoF candidate acceptance sync |
 | 2026-06-30 03:00 | manual | .gitmodules | implementation | 为 `third_party/unitree_rl_mjlab` 设置 `ignore = untracked`，避免训练缓存/log 副产物污染父仓库状态 |
+| 2026-06-30 03:53 | manual | AGENTS.md | implementation | 明确 23DoF locomotion controller 训练是 Gate C 前置 bootstrap 例外，并记录最多 3 张空闲 GPU、默认 1 个 4096-env job/GPU 的并发规则 |
+| 2026-06-30 03:53 | manual | src/humanoid_locomotion_runtime/unitree_g1_23dof_profiles.py | implementation | 新增 repo-local `Unitree-G1-23Dof-ForwardFlat` 和 `Unitree-G1-23Dof-VelocityBalancedFlat` task profiles；不修改 Unitree submodule tracked source |
+| 2026-06-30 03:53 | manual | scripts/unitree_train_mamba_wrapper.py | implementation | 训练 wrapper 在进入 upstream `train.py` 前注册 repo-local 23DoF controller profiles，并保持旧 torch ONNX export 兼容 patch |
+| 2026-06-30 03:53 | manual | scripts/setup_unitree_g1_23dof_training.sh | implementation | 环境检查脚本同步加载 repo-local profiles，列出新增 23DoF task choices |
+| 2026-06-30 03:53 | manual | scripts/run_unitree_g1_23dof_training.sh | implementation | 默认 task 切到 `Unitree-G1-23Dof-VelocityBalancedFlat`，新增 `SEED` 透传和 `save_interval=250`，用于 checkpoint selection |
+| 2026-06-30 03:53 | manual | scripts/eval_unitree_g1_23dof_command_grid.py | implementation | 新增 23DoF checkpoint command-grid eval：stand/forward/yaw/lateral，输出 ignored JSON metrics，不提交 raw eval artifacts |
+| 2026-06-30 03:53 | manual | tests/test_unitree_g1_23dof_training_framework.py | implementation | 覆盖 repo-local profile registration、balanced default task、seed 透传和 command-grid eval script presence |
+| 2026-06-30 03:53 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 同步官方 29DoF policy 对 23DoF controller 改进的参考结论、repo-local task、eval 脚本和 Stage A/B/C 路线 |
+| 2026-06-30 03:53 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | 23DoF controller policy-improvement latest checklist：直行验收、velocity-balanced controller、command-grid selection 和 Gate C 条件 |
+| 2026-06-30 03:53 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md | implementation | 23DoF controller policy-improvement timestamp copy |
+| 2026-06-30 03:53 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_A_HANDOFF_20260630.md | implementation | Stage A ForwardFlat multi-seed handoff：seeds 101/102/103 on GPUs 1/2/3，raw logs/checkpoints 仍保持 ignored |
+| 2026-06-30 03:53 | manual | refine-logs/G1_23DOF_CONTROLLER_TRAINING_ACCEPTANCE.md | implementation | full-training candidate 验收 latest copy 同步用户观察到 `model_4500.pt` 斜走后的后续 policy-improvement 处理 |
+| 2026-06-30 03:53 | manual | refine-logs/G1_23DOF_CONTROLLER_TRAINING_ACCEPTANCE_20260630.md | implementation | full-training candidate 验收 timestamp copy 同步斜走后续处理 |
+| 2026-06-30 03:53 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 新增 R007f-R007j；R007f DONE，R007g Stage A ForwardFlat multi-seed IN_PROGRESS |
+| 2026-06-30 03:53 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 Gate C controller bootstrap 例外、R007f 完成、R007g 启动和后续 eval/smoke 停止条件 |
+| 2026-06-30 03:53 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 2026-06-30 controller policy-improvement scaffold、GPU 并发规则和次日验收项 |
+| 2026-06-30 04:02 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_A_HANDOFF_20260630.md | implementation | Stage A handoff 增补 `model_250.pt` 三 seed command-grid 中途 eval 结果；明确早期 checkpoint 不合格且不算 mature controller evidence |
+| 2026-06-30 04:02 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | policy-improvement TODO 增补 Stage A `model_250.pt` 中途 eval 已完成但不合格，后续仍需更后期 checkpoint selection |
+| 2026-06-30 04:02 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md | implementation | policy-improvement TODO timestamp copy 同步中途 eval 结果 |
+| 2026-06-30 04:02 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 R007g 训练进度和 R007i 中途 eval `IN_PROGRESS`；ignored eval JSON 不进 git |
+| 2026-06-30 04:02 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 Stage A `model_250.pt` command-grid sanity 已完成但不构成 mature controller evidence |
+| 2026-06-30 04:02 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 04:00 UTC 中途 eval 完成、训练仍未完成、Gate C 不推进 |
+| 2026-06-30 04:13 | manual | scripts/eval_unitree_g1_23dof_command_grid.py | implementation | 修复并发 command-grid eval JSON 文件名碰撞；输出名加入 task、run directory、checkpoint stem、seed 和 timestamp |
+| 2026-06-30 04:13 | manual | tests/test_unitree_g1_23dof_training_framework.py | implementation | 增加 eval 输出命名防回归检查，覆盖 seed/checkpoint/run directory 字段 |
+| 2026-06-30 04:13 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 训练框架文档同步并发 eval 命名规则，以及 `model_250.pt` / `model_500.pt` 中途 eval 不构成 mature evidence |
+| 2026-06-30 04:13 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_A_HANDOFF_20260630.md | implementation | handoff 增补 `model_500.pt` 三 seed command-grid eval 结果和输出命名修复；`model_500.pt` 仍不达 mature controller gate |
+| 2026-06-30 04:13 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | policy-improvement TODO 同步 eval filename collision fix 和 `model_500.pt` 中途 eval 趋势 |
+| 2026-06-30 04:13 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md | implementation | policy-improvement TODO timestamp copy 同步 `model_500.pt` eval |
+| 2026-06-30 04:13 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 R007i `model_500.pt` eval 和并发 eval 输出命名修复，Gate C 仍不推进 |
+| 2026-06-30 04:13 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 R007i eval reliability fix 和 `model_500.pt` 中途趋势 |
+| 2026-06-30 04:13 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 `model_500.pt` eval 已完成但 lateral drift 未过 gate |
+| 2026-06-30 04:20 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 训练框架文档同步 Stage A `model_1000.pt` 中途 eval；趋势改善但不构成 mature evidence |
+| 2026-06-30 04:20 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_A_HANDOFF_20260630.md | implementation | handoff 增补 `model_1000.pt` 三 seed command-grid eval 结果；forward drift 改善但 lateral command 仍不稳 |
+| 2026-06-30 04:20 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | policy-improvement TODO 同步 `model_1000.pt` 中途 eval 仍未过 mature controller gate |
+| 2026-06-30 04:20 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md | implementation | policy-improvement TODO timestamp copy 同步 `model_1000.pt` eval |
+| 2026-06-30 04:20 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 R007i `model_1000.pt` command-grid eval 结果，R007g/R007i 仍 IN_PROGRESS |
+| 2026-06-30 04:20 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 `model_1000.pt` 中途 eval 结果和继续 eval 后期 checkpoint 的要求 |
+| 2026-06-30 04:20 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 `model_1000.pt` eval 已完成但 lateral drift 未过 gate |
+| 2026-06-30 04:35 | manual | scripts/summarize_unitree_g1_23dof_eval.py | implementation | 新增 command-grid eval JSON 汇总脚本，输出 checkpoint/seed 指标和 simple triage penalty；不替代 Gate C acceptance |
+| 2026-06-30 04:35 | manual | tests/test_unitree_g1_23dof_training_framework.py | implementation | 覆盖 eval summary script 的关键字段：`selection_penalty`、forward fast lateral drift 和 lateral done fraction |
+| 2026-06-30 04:35 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 训练框架文档同步 eval summary script，以及 Stage A `model_1250.pt` / `model_1500.pt` 中途 eval 不构成 mature evidence |
+| 2026-06-30 04:35 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_A_HANDOFF_20260630.md | implementation | handoff 增补 `model_1250.pt` / `model_1500.pt` 三 seed command-grid eval 结果和 summary script |
+| 2026-06-30 04:35 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | policy-improvement TODO 同步 `model_1250.pt` / `model_1500.pt` eval 和 summary script |
+| 2026-06-30 04:35 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md | implementation | policy-improvement TODO timestamp copy 同步 `model_1250.pt` / `model_1500.pt` eval |
+| 2026-06-30 04:35 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 R007i 已 eval 到 `model_1500.pt`，R007g/R007i 仍 IN_PROGRESS |
+| 2026-06-30 04:35 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 `model_1250.pt` / `model_1500.pt` eval 结果和 summary script |
+| 2026-06-30 04:35 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 eval 已推进到 `model_1500.pt`，lateral drift 未过 gate |
+| 2026-06-30 04:43 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 训练框架文档同步 Stage A `model_2000.pt` 中途 eval；目前最好但 cross-seed straight drift 仍未达标 |
+| 2026-06-30 04:43 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_A_HANDOFF_20260630.md | implementation | handoff 增补 `model_2000.pt` 三 seed command-grid eval 结果；仍不构成 mature controller evidence |
+| 2026-06-30 04:43 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | policy-improvement TODO 同步 `model_2000.pt` 当前最佳中途点但未过 gate |
+| 2026-06-30 04:43 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md | implementation | policy-improvement TODO timestamp copy 同步 `model_2000.pt` eval |
+| 2026-06-30 04:43 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 R007i 已 eval 到 `model_2000.pt`，R007g/R007i 仍 IN_PROGRESS |
+| 2026-06-30 04:43 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 `model_2000.pt` 中途 eval 结果 |
+| 2026-06-30 04:43 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 `model_2000.pt` eval 已完成但未过 mature controller gate |
+| 2026-06-30 04:54 | manual | scripts/summarize_unitree_g1_23dof_eval.py | implementation | eval summary script 增加 `--group-by checkpoint`，支持 multi-seed 聚合排序 |
+| 2026-06-30 04:54 | manual | tests/test_unitree_g1_23dof_training_framework.py | implementation | 测试同步覆盖 eval summary 聚合模式关键字段 |
+| 2026-06-30 04:54 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 训练框架文档同步 Stage A `model_2500.pt` eval 和 checkpoint 聚合 summary |
+| 2026-06-30 04:54 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_A_HANDOFF_20260630.md | implementation | handoff 增补 `model_2500.pt` 三 seed command-grid eval 结果；当前聚合最好但仍未过 gate |
+| 2026-06-30 04:54 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | policy-improvement TODO 同步 `model_2500.pt` eval 和 summary 聚合模式 |
+| 2026-06-30 04:54 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md | implementation | policy-improvement TODO timestamp copy 同步 `model_2500.pt` eval |
+| 2026-06-30 04:54 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 R007i 已 eval 到 `model_2500.pt`，R007g/R007i 仍 IN_PROGRESS |
+| 2026-06-30 04:54 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 `model_2500.pt` 中途 eval 和 multi-seed aggregation |
+| 2026-06-30 04:54 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 `model_2500.pt` eval 已完成但未过 mature controller gate |
+| 2026-06-30 05:12 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 训练框架文档同步 Stage A `model_3000.pt` eval；聚合略弱于 `model_2500.pt`，仍未过 mature controller gate |
+| 2026-06-30 05:12 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_A_HANDOFF_20260630.md | implementation | handoff 已记录 `model_3000.pt` 三 seed command-grid eval 结果；不构成 mature controller evidence |
+| 2026-06-30 05:12 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | policy-improvement TODO 同步 `model_3000.pt` eval 和后续 checkpoint selection 范围 |
+| 2026-06-30 05:12 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md | implementation | policy-improvement TODO timestamp copy 同步 `model_3000.pt` eval |
+| 2026-06-30 05:12 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 R007i 已 eval 到 `model_3000.pt`，R007g/R007i 仍 IN_PROGRESS |
+| 2026-06-30 05:12 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 `model_3000.pt` eval 结果和 `model_2500.pt` 当前最佳聚合判断 |
+| 2026-06-30 05:12 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 `model_3000.pt` eval 已完成但未过 mature controller gate |
+| 2026-06-30 05:18 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 训练框架文档同步 Stage A `model_3500.pt` eval；mean lateral 改善但 worst-case lateral drift 和 lateral commands 仍未过 gate |
+| 2026-06-30 05:18 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_A_HANDOFF_20260630.md | implementation | handoff 增补 `model_3500.pt` 三 seed command-grid eval 结果；仍不构成 mature controller evidence |
+| 2026-06-30 05:18 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | policy-improvement TODO 同步 `model_3500.pt` eval 和 command-bin/cross-axis reward 下一步判断 |
+| 2026-06-30 05:18 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md | implementation | policy-improvement TODO timestamp copy 同步 `model_3500.pt` eval |
+| 2026-06-30 05:18 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 R007i 已 eval 到 `model_3500.pt`，R007g/R007i 仍 IN_PROGRESS |
+| 2026-06-30 05:18 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 `model_3500.pt` eval 结果和仍无 mature evidence 的 gate 判断 |
+| 2026-06-30 05:18 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 `model_3500.pt` eval 已完成但未过 mature controller gate |
+| 2026-06-30 05:20 | manual | src/humanoid_locomotion_runtime/unitree_g1_23dof_profiles.py | implementation | 新增 `command_axis_leakage_penalty` reward term，用于惩罚命令静默轴上的实际速度串扰 |
+| 2026-06-30 05:20 | manual | tests/test_unitree_g1_23dof_training_framework.py | test | 覆盖 repo-local profile 包含 `command_axis_leakage_penalty` / `command_axis_leakage` |
+| 2026-06-30 05:20 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 训练框架文档同步 cross-axis leakage reward 改动，说明该改动服务后续新 run |
+| 2026-06-30 05:20 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | policy-improvement TODO 同步 cross-axis leakage reward 已落地，command-bin sampler 仍 pending |
+| 2026-06-30 05:20 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md | implementation | policy-improvement TODO timestamp copy 同步 cross-axis leakage reward |
+| 2026-06-30 05:20 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 R007f follow-up reward 改动，R007g/R007i 仍 IN_PROGRESS |
+| 2026-06-30 05:20 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 R007f follow-up reward 改动 |
+| 2026-06-30 05:20 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 05:20 UTC cross-axis leakage reward 改动 |
+| 2026-06-30 05:22 | manual | runs/unitree_g1_23dof_eval/*model_3500_seed999*.json | ignored-artifact | 2 env / 2 step command-grid smoke 确认 `command_axis_leakage` reward 进入 RewardManager；raw JSON 仍保持 ignored |
+| 2026-06-30 05:22 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 训练框架文档同步 cross-axis reward smoke，actor/action contract 仍为 `80 -> 23` |
+| 2026-06-30 05:22 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | policy-improvement TODO 同步 cross-axis reward smoke 结果 |
+| 2026-06-30 05:22 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md | implementation | policy-improvement TODO timestamp copy 同步 cross-axis reward smoke |
+| 2026-06-30 05:22 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 R007f follow-up smoke 结果 |
+| 2026-06-30 05:22 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 cross-axis reward smoke 结果 |
+| 2026-06-30 05:22 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 05:22 UTC cross-axis reward smoke |
+| 2026-06-30 05:27 | manual | scripts/summarize_unitree_g1_23dof_eval.py | implementation | eval summary 增加 `--include-seeds`，避免 smoke seed JSON 污染正式 checkpoint 聚合 |
+| 2026-06-30 05:27 | manual | tests/test_unitree_g1_23dof_training_framework.py | test | 覆盖 summary script 暴露 `--include-seeds` seed allowlist |
+| 2026-06-30 05:27 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_A_HANDOFF_20260630.md | implementation | handoff 增补 `model_4000.pt` 三 seed eval；fixed-forward 指标最好但 lateral/yaw commands 仍未过 gate |
+| 2026-06-30 05:27 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 训练框架文档同步 Stage A `model_4000.pt` eval 和 `--include-seeds` 聚合修正 |
+| 2026-06-30 05:27 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | policy-improvement TODO 同步 `model_4000.pt` eval 和后续 checkpoint selection 范围 |
+| 2026-06-30 05:27 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md | implementation | policy-improvement TODO timestamp copy 同步 `model_4000.pt` eval |
+| 2026-06-30 05:27 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 R007i 已 eval 到 `model_4000.pt`，R007g/R007i 仍 IN_PROGRESS |
+| 2026-06-30 05:27 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 `model_4000.pt` eval 结果 |
+| 2026-06-30 05:27 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 `model_4000.pt` eval 已完成但未过 mature controller gate |
+| 2026-06-30 05:37 | manual | runs/unitree_g1_23dof_eval/*model_4500_seed*.json | ignored-artifact | Stage A `model_4500.pt` 三 seed command-grid eval 完成；raw JSON 仍保持 ignored |
+| 2026-06-30 05:38 | manual | src/humanoid_locomotion_runtime/unitree_g1_23dof_profiles.py | implementation | 新增 binned velocity command sampler，Stage A 覆盖 stand/straight 速度段，Stage B 覆盖 stand/straight/yaw-only/lateral-only/combined |
+| 2026-06-30 05:38 | manual | scripts/eval_unitree_g1_23dof_command_grid.py | implementation | command-grid eval 在 binned sampler profile 下用 single locked eval bin 固定命令，避免 eval command 被训练采样器重采样 |
+| 2026-06-30 05:38 | manual | tests/test_unitree_g1_23dof_training_framework.py | test | 覆盖 binned command sampler symbols 和 Stage B command bins |
+| 2026-06-30 05:38 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_A_HANDOFF_20260630.md | implementation | handoff 增补 `model_4500.pt` 三 seed eval；略弱于 `model_4000.pt` 且仍未过 mature controller gate |
+| 2026-06-30 05:38 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 训练框架文档同步 binned command sampler 和 `model_4500.pt` eval 结果 |
+| 2026-06-30 05:38 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | policy-improvement TODO 同步 command-bin sampler 已落地和 `model_4500.pt` eval 结果 |
+| 2026-06-30 05:38 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md | implementation | policy-improvement TODO timestamp copy 同步 command-bin sampler 和 `model_4500.pt` eval |
+| 2026-06-30 05:44 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 R007f binned sampler 和 R007i `model_4500.pt` eval，R007g/R007i 仍 IN_PROGRESS |
+| 2026-06-30 05:44 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 binned sampler 和 `model_4500.pt` eval 结果 |
+| 2026-06-30 05:44 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 binned sampler 和 `model_4500.pt` eval 已完成但未过 mature controller gate |
+| 2026-06-30 05:48 | manual | scripts/unitree_train_mamba_wrapper.py | implementation | repo-local profile dynamic load 先写入 `sys.modules[spec.name]`，修复 Python 3.10 dataclass importlib smoke failure |
+| 2026-06-30 05:48 | manual | scripts/eval_unitree_g1_23dof_command_grid.py | implementation | eval 入口同步 `sys.modules[spec.name]` dynamic-load fix |
+| 2026-06-30 05:48 | manual | scripts/setup_unitree_g1_23dof_training.sh | implementation | setup task-list smoke 入口同步 `sys.modules[spec.name]` dynamic-load fix |
+| 2026-06-30 05:48 | manual | tests/test_unitree_g1_23dof_training_framework.py | test | 覆盖 train/eval/setup 动态加载 repo-local profile 时必须写入 `sys.modules` |
+| 2026-06-30 05:48 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 训练框架文档同步 binned sampler real-env smoke 结果 |
+| 2026-06-30 05:48 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | policy-improvement TODO 同步 binned sampler real-env smoke 结果 |
+| 2026-06-30 05:48 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md | implementation | policy-improvement TODO timestamp copy 同步 binned sampler real-env smoke |
+| 2026-06-30 05:48 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 binned sampler real-env smoke 和 dynamic-load fix |
+| 2026-06-30 05:48 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 binned sampler real-env smoke |
+| 2026-06-30 05:48 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 binned sampler real-env smoke |
+| 2026-06-30 05:55 | manual | runs/unitree_g1_23dof_eval/*model_5000_seed*.json | ignored-artifact | Stage A `model_5000.pt` 三 seed command-grid eval 完成；当前 fixed-forward 指标最好但仍未过 mature controller gate；raw JSON 仍保持 ignored |
+| 2026-06-30 06:19 | manual | runs/unitree_g1_23dof_eval/*model_6000_seed*.json | ignored-artifact | Stage A `model_6000.pt` 三 seed command-grid eval 完成；fixed-forward 指标较 `model_5000.pt` 明显退化；raw JSON 仍保持 ignored |
+| 2026-06-30 06:22 | manual | runs/unitree_g1_23dof_eval/*model_6500_seed*.json | ignored-artifact | Stage A `model_6500.pt` 三 seed command-grid eval 完成；有恢复但仍弱于 `model_5000.pt`；raw JSON 仍保持 ignored |
+| 2026-06-30 06:24 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_A_HANDOFF_20260630.md | implementation | handoff 增补 `model_5000/6000/6500.pt` 三 seed eval 结果，`model_5000.pt` 暂为 best 但仍不 mature |
+| 2026-06-30 06:24 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 训练框架文档同步 Stage A 已 eval 到 `model_6500.pt`，`model_5000.pt` 暂为 best |
+| 2026-06-30 06:24 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | policy-improvement TODO 同步 `model_5000/6000/6500.pt` eval 趋势 |
+| 2026-06-30 06:24 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md | implementation | policy-improvement TODO timestamp copy 同步 `model_5000/6000/6500.pt` eval |
+| 2026-06-30 06:24 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 R007i 已 eval 到 `model_6500.pt`，R007g/R007i 仍 IN_PROGRESS |
+| 2026-06-30 06:24 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 `model_5000/6000/6500.pt` eval 趋势 |
+| 2026-06-30 06:24 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 `model_5000/6000/6500.pt` eval 已完成但未过 mature controller gate |
+| 2026-06-30 07:21 | manual | runs/unitree_g1_23dof_eval/*model_7000_seed*.json | ignored-artifact | Stage A `model_7000.pt` 三 seed command-grid eval 完成；raw JSON 仍保持 ignored |
+| 2026-06-30 07:24 | manual | runs/unitree_g1_23dof_eval/*model_8000_seed*.json | ignored-artifact | Stage A `model_8000.pt` 三 seed command-grid eval 完成；raw JSON 仍保持 ignored |
+| 2026-06-30 07:30 | manual | runs/unitree_g1_23dof_eval/*model_8500_seed*.json | ignored-artifact | Stage A `model_8500.pt` 三 seed command-grid eval 完成；后期 checkpoint 中较接近 `model_5000.pt` 但仍未过 mature controller gate |
+| 2026-06-30 07:26 | manual | runs/unitree_g1_23dof_eval/*model_9000_seed*.json | ignored-artifact | Stage A `model_9000.pt` 三 seed command-grid eval 完成；raw JSON 仍保持 ignored |
+| 2026-06-30 07:33 | manual | runs/unitree_g1_23dof_eval/*model_9500_seed*.json | ignored-artifact | Stage A `model_9500.pt` 三 seed command-grid eval 完成；接近但仍略弱于 `model_5000.pt`，raw JSON 仍保持 ignored |
+| 2026-06-30 07:34 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_A_HANDOFF_20260630.md | implementation | handoff 增补 `model_7000/8000/8500/9000/9500.pt` 三 seed eval 结果 |
+| 2026-06-30 07:34 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 训练框架文档同步 Stage A 已 eval 到 `model_9500.pt`，`model_5000.pt` 仍为当前 best |
+| 2026-06-30 07:34 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | policy-improvement TODO 同步 `model_7000/8000/8500/9000/9500.pt` eval 趋势 |
+| 2026-06-30 07:34 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md | implementation | policy-improvement TODO timestamp copy 同步 `model_7000/8000/8500/9000/9500.pt` eval |
+| 2026-06-30 07:34 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 R007i 已 eval 到 `model_9500.pt`，R007g/R007i 仍 IN_PROGRESS |
+| 2026-06-30 07:34 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 `model_7000/8000/8500/9000/9500.pt` eval 趋势 |
+| 2026-06-30 07:34 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 `model_7000/8000/8500/9000/9500.pt` eval 已完成但未过 mature controller gate |
+| 2026-06-30 07:44 | manual | runs/unitree_g1_23dof_eval/*model_10000_seed*.json | ignored-artifact | Stage A `model_10000.pt` 三 seed final command-grid eval 完成；最终轮弱于 `model_5000.pt`，raw JSON 仍保持 ignored |
+| 2026-06-30 08:30 | manual | third_party/unitree_rl_mjlab/logs/rsl_rl/g1_23dof_forward_flat/*20260630T034920Z/policy.onnx | ignored-artifact | Stage A seeds `101/102/103` 最终 ONNX shape 已验证为 `obs [1,80] -> actions [1,23]`；ONNX 仍不进 git |
+| 2026-06-30 08:33 | manual | scripts/run_unitree_g1_23dof_training.sh | implementation | 训练脚本收尾产物查找改为 profile-agnostic `logs/rsl_rl/*/*RUN_NAME`，覆盖 ForwardFlat 和 VelocityBalancedFlat |
+| 2026-06-30 08:34 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_B_HANDOFF_20260630.md | implementation | Stage B VelocityBalancedFlat multi-seed handoff：seeds 201/202/203 on GPUs 1/2/3，raw logs/checkpoints 仍保持 ignored |
+| 2026-06-30 08:34 | manual | runs/unitree_g1_23dof_training/STAGE_B_VELOCITY_BALANCED_RUNS_20260630T083359Z.txt | ignored-artifact | Stage B launch run list；tmux sessions `g1vb_s201/s202/s203_20260630T083359Z`，file remains ignored under runs |
+| 2026-06-30 08:36 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 训练框架文档同步 Stage A complete/ONNX shape 和 Stage B multi-seed launch 状态 |
+| 2026-06-30 08:36 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_A_HANDOFF_20260630.md | implementation | Stage A handoff 从 running 收口为 complete；记录 `model_10000.pt` final eval、ONNX shape 和 best checkpoint 仍为 `model_5000.pt` |
+| 2026-06-30 08:36 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | policy-improvement TODO 同步 Stage A complete/ONNX shape、Stage B launch 和 GPU preflight evidence |
+| 2026-06-30 08:36 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md | implementation | policy-improvement TODO timestamp copy 同步 Stage A complete/Stage B launch |
+| 2026-06-30 08:36 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 R007g DONE、R007h IN_PROGRESS、R007i 仍 IN_PROGRESS；Gate C 仍不推进 |
+| 2026-06-30 08:36 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 R007g shape check、R007h launch 和初始 health check |
+| 2026-06-30 08:36 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 Stage A complete/ONNX shape 和 Stage B 08:33 UTC launch |
+| 2026-06-30 08:38 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_B_HANDOFF_20260630.md | implementation | Stage B handoff 增补 08:38 UTC health check：three seeds still running，iteration 129/135，early metrics improving but not mature evidence |
+| 2026-06-30 08:40 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_B_HANDOFF_20260630.md | implementation | Stage B handoff 增补 training-check：iteration 249/10001，mean reward positive，无 OOM/NaN，decision CONTINUE |
+| 2026-06-30 08:43 | manual | scripts/run_unitree_g1_23dof_stage_b_eval_queue.sh | implementation | 新增 Stage B post-training eval queue：等待 `model_10000.pt` 和训练 tmux 结束后，再用 GPU 1/2/3 分批跑 command-grid eval |
+| 2026-06-30 08:43 | manual | tests/test_unitree_g1_23dof_training_framework.py | test | 覆盖 Stage B eval queue 的 final-checkpoint wait、tmux wait、GPU assignment 和 seed-filter summary |
+| 2026-06-30 08:43 | manual | runs/unitree_g1_23dof_eval_queue/stage_b_eval_queue_20260630T084308Z.log | ignored-artifact | Stage B eval queue watcher log；08:43 UTC 确认仍在等待 `model_10000.pt`，未提前占用额外 GPU |
+| 2026-06-30 08:45 | manual | docs/g1_edu_23dof_training_framework.md | implementation | 训练框架文档同步 Stage B post-training eval queue |
+| 2026-06-30 08:45 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | policy-improvement TODO 同步 Stage B eval queue 已启动 |
+| 2026-06-30 08:45 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md | implementation | policy-improvement TODO timestamp copy 同步 Stage B eval queue |
+| 2026-06-30 08:45 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 R007h training-check 和 R007i Stage B eval queue |
+| 2026-06-30 08:45 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 R007h training-check 和 R007i Stage B eval queue |
+| 2026-06-30 08:45 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 Stage B training-check 和 post-training eval queue |
+| 2026-06-30 08:47 | manual | third_party/unitree_rl_mjlab/logs/rsl_rl/g1_23dof_velocity_balanced/*20260630T083359Z/model_500.pt | ignored-artifact | Stage B `model_500.pt` 已写出；raw checkpoint 仍保持 ignored |
+| 2026-06-30 08:49 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_B_HANDOFF_20260630.md | implementation | Stage B handoff 增补 08:47 UTC training-check：iteration 549/10001，reward 33.49-38.25，无 OOM/NaN，decision CONTINUE |
+| 2026-06-30 08:49 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 同步 Stage B 08:47 UTC health check |
+| 2026-06-30 08:49 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 Stage B 08:47 UTC health check |
+| 2026-06-30 08:49 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 Stage B 08:47 UTC health check |
+| 2026-06-30 08:51 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_B_HANDOFF_20260630.md | implementation | Stage B handoff 增补 08:51 UTC lightweight health check：iteration 696/10001，reward 39.21-42.10，无 OOM/NaN/Inf，decision CONTINUE |
+| 2026-06-30 08:55 | manual | runs/unitree_g1_23dof_training/*20260630T083359Z.log | ignored-artifact | Stage B old three-GPU early runs stopped at iteration ~783/10001 per user resource utilization request; raw logs/checkpoints remain ignored and superseded |
+| 2026-06-30 08:55 | manual | runs/unitree_g1_23dof_training/STAGE_B_VELOCITY_BALANCED_PACKED_GPU5_RUNS_20260630T085517Z.txt | ignored-artifact | Stage B packed GPU5 launch run list for seeds 201/202/203; file remains ignored under runs |
+| 2026-06-30 08:56 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_B_HANDOFF_20260630.md | implementation | Stage B handoff updated: authoritative runs are packed on GPU 5, old GPU 1/2/3 runs marked superseded |
+| 2026-06-30 08:56 | manual | runs/unitree_g1_23dof_eval_queue/stage_b_eval_queue_20260630T085653Z.log | ignored-artifact | Stage B packed eval queue watcher log; waits for packed GPU5 final checkpoints and uses GPU list 5 5 5 |
+| 2026-06-30 09:00 | manual | docs/g1_edu_23dof_training_framework.md | implementation | training framework synchronized to Stage B packed GPU5 current run and packed eval queue |
+| 2026-06-30 09:00 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | policy-improvement TODO synchronized to Stage B packed GPU5 current run and packed eval queue |
+| 2026-06-30 09:00 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md | implementation | policy-improvement TODO timestamp copy synchronized to Stage B packed GPU5 current run |
+| 2026-06-30 09:00 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker synchronized to old three-GPU Stage B runs superseded and packed GPU5 runs in progress |
+| 2026-06-30 09:00 | manual | refine-logs/EXPERIMENT_TRACKER_20260630_090007.md | implementation | tracker timestamp copy for Stage B packed GPU5 migration |
+| 2026-06-30 09:00 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan synchronized to Stage B packed GPU5 migration and packed eval queue |
+| 2026-06-30 09:00 | manual | refine-logs/EXPERIMENT_PLAN_20260630_090007.md | implementation | experiment plan timestamp copy for Stage B packed GPU5 migration |
+| 2026-06-30 09:00 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline synchronized to Stage B packed GPU5 migration |
+| 2026-06-30 09:00 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260630_090007.md | implementation | daily timeline timestamp copy for Stage B packed GPU5 migration |
+| 2026-06-30 09:00 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_B_HANDOFF_20260630.md | implementation | Stage B packed GPU5 health check: iteration 54/10001, GPU5 ~7550 MiB/100%, GPU1/2/3 released, no OOM |

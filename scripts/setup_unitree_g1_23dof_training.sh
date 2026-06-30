@@ -63,7 +63,26 @@ print("cuda", torch.cuda.is_available(), torch.cuda.device_count(), torch.versio
 if missing:
   raise SystemExit(f"missing packages: {', '.join(missing)}")
 PY
-  PYTHONPATH="$TRAIN_REPO" mamba run -n "$CONDA_ENV_NAME" python scripts/list_envs.py --keyword G1-23Dof
+	  ROOT_DIR="$ROOT_DIR" PYTHONPATH="$TRAIN_REPO" mamba run -n "$CONDA_ENV_NAME" python - <<'PY'
+import importlib.util
+import os
+import sys
+from pathlib import Path
+
+from mjlab.tasks.registry import list_tasks
+
+root_dir = Path(os.environ["ROOT_DIR"])
+profiles_path = root_dir / "src" / "humanoid_locomotion_runtime" / "unitree_g1_23dof_profiles.py"
+spec = importlib.util.spec_from_file_location("unitree_g1_23dof_profiles_repo_local", profiles_path)
+module = importlib.util.module_from_spec(spec)
+assert spec is not None and spec.loader is not None
+sys.modules[spec.name] = module
+spec.loader.exec_module(module)
+module.register_unitree_g1_23dof_controller_profiles()
+for task_id in list_tasks():
+  if "G1-23Dof" in task_id:
+    print(task_id)
+PY
 )
 
 cat <<EOF

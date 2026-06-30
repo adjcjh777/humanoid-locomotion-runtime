@@ -22,6 +22,7 @@
 - 如果 23DoF controller smoke gate 失败或 23DoF controller 不存在，优先明确切到 MJLab/mujocolab-compatible classic MuJoCo reference backend，而不是默认切到 MuJoCo Playground；切换后论文/实验表述必须写清楚 robot profile。
 - V0 是语言条件 humanoid locomotion runtime，不是端到端 foundation-scale VLA。
 - V0 的学习只发生在 task/failure 层的 supervisory recovery；任何 learned policy 都不能替代底层 gait、joint 或 actuator control。
+- 当前例外边界：`company_g1_edu_23dof` locomotion policy controller 仍处在 Gate C 前置 bootstrap 阶段，允许为补齐底层 controller evidence 进行 23DoF controller training / play / eval / smoke；一旦选出 mature controller candidate 并通过 project-local smoke，后续 recovery 研究必须把该 controller 冻结，不得在高层 supervisor 实验中继续漂移底层 controller。
 
 ## 核心边界
 
@@ -74,6 +75,7 @@
 - generated runs、raw logs、replay artifacts、checkpoints、model weights 不得进入 git，除非被明确整理成很小的文档示例。
 - 执行顺序以 gate 为准，不以日历为准。固定 28 天 timeline 是参考节奏；任一 gate 未通过，不进入下一阶段。
 - 当前只允许 GO 到“最小代码脚手架和协议冻结”；PPO、大规模实验和论文主结论必须等 snapshot branching、baseline、统计和 EDP gate 通过后再启动。
+- 当前 23DoF locomotion controller 训练是 Gate C 前置工作，不属于高层 recovery PPO 或论文主结论。该阶段最多同时使用 3 张空闲 GPU；单张 GPU 只有在确认不会 OOM 时最多同时跑 3 个训练任务，默认按 1 个 4096-env 训练任务/GPU 保守启动。启动前记录 GPU、seed、task、run name，OOM 时降低 `NUM_ENVS` 或并发数，不把失败 run 计为 evidence。
 
 ## 审核后新增硬边界
 
