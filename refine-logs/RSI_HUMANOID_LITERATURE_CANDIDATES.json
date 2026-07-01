@@ -1,0 +1,279 @@
+{
+  "artifact": "RSI_HUMANOID_LITERATURE_CANDIDATES",
+  "created_at": "2026-07-01T23:59:00+08:00",
+  "team_id": "humanoid-rsi-literature-6e3749cf",
+  "updated_at": "2026-07-02T00:26:24+08:00",
+  "scope": "bounded RSI-like runtime adaptation for Humanoid Locomotion Runtime",
+  "status_note": "Design evidence only. This file does not imply Gate SI promotion, controller modification, or runtime deployment.",
+  "candidates": [
+    {
+      "key": "reflexion_2023",
+      "title": "Reflexion: Language Agents with Verbal Reinforcement Learning",
+      "year": 2023,
+      "source_url": "https://arxiv.org/abs/2303.11366",
+      "verification_status": "verified_via_arxiv",
+      "relevance": "episodic memory improves later decisions without weight updates",
+      "use_for_project": "typed strategy memory and memory-content intervention design",
+      "avoid": "free-text reflection directly driving runtime policy"
+    },
+    {
+      "key": "rise_2024",
+      "title": "Recursive Introspection: Teaching Language Model Agents How to Self-Improve",
+      "year": 2024,
+      "source_url": "https://arxiv.org/abs/2407.18219",
+      "verification_status": "verified_via_arxiv_and_neurips",
+      "relevance": "iterative error detection and correction across turns",
+      "use_for_project": "conceptual reference for offline proposer and auditor loops",
+      "avoid": "LLM in real-time robot safety loop"
+    },
+    {
+      "key": "self_evolving_agents_survey_2025",
+      "title": "A Survey of Self-Evolving Agents: On Path to Artificial Super Intelligence",
+      "year": 2025,
+      "source_url": "https://arxiv.org/abs/2507.21046",
+      "verification_status": "verified_via_arxiv",
+      "relevance": "what/when/how taxonomy for self-evolving agents",
+      "use_for_project": "classify evolution target as high-level strategy memory and selector config",
+      "avoid": "ASI or strong RSI framing"
+    },
+    {
+      "key": "adas_2024",
+      "title": "Automated Design of Agentic Systems",
+      "year": 2024,
+      "source_url": "https://arxiv.org/abs/2408.08435",
+      "verification_status": "verified_via_arxiv_openreview",
+      "relevance": "meta agent search over agent designs",
+      "use_for_project": "future offline candidate proposer/evaluator harness",
+      "avoid": "autonomous code deployment to robot runtime"
+    },
+    {
+      "key": "godel_agent_2025",
+      "title": "A Self-Referential Agent Framework for Recursively Self-Improvement",
+      "year": 2025,
+      "source_url": "https://aclanthology.org/2025.acl-long.1354/",
+      "verification_status": "verified_via_acl_anthology",
+      "relevance": "self-referential agent dynamically modifies its own logic",
+      "use_for_project": "risk contrast and forbidden-claim boundary",
+      "avoid": "claiming recursive successor design"
+    },
+    {
+      "key": "darwin_godel_machine_2025",
+      "title": "Darwin Godel Machine: Open-Ended Evolution of Self-Improving Agents",
+      "year": 2025,
+      "source_url": "https://arxiv.org/abs/2505.22954",
+      "verification_status": "verified_via_arxiv",
+      "relevance": "code-modifying agents validated on coding benchmarks",
+      "use_for_project": "archive, validation, rollback inspiration",
+      "avoid": "self-modifying robot control code"
+    },
+    {
+      "key": "alphaevolve_2025",
+      "title": "AlphaEvolve: A coding agent for scientific and algorithmic discovery",
+      "year": 2025,
+      "source_url": "https://arxiv.org/abs/2506.13131",
+      "verification_status": "verified_via_arxiv",
+      "relevance": "LLM evolutionary improvement with evaluators",
+      "use_for_project": "verifiable evaluator framing for candidate updates",
+      "avoid": "algorithm evolution touching controller or safety path"
+    },
+    {
+      "key": "enpire_2026",
+      "title": "ENPIRE: Agentic Robot Policy Self-Improvement in the Real World",
+      "year": 2026,
+      "source_url": "https://arxiv.org/abs/2606.19980",
+      "project_url": "https://research.nvidia.com/labs/gear/enpire/",
+      "organization": "NVIDIA GEAR / CMU / UC Berkeley",
+      "priority_for_project": "primary_reference",
+      "verification_status": "verified_via_arxiv_and_nvidia_project_page",
+      "relevance": "agentic physical autoresearch harness with Environment, Policy Improvement, Rollout, and Evolution modules",
+      "use_for_project": "primary template for Gate SI harness design: reset/verify, typed candidate improvement, validation rollout, offline evolution audit, and MRU/MTU-style utilization metrics",
+      "transfer_mapping": {
+        "EN": "EDP-backed reset and verification artifacts; runtime/evaluation split preserved",
+        "PI": "CandidateUpdateProposer emits typed CandidateUpdateManifest for high-level recovery/config updates only",
+        "R": "GateSIValidationRunner evaluates candidates on seed splits, matched seeds, and future snapshot branches",
+        "E": "offline agent team analyzes logs/literature and proposes auditable manifest changes"
+      },
+      "avoid": "modifying frozen humanoid locomotion controller in V0, autonomous code deployment, or claiming manipulation policy self-improvement as humanoid recovery evidence"
+    },
+    {
+      "key": "robomemory_2025",
+      "title": "RoboMemory: A Brain-inspired Multi-memory Agentic Framework for Lifelong Learning in Physical Embodied Systems",
+      "year": 2025,
+      "source_url": "https://arxiv.org/abs/2508.01415",
+      "verification_status": "verified_via_arxiv",
+      "relevance": "spatial, temporal, episodic, semantic memory for embodied agents",
+      "use_for_project": "memory hierarchy reference",
+      "avoid": "making full semantic 3D memory the V0 main claim"
+    },
+    {
+      "key": "self_improving_robots_2023",
+      "title": "Self-Improving Robots: End-to-End Autonomous Visuomotor Reinforcement Learning",
+      "year": 2023,
+      "source_url": "https://proceedings.mlr.press/v229/sharma23b.html",
+      "verification_status": "verified_via_pmlr",
+      "relevance": "autonomous practice and robot policy improvement",
+      "use_for_project": "near-neighbor robot self-improvement baseline",
+      "avoid": "equating manipulation end-to-end visuomotor RL with high-level locomotion recovery"
+    },
+    {
+      "key": "humanoid_locomotion_rl_2024",
+      "title": "Real-world Humanoid Locomotion with Reinforcement Learning",
+      "year": 2024,
+      "source_url": "https://www.science.org/doi/10.1126/scirobotics.adi9579",
+      "verification_status": "verified_via_science_arxiv",
+      "relevance": "causal transformer uses proprioceptive history for in-context adaptation",
+      "use_for_project": "strong raw-history baseline and terminology guardrail",
+      "avoid": "calling low-level history-conditioned control a strategy-memory SI loop"
+    },
+    {
+      "key": "frasa_2024",
+      "title": "FRASA: An End-to-End Reinforcement Learning Agent for Fall Recovery and Stand Up of Humanoid Robots",
+      "year": 2024,
+      "source_url": "https://arxiv.org/abs/2410.08655",
+      "verification_status": "verified_via_arxiv",
+      "relevance": "humanoid recovery-specific DRL comparator",
+      "use_for_project": "recovery metric and comparator discussion",
+      "avoid": "replacing frozen gait/controller with low-level recovery policy in V0"
+    },
+    {
+      "key": "task_free_lifelong_robot_learning_2024",
+      "title": "Task-free Lifelong Robot Learning with Retrieval-based Weighted Local Adaptation",
+      "year": 2024,
+      "source_url": "https://arxiv.org/abs/2410.02995",
+      "verification_status": "verified_via_arxiv",
+      "relevance": "retrieval and local adaptation under task-free lifelong learning",
+      "use_for_project": "memory retrieval and stale/shuffled memory ablation design",
+      "avoid": "claiming manipulation lifelong learning results as humanoid locomotion evidence"
+    },
+    {
+      "key": "goedel_machines_2003",
+      "title": "Goedel Machines: Self-Referential Universal Problem Solvers Making Provably Optimal Self-Improvements",
+      "year": 2003,
+      "source_url": "https://arxiv.org/abs/cs/0309048",
+      "verification_status": "verified_via_arxiv",
+      "relevance": "foundational strong RSI with proof-triggered self-rewrite",
+      "use_for_project": "theoretical boundary and related-work contrast",
+      "avoid": "proof-style self-modification or code rewrite claims"
+    },
+    {
+      "key": "rsi_formulation_2018",
+      "title": "A Formulation of Recursive Self-Improvement and Its Possible Efficiency",
+      "year": 2018,
+      "source_url": "https://arxiv.org/abs/1805.06610",
+      "verification_status": "verified_via_arxiv",
+      "relevance": "formal RSI loop language",
+      "use_for_project": "background terminology for bounded adaptation contrast",
+      "avoid": "framing Gate SI as full RSI"
+    },
+    {
+      "key": "stop_2023",
+      "title": "Self-Taught Optimizer (STOP): Recursively Self-Improving Code Generation",
+      "year": 2023,
+      "source_url": "https://arxiv.org/abs/2310.02304",
+      "verification_status": "verified_via_arxiv",
+      "relevance": "fixed LM plus scaffold self-improvement",
+      "use_for_project": "offline proposer architecture analogy",
+      "avoid": "autonomous code deployment or sandbox bypass"
+    },
+    {
+      "key": "expel_2023",
+      "title": "ExpeL: LLM Agents Are Experiential Learners",
+      "year": 2023,
+      "source_url": "https://arxiv.org/abs/2308.10144",
+      "verification_status": "verified_via_arxiv",
+      "relevance": "experience gathering and knowledge extraction without parametric updates",
+      "use_for_project": "post-episode memory consolidation analogy",
+      "avoid": "natural-language lessons directly changing runtime actions"
+    },
+    {
+      "key": "agent_pro_2024",
+      "title": "Agent-Pro: Learning to Evolve via Policy-Level Reflection and Optimization",
+      "year": 2024,
+      "source_url": "https://arxiv.org/abs/2402.17574",
+      "verification_status": "verified_via_arxiv_acl",
+      "relevance": "policy-level reflection from trajectories",
+      "use_for_project": "high-level policy update framing",
+      "avoid": "transferring game-domain safety claims to robots"
+    },
+    {
+      "key": "voyager_2023",
+      "title": "Voyager: An Open-Ended Embodied Agent with Large Language Models",
+      "year": 2023,
+      "source_url": "https://arxiv.org/abs/2305.16291",
+      "verification_status": "verified_via_arxiv_project",
+      "relevance": "skill library and environment feedback for embodied lifelong learning",
+      "use_for_project": "strategy memory registry inspiration",
+      "avoid": "executable Minecraft code skills as humanoid option contracts"
+    },
+    {
+      "key": "self_evolving_embodied_ai_2026",
+      "title": "Self-evolving Embodied AI",
+      "year": 2026,
+      "source_url": "https://arxiv.org/abs/2602.04411",
+      "verification_status": "verified_via_arxiv",
+      "relevance": "taxonomy for memory, task, environment, embodiment, and model evolution",
+      "use_for_project": "classify V0 as memory plus high-level update only",
+      "avoid": "embodiment or model self-evolution claims"
+    },
+    {
+      "key": "robo_cortex_2026",
+      "title": "Robo-Cortex: A Self-Evolving Embodied Agent via Dual-Grain Cognitive Memory and Autonomous Knowledge Induction",
+      "year": 2026,
+      "source_url": "https://arxiv.org/abs/2605.18729",
+      "verification_status": "verified_via_arxiv",
+      "relevance": "dual-grain memory and navigation heuristic induction",
+      "use_for_project": "obstacle and navigation failure strategy memory reference",
+      "avoid": "VLM imagine-then-verify replacing Gate SI"
+    },
+    {
+      "key": "embodiskill_2026",
+      "title": "EmbodiSkill: Skill-Aware Reflection for Self-Evolving Embodied Agents",
+      "year": 2026,
+      "source_url": "https://arxiv.org/abs/2605.10332",
+      "verification_status": "verified_via_arxiv",
+      "relevance": "distinguishes skill content error from execution lapse",
+      "use_for_project": "failure taxonomy and targeted high-level update design",
+      "avoid": "direct skill-body rewrite outside V0 high-level recovery scope"
+    },
+    {
+      "key": "rma_2021",
+      "title": "RMA: Rapid Motor Adaptation for Legged Robots",
+      "year": 2021,
+      "source_url": "https://arxiv.org/abs/2107.04034",
+      "verification_status": "verified_via_arxiv",
+      "relevance": "body-state history and online adaptation for legged robots",
+      "use_for_project": "strong baseline and body-memory metric reference",
+      "avoid": "low-level motor adaptation in frozen-controller V0"
+    },
+    {
+      "key": "humanup_2025",
+      "title": "Learning Getting-Up Policies for Real-World Humanoid Robots",
+      "year": 2025,
+      "source_url": "https://arxiv.org/abs/2502.12152",
+      "verification_status": "verified_via_arxiv_project",
+      "relevance": "G1 humanoid fall recovery and getting-up policy",
+      "use_for_project": "recovery option and safety metric reference",
+      "avoid": "low-level getting-up controller training as SI evidence"
+    },
+    {
+      "key": "self_improving_efms_2025",
+      "title": "Self-Improving Embodied Foundation Models",
+      "year": 2025,
+      "source_url": "https://arxiv.org/abs/2509.15155",
+      "verification_status": "verified_via_arxiv_project",
+      "relevance": "success detector and autonomous practice for robot policy improvement",
+      "use_for_project": "validation-loop and success-detector reference",
+      "avoid": "end-to-end low-level policy improvement in V0"
+    },
+    {
+      "key": "spibb_2019",
+      "title": "Safe Policy Improvement with Baseline Bootstrapping",
+      "year": 2019,
+      "source_url": "https://arxiv.org/abs/1712.06924",
+      "verification_status": "verified_via_arxiv_pmlr",
+      "relevance": "conservative policy improvement with baseline fallback",
+      "use_for_project": "Gate SI promote/reject and fallback logic inspiration",
+      "avoid": "claiming theoretical safety guarantees for the humanoid stack"
+    }
+  ]
+}

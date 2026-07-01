@@ -15,7 +15,7 @@
 
 **Mac 本机工作入口**: 当前 Mac 只做不会影响 A800 主实验线的工作，详细清单见 `refine-logs/MAC_SAFE_WORKLIST.md`。
 
-- [x] Mac 已完成：工具链对齐、纯 Python contract tests、Gate C backend-neutral fake restore testbed、RuntimeManager typed command skeleton、controlled grounding + temporary object memory、NavigatorV0 local planner skeleton、dashboard/replay publisher skeleton、run id / decision-flip analysis skeleton、leakage boundary tests、A800 handoff 文档、citation audit、R047a statistical-design draft、R048/R071a literature-informed experiment design audit、R049 bounded self-improvement SI-0 schema lock，以及 R050 RSI humanoid literature / technical report。
+- [x] Mac 已完成：工具链对齐、纯 Python contract tests、Gate C backend-neutral fake restore testbed、RuntimeManager typed command skeleton、controlled grounding + temporary object memory、NavigatorV0 local planner skeleton、dashboard/replay publisher skeleton、run id / decision-flip analysis skeleton、leakage boundary tests、A800 handoff 文档、citation audit、R047a statistical-design draft、R048/R071a literature-informed experiment design audit，以及 R049 bounded self-improvement SI-0 schema lock。
 - [ ] Mac 不跑：A800 runtime smoke、23DoF controller smoke、failure pilots、severity calibration、baseline ladder、PPO 或任何主结论 rollout。
 - [ ] Mac 产出的本地临时文件必须保持 git 外；提交前检查 `git status --short`。
 
@@ -116,7 +116,6 @@
 ### Gate SI: bounded self-improvement extension
 
 - [x] R049 / SI-0: 锁定 `strategy_memory`、`candidate_update_manifest`、`promotion_report`、`rollback_manifest` schema，并测试 candidate update 不能修改低层 controller、joint action、SafetySupervisor override 或 hard-stop path；证据：`docs/bounded_self_improvement_extension.md`、`src/humanoid_locomotion_runtime/self_improvement.py`、`tests/test_self_improvement.py`。
-- [x] R050: 完成 RSI humanoid literature / technical report，使用 Agent Bus 子代理和 web verification，把强 RSI / embodied self-evolution / robot self-improvement 文献映射到 bounded, offline, gated high-level recovery adaptation；证据：`refine-logs/RSI_HUMANOID_LITERATURE_TECH_REPORT.md`、`refine-logs/RSI_HUMANOID_LITERATURE_CANDIDATES.json`、`refine-logs/RSI_HUMANOID_AGENT_TEAM_SUMMARY.md`。
 - [ ] SI-1: EDP extension 写入 controller provenance、memory consolidation artifacts、candidate update references，并扩展 validator。
 - [ ] SI-2: offline memory consolidation 从合法 runtime event/recovery traces 生成 typed failure/strategy memory。
 - [ ] SI-3: candidate proposer 只输出 schema-constrained typed manifest，不能让自然语言 proposal 直接生效。

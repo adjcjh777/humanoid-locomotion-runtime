@@ -476,3 +476,33 @@
 | 2026-07-01 03:45 | manual | refine-logs/EXPERIMENT_PLAN_20260701_034510.md | implementation | experiment plan timestamp copy after curated evidence selection |
 | 2026-07-01 03:45 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline records curated evidence selection for important run/log/pt artifacts |
 | 2026-07-01 03:45 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260701_034510.md | implementation | daily timeline timestamp copy after curated evidence selection |
+| 2026-07-01 19:51 | manual | src/humanoid_locomotion_runtime/self_improvement.py | implementation | R049 / SI-0 bounded self-improvement schemas：strategy memory、candidate update manifest、promotion report、rollback manifest；candidate behavior 按 update kind 白名单，禁止低层 controller / joint action / safety-path update |
+| 2026-07-01 19:51 | manual | tests/test_self_improvement.py | test | R049 / SI-0 schema tests：roundtrip、oracle leakage rejection、forbidden update field rejection、update-kind behavior whitelist 和 PROMOTE rollback pointer |
+| 2026-07-01 19:51 | manual | src/humanoid_locomotion_runtime/__init__.py | implementation | 导出 bounded self-improvement schema/API，供后续 SI-1 EDP extension、SI-2 consolidation 和 SI-3 proposer 复用 |
+| 2026-07-01 19:51 | manual | docs/bounded_self_improvement_extension.md | implementation | SI-0 checklist 标记完成并记录 `proposed_behavior` update-kind 白名单口径；SI-1 到 SI-5 仍 pending |
+| 2026-07-01 19:51 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 新增 R049 DONE：bounded self-improvement SI-0 schema lock；明确不表示 Gate SI validation/promotion 或 controller self-modification 放行 |
+| 2026-07-01 19:51 | manual | refine-logs/EXPERIMENT_TRACKER_20260701_195156.md | implementation | R049 tracker timestamp copy |
+| 2026-07-01 19:51 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 新增 C4 optional claim 和 Bounded SI / Gate SI checklist，R049 done、SI-1 到 SI-5 pending |
+| 2026-07-01 19:51 | manual | refine-logs/EXPERIMENT_PLAN_20260701_195156.md | implementation | R049 experiment plan timestamp copy |
+| 2026-07-01 19:51 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 R049 Mac-safe SI-0 完成项和 Gate SI 后续 checklist |
+| 2026-07-01 19:51 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260701_195156.md | implementation | R049 daily timeline timestamp copy |
+| 2026-07-02 00:02 | /research-lit + agent-bus-team | refine-logs/RSI_HUMANOID_LITERATURE_TECH_REPORT.md | research | R050 RSI / humanoid technical report：把强 RSI、LLM experiential learning、embodied memory/self-evolution、robot self-improvement、humanoid recovery 和 SPIBB 文献映射到 bounded high-level recovery self-improvement 边界 |
+| 2026-07-02 00:02 | /research-lit + agent-bus-team | refine-logs/RSI_HUMANOID_LITERATURE_TECH_REPORT_20260702_000254.md | research | R050 technical report timestamp copy |
+| 2026-07-02 00:02 | /research-lit + agent-bus-team | refine-logs/RSI_HUMANOID_LITERATURE_CANDIDATES.json | research | R050 machine-readable literature candidate list；含 verification status、project relevance 和 avoid boundary |
+| 2026-07-02 00:02 | /research-lit + agent-bus-team | refine-logs/RSI_HUMANOID_LITERATURE_CANDIDATES_20260702_000254.json | research | R050 literature candidate timestamp copy |
+| 2026-07-02 00:02 | agent-bus-team | refine-logs/RSI_HUMANOID_AGENT_TEAM_SUMMARY.md | research | R050 Agent Bus team summary：team id、subagent threads、Chrome control status、role findings 和 bounded SI decision |
+| 2026-07-02 00:02 | agent-bus-team | refine-logs/RSI_HUMANOID_AGENT_TEAM_SUMMARY_20260702_000254.md | research | R050 Agent Bus team summary timestamp copy |
+| 2026-07-02 00:02 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 新增 R050 DONE；明确它是 literature/technical-report evidence，不表示 Gate SI promotion、runtime deployment 或 controller self-modification |
+| 2026-07-02 00:02 | manual | refine-logs/EXPERIMENT_TRACKER_20260702_000254.md | implementation | R050 tracker timestamp copy |
+| 2026-07-02 00:02 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 R050 RSI humanoid 技术调研和 bounded/offline/gated claim 边界 |
+| 2026-07-02 00:02 | manual | refine-logs/EXPERIMENT_PLAN_20260702_000254.md | implementation | R050 experiment plan timestamp copy |
+| 2026-07-02 00:02 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline 同步 R050 Mac-safe 文献/技术报告完成项 |
+| 2026-07-02 00:02 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260702_000254.md | implementation | R050 daily timeline timestamp copy |
+| 2026-07-02 00:26 | /research-lit | refine-logs/RSI_HUMANOID_LITERATURE_TECH_REPORT.md | research | R050 follow-up：将 ENPIRE / NVIDIA GEAR 提升为主参考框架，新增 EN/PI/R/E 到 Gate SI harness 的映射和 MRU/MTU-style utilization 指标建议 |
+| 2026-07-02 00:26 | /research-lit | refine-logs/RSI_HUMANOID_LITERATURE_TECH_REPORT_20260702_002624.md | research | R050 ENPIRE follow-up technical report timestamp copy |
+| 2026-07-02 00:26 | /research-lit | refine-logs/RSI_HUMANOID_LITERATURE_CANDIDATES.json | research | R050 follow-up：ENPIRE candidate 标记为 primary_reference，并补充 NVIDIA project page、EN/PI/R/E transfer mapping 和 avoid boundary |
+| 2026-07-02 00:26 | /research-lit | refine-logs/RSI_HUMANOID_LITERATURE_CANDIDATES_20260702_002624.json | research | R050 ENPIRE follow-up candidates timestamp copy |
+| 2026-07-02 00:26 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker 新增 R050c TODO：ENPIRE-inspired Gate SI harness spec |
+| 2026-07-02 00:26 | manual | refine-logs/EXPERIMENT_TRACKER_20260702_002624.md | implementation | R050c tracker timestamp copy |
+| 2026-07-02 00:26 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan 同步 ENPIRE / NVIDIA GEAR 作为主参考框架，并增加 R050c harness spec 待办 |
+| 2026-07-02 00:26 | manual | refine-logs/EXPERIMENT_PLAN_20260702_002624.md | implementation | R050c experiment plan timestamp copy |

@@ -365,6 +365,8 @@ V0 只允许修改高层 decision，不允许修改低层 controller。
 }
 ```
 
+SI-0 schema 还要求 `proposed_behavior` 的顶层字段按 `update_kind` 白名单校验。也就是说，candidate 不能只换一个字段名来绕过边界：`recovery_priority_update` 只能表达高层 recovery 排序、偏好和速度 cap；planner / grounding / abort-safe-stop update 只能使用各自的高层字段集合。
+
 ---
 
 ## 6. Gate SI: Self-Improvement Promotion Gate
@@ -578,12 +580,12 @@ C4 不能替代原 C1-C3。推荐论文叙事顺序：
 
 ### SI-0: Documentation and schema lock
 
-- [ ] Add this document to tracker evidence.
-- [ ] Add `strategy_memory` schema.
-- [ ] Add `candidate_update_manifest` schema.
-- [ ] Add `promotion_report` schema.
-- [ ] Add `rollback_manifest` schema.
-- [ ] Add tests proving candidate update cannot modify low-level controller fields.
+- [x] Add this document to tracker evidence. 证据：`refine-logs/EXPERIMENT_TRACKER.md` R049、`MANIFEST.md`。
+- [x] Add `strategy_memory` schema. 证据：`src/humanoid_locomotion_runtime/self_improvement.py`、`tests/test_self_improvement.py`。
+- [x] Add `candidate_update_manifest` schema. 证据：`src/humanoid_locomotion_runtime/self_improvement.py`、`tests/test_self_improvement.py`。
+- [x] Add `promotion_report` schema. 证据：`src/humanoid_locomotion_runtime/self_improvement.py`、`tests/test_self_improvement.py`。
+- [x] Add `rollback_manifest` schema. 证据：`src/humanoid_locomotion_runtime/self_improvement.py`、`tests/test_self_improvement.py`。
+- [x] Add tests proving candidate update cannot modify low-level controller fields. 证据：`tests/test_self_improvement.py::test_candidate_update_manifest_rejects_forbidden_update_fields`。
 
 ### SI-1: EDP extension
 
