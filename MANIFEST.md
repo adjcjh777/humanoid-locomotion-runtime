@@ -449,3 +449,30 @@
 | 2026-06-30 09:00 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260630_090007.md | implementation | daily timeline timestamp copy for Stage B packed GPU5 migration |
 | 2026-06-30 09:00 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_B_HANDOFF_20260630.md | implementation | Stage B packed GPU5 health check: iteration 54/10001, GPU5 ~7550 MiB/100%, GPU1/2/3 released, no OOM |
 | 2026-06-30 09:23 | manual | refine-logs/G1_23DOF_WORK_REPORT_20260629_20260630.html | report | standalone HTML report summarizing 2026-06-29/2026-06-30 23DoF controller training framework, Stage A/B runs, eval status, gate boundary, and next checks |
+| 2026-07-01 03:34 | manual | scripts/unitree_play_mamba_wrapper.py | implementation | repo-local play wrapper registers `Unitree-G1-23Dof-VelocityBalancedFlat` profile before invoking upstream `scripts/play.py` |
+| 2026-07-01 03:34 | manual | scripts/run_unitree_g1_23dof_play.sh | implementation | direct play entrypoint for selected 23DoF checkpoints; defaults to Viser and mamba env `robot` |
+| 2026-07-01 03:34 | manual | tests/test_unitree_g1_23dof_training_framework.py | test | scoped tests cover the play wrapper and direct play script wiring |
+| 2026-07-01 03:34 | manual | runs/unitree_g1_23dof_eval_queue/stage_b_eval_queue_20260701T012312Z.log | ignored-artifact | Stage B packed GPU5 eval rerun completed; raw queue log remains ignored |
+| 2026-07-01 03:34 | manual | runs/unitree_g1_23dof_eval/*VelocityBalancedFlat*packedgpu5*seed*.json | ignored-artifact | Stage B command-grid eval outputs: 13 checkpoints x 3 seeds, raw JSON remains ignored |
+| 2026-07-01 03:34 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_B_ACCEPTANCE_20260701.md | implementation | Stage B morning acceptance: seeds 201/202/203 complete, `model_9000.pt` selected, Viser straight-line sanity recorded, R007j still pending |
+| 2026-07-01 03:34 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_B_HANDOFF_20260630.md | implementation | Stage B handoff closed from running to complete and synchronized with eval/play sanity results |
+| 2026-07-01 03:34 | manual | docs/g1_edu_23dof_training_framework.md | implementation | training framework documents direct play entrypoint and Stage B `model_9000.pt` candidate status |
+| 2026-07-01 03:34 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | policy-improvement TODO marks Stage B training/eval done and keeps checkpoint copy plus R007j smoke open |
+| 2026-07-01 03:34 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260701_033421.md | implementation | timestamp copy for policy-improvement TODO after Stage B eval/play sanity |
+| 2026-07-01 03:34 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker marks R007h/R007i DONE, selects Stage B seed 202 `model_9000.pt`, leaves R007j TODO |
+| 2026-07-01 03:34 | manual | refine-logs/EXPERIMENT_TRACKER_20260701_033421.md | implementation | tracker timestamp copy after Stage B acceptance |
+| 2026-07-01 03:34 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan syncs Stage B completion, eval metrics, Viser straight-line sanity, and R007j boundary |
+| 2026-07-01 03:34 | manual | refine-logs/EXPERIMENT_PLAN_20260701_033421.md | implementation | experiment plan timestamp copy after Stage B acceptance |
+| 2026-07-01 03:34 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline syncs Stage B acceptance and keeps 23DoF profile smoke pending |
+| 2026-07-01 03:34 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260701_033421.md | implementation | daily timeline timestamp copy after Stage B acceptance |
+| 2026-07-01 03:45 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_B_CURATED_EVIDENCE_20260701.md | implementation | GitHub-safe curated evidence index for selected Stage B run/log/checkpoint/ONNX/eval artifacts; raw files remain ignored |
+| 2026-07-01 03:45 | manual | refine-logs/G1_23DOF_CONTROLLER_STAGE_B_ACCEPTANCE_20260701.md | implementation | acceptance doc links the curated evidence index and keeps raw artifact bodies out of git |
+| 2026-07-01 03:45 | manual | docs/g1_edu_23dof_training_framework.md | implementation | training framework links latest policy TODO snapshot and curated Stage B evidence index |
+| 2026-07-01 03:45 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md | implementation | policy TODO records curated evidence selection while keeping checkpoint copy and R007j smoke open |
+| 2026-07-01 03:45 | manual | refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260701_034510.md | implementation | timestamp copy for policy TODO after curated evidence selection |
+| 2026-07-01 03:45 | manual | refine-logs/EXPERIMENT_TRACKER.md | implementation | tracker references curated raw-artifact hash/path index for R007h/R007i |
+| 2026-07-01 03:45 | manual | refine-logs/EXPERIMENT_TRACKER_20260701_034510.md | implementation | tracker timestamp copy after curated evidence selection |
+| 2026-07-01 03:45 | manual | refine-logs/EXPERIMENT_PLAN.md | implementation | experiment plan records curated Stage B evidence publication and preserved R007j boundary |
+| 2026-07-01 03:45 | manual | refine-logs/EXPERIMENT_PLAN_20260701_034510.md | implementation | experiment plan timestamp copy after curated evidence selection |
+| 2026-07-01 03:45 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE.md | implementation | daily timeline records curated evidence selection for important run/log/pt artifacts |
+| 2026-07-01 03:45 | manual | refine-logs/DAILY_EXPERIMENT_TIMELINE_20260701_034510.md | implementation | daily timeline timestamp copy after curated evidence selection |

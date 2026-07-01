@@ -1,7 +1,7 @@
 # G1 edu 23DoF Controller Training Framework
 
 **日期**: 2026-06-29
-**状态**: repo-local full-training entrypoint scaffolded; policy-improvement profiles added; controller evidence still pending
+**状态**: repo-local training/play entrypoints scaffolded; Stage B `model_9000.pt` candidate selected; controller smoke evidence still pending
 
 这份文档只说明怎么在当前仓库里训练 `company_g1_edu_23dof` 的 locomotion controller。它不表示 controller 已经成熟，也不表示 Gate C controller smoke 已通过。
 
@@ -55,6 +55,15 @@ TASK=Unitree-G1-23Dof-ForwardFlat GPU_ID=4 SEED=101 bash scripts/run_unitree_g1_
 GPU_ID=4 NUM_ENVS=64 MAX_ITERATIONS=1 SAVE_INTERVAL=1 RUN_NAME=a800_g1_23dof_sanity_$(date -u +%Y%m%dT%H%M%SZ) bash scripts/run_unitree_g1_23dof_training.sh
 ```
 
+短回放入口使用 repo-local wrapper 注册 `VelocityBalancedFlat` profile 后调用上游 `scripts/play.py`：
+
+```bash
+RUN_NAME=a800_g1_23dof_velocitybalanced_packedgpu5_seed202_4096env_10001iter_20260630T085517Z \
+CHECKPOINT=model_9000.pt \
+GPU_ID=5 \
+bash scripts/run_unitree_g1_23dof_play.sh
+```
+
 ## 验收边界
 
 - [x] `scripts/setup_unitree_g1_23dof_training.sh` 能复用 mamba env `robot` 并列出 `Unitree-G1-23Dof-Flat`。
@@ -64,13 +73,13 @@ GPU_ID=4 NUM_ENVS=64 MAX_ITERATIONS=1 SAVE_INTERVAL=1 RUN_NAME=a800_g1_23dof_san
 - [x] command-grid eval 输出文件名包含 task、run directory、checkpoint stem、seed 和 timestamp，支持 3 张 GPU 并发 eval 而不互相覆盖 JSON。
 - [x] `scripts/summarize_unitree_g1_23dof_eval.py` 汇总 command-grid eval JSON，按 simple penalty 辅助筛选 checkpoint；支持 `--group-by checkpoint` 做 multi-seed 聚合排序。该排序只是 triage，不替代 Gate C acceptance。
 - [x] 用 `onnx` 检查导出的 `policy.onnx` input/output shape：`obs [1, 80] -> actions [1, 23]`。
-- [ ] 用官方 `scripts/play.py Unitree-G1-23Dof-Flat --checkpoint_file=...` 做短回放。
+- [x] 用 `scripts/run_unitree_g1_23dof_play.sh` 对 Stage B seed `202` run 的 `model_9000.pt` 做 Viser 短回放；用户 2026-07-01 观察效果还不错，走直线部分符合当前目测要求。
 - [ ] 把通过 shape/play 的 candidate 拷贝到本项目 ignored `checkpoints/` 下，再跑 project-local controller smoke。
 - [ ] 只有 project-local 23DoF smoke 通过后，才能把它写成 `company_g1_edu_23dof` controller evidence。
 
 ## 2026-06-30 Policy Improvement Plan
 
-- [x] 待办清单：`refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260630.md`。
+- [x] 待办清单：fixed latest `refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO.md`，最新快照 `refine-logs/G1_23DOF_CONTROLLER_POLICY_IMPROVEMENT_TODO_20260701_034510.md`。
 - [x] 保留通用 velocity controller 方向，不把 controller 简化成只能直行的 policy。
 - [x] 新增 `ForwardFlat` 和 `VelocityBalancedFlat` 两个 repo-local tasks；前者服务固定直行稳定性，后者服务通用 velocity controller。
 - [x] 新增 binned velocity command sampler：Stage A 明确覆盖 `stand` / straight-forward 速度段，Stage B 明确覆盖 `stand` / `straight_forward` / `yaw_only` / `lateral_only` / `combined`，避免纯 uniform command 让关键验收 command 分布太稀。
@@ -82,11 +91,12 @@ GPU_ID=4 NUM_ENVS=64 MAX_ITERATIONS=1 SAVE_INTERVAL=1 RUN_NAME=a800_g1_23dof_san
 - [x] Stage A / ForwardFlat seeds `101/102/103` 已完成训练并输出 `model_10000.pt` / `policy.onnx`，原始产物保持在 ignored submodule logs。
 - [x] Stage A / ForwardFlat seeds `101/102/103` 的最终 `policy.onnx` 已验证为 `obs [1,80] -> actions [1,23]`。
 - [x] 跑至少 3 个 Stage A / ForwardFlat seeds。
-- [x] 启动至少 3 个 Stage B / VelocityBalancedFlat seeds：seeds `201/202/203` 当前打包在 GPU `5` 上运行，tmux sessions `g1vb_pack_s201/s202/s203_20260630T085517Z`，handoff 见 `refine-logs/G1_23DOF_CONTROLLER_STAGE_B_HANDOFF_20260630.md`。
-- [x] Stage B post-training eval queue 已启动：`scripts/run_unitree_g1_23dof_stage_b_eval_queue.sh` 在训练完成后自动评估关键 checkpoints；当前 watcher `g1vb_pack_eval_after_train_20260630T085653Z` 也使用 GPU `5`，避免训练/评估继续占用 GPU `1/2/3`。
-- [ ] 完成至少 3 个 Stage B / VelocityBalancedFlat seeds 到 `Learning iteration 10000/10001`。
+- [x] 启动至少 3 个 Stage B / VelocityBalancedFlat seeds：seeds `201/202/203` 打包在 GPU `5` 上运行，tmux sessions `g1vb_pack_s201/s202/s203_20260630T085517Z`，handoff 见 `refine-logs/G1_23DOF_CONTROLLER_STAGE_B_HANDOFF_20260630.md`。
+- [x] Stage B post-training eval queue 已补跑完成：`scripts/run_unitree_g1_23dof_stage_b_eval_queue.sh` 产出 39 个 ignored eval JSON，覆盖 13 checkpoints x 3 seeds；补跑 log 为 `runs/unitree_g1_23dof_eval_queue/stage_b_eval_queue_20260701T012312Z.log`。
+- [x] 完成至少 3 个 Stage B / VelocityBalancedFlat seeds 到 `Learning iteration 10000/10001`；最终 `policy.onnx` shape 为 `obs [1,80] -> actions [1,23]`。
 - [x] 对 Stage A candidate checkpoints 做 command-grid eval，不默认选择最终轮 `model_10000.pt`；截至 Stage A 结束，`model_5000.pt` 是当前 fixed-forward best。
-- [ ] 对 Stage B candidate checkpoints 做 command-grid eval，并确认通用 velocity controller 不牺牲固定直行。
+- [x] 对 Stage B candidate checkpoints 做 command-grid eval，并确认当前 selected candidate `model_9000.pt` 的直线部分通过 Viser 目测 sanity；三 seed聚合 forward fast mean abs lateral 约 `0.203m`。
+- [x] 重要 run/log/pt/ONNX/JSON 的 GitHub-safe evidence 索引：`refine-logs/G1_23DOF_CONTROLLER_STAGE_B_CURATED_EVIDENCE_20260701.md`；raw artifact 本体仍不提交。
 - [ ] 通过 eval 的 candidate 才进入 ignored `checkpoints/` 和 project-local controller smoke。
 
 ## 2026-06-29 Smoke 记录

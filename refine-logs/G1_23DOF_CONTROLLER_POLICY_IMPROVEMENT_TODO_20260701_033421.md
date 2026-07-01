@@ -66,7 +66,6 @@
 - [x] 对 Stage B packed runs 的 13 个 checkpoints x 3 seeds 做 command-grid eval，记录 lateral drift、yaw error、velocity error、fall/done fraction；补跑 queue：`runs/unitree_g1_23dof_eval_queue/stage_b_eval_queue_20260701T012312Z.log`，产物为 ignored `runs/unitree_g1_23dof_eval/*VelocityBalancedFlat*packedgpu5*seed*.json`。
 - [x] 比较 `model_10000.pt` 与新训练更后期 checkpoint；截至 Stage B eval 结束，当前 selected candidate 是 seed `202` run 的 `model_9000.pt`，最终轮 `model_10000.pt` 不默认导出为 best。
 - [x] Viser play sanity：用户 2026-07-01 观察 `model_9000.pt` 效果还不错，走直线部分符合当前目测要求；该条不替代 project-local controller smoke。
-- [x] 筛选重要 run/log/pt/ONNX/JSON：raw artifact 本体保持 ignored，提交 `refine-logs/G1_23DOF_CONTROLLER_STAGE_B_CURATED_EVIDENCE_20260701.md` 记录路径、大小、SHA256、关键指标和复核命令。
 - [ ] 通过 eval 的 candidate 才复制到 ignored `checkpoints/` 并生成 hash/shape summary。
 - [ ] project-local controller smoke 至少覆盖 `stand_ready`、`safe_stop`、`track_velocity`。
 

@@ -75,7 +75,6 @@
 - [x] 2026-07-01 Stage B packed GPU 5 seeds `201/202/203` 均完成到 `Learning iteration 10000/10001`，最终 mean reward 约 `49.33/49.65/50.50`，`fell_over=0.0000`，ONNX shape `obs [1,80] -> actions [1,23]`。
 - [x] 2026-07-01 R007i selected candidate: Stage B seed `202` run 的 `model_9000.pt`；三 seed 聚合 forward fast mean forward displacement 约 `9.184m`、mean abs lateral 约 `0.203m`、velocity error 约 `0.116`、yaw error 约 `0.080`。
 - [x] 2026-07-01 Viser play sanity: 用户观察 `model_9000.pt` 效果还不错，走直线部分符合当前目测要求；该条只算 qualitative play sanity，不算 project-local smoke。
-- [x] 2026-07-01 curated evidence selection: 重要 run/log/pt/ONNX/JSON 不提交本体，提交 `refine-logs/G1_23DOF_CONTROLLER_STAGE_B_CURATED_EVIDENCE_20260701.md` 作为 hash/path/metrics 索引。
 - [x] 2026-06-30 04:54 UTC `scripts/summarize_unitree_g1_23dof_eval.py` 增加 `--group-by checkpoint`，支持 multi-seed 聚合排序。
 - [x] 完成 R007h multi-seed controller training 和 R007i command-grid eval；Stage B `model_9000.pt` 是当前 selected candidate，但仍需 R007j。
 - [ ] 完成 R007j project-local 23DoF controller smoke 后，才能把 mature controller evidence 写入 Gate C。
@@ -256,7 +255,6 @@
 - [x] R007i: 为 Stage B 设置 post-training eval queue，等待训练完成后自动跑关键 checkpoint command-grid eval。
 - [x] R007h: 完成 `Unitree-G1-23Dof-VelocityBalancedFlat` multi-seed 并输出 checkpoints / `policy.onnx`。
 - [x] R007i: 对旧 candidate 和新 checkpoints 跑 command-grid eval，记录 lateral drift、yaw error、velocity error、done fraction；Stage B `model_9000.pt` 已选为当前 candidate。
-- [x] R007i: 筛选重要 raw artifacts 并生成 GitHub 可提交证据索引；raw logs/checkpoints/eval JSON 仍保持 ignored。
 - [ ] R007j: selected candidate 通过 eval 后，再运行 `stand_ready` / `safe_stop` / `track_velocity` smoke。
 
 **次日验收**

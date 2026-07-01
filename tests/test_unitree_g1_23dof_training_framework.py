@@ -19,11 +19,17 @@ def test_training_scripts_use_current_repo_paths() -> None:
   training_script = (
     ROOT / "scripts" / "run_unitree_g1_23dof_training.sh"
   ).read_text(encoding="utf-8")
+  play_script = (ROOT / "scripts" / "run_unitree_g1_23dof_play.sh").read_text(
+    encoding="utf-8"
+  )
   wrapper = (ROOT / "scripts" / "unitree_train_mamba_wrapper.py").read_text(
     encoding="utf-8"
   )
+  play_wrapper = (ROOT / "scripts" / "unitree_play_mamba_wrapper.py").read_text(
+    encoding="utf-8"
+  )
 
-  combined = setup_script + training_script + wrapper
+  combined = setup_script + training_script + play_script + wrapper + play_wrapper
   assert "ROOT_DIR" in combined
   assert "third_party/unitree_rl_mjlab" in combined
   assert "Unitree-G1-23Dof-Flat" in combined
@@ -31,6 +37,7 @@ def test_training_scripts_use_current_repo_paths() -> None:
   assert "UNITREE_RL_MJLAB_CONDA_ENV:-robot" in combined
   assert "mamba run -n" in setup_script
   assert "unitree_train_mamba_wrapper.py" in combined
+  assert "unitree_play_mamba_wrapper.py" in combined
   assert "register_unitree_g1_23dof_controller_profiles" in combined
   assert "sys.modules[spec.name] = module" in combined
   assert "PYTHONDONTWRITEBYTECODE" in combined
@@ -45,6 +52,14 @@ def test_training_scripts_use_current_repo_paths() -> None:
   assert "--agent.logger=tensorboard" in training_script
   assert "--agent.upload-model=False" in training_script
   assert "Training finished. Candidate training outputs under:" in training_script
+  assert '"scripts"' in play_wrapper
+  assert '"play.py"' in play_wrapper
+  assert "CHECKPOINT_FILE" in play_script
+  assert "RUN_NAME" in play_script
+  assert "CHECKPOINT=\"${CHECKPOINT:-model_9000.pt}\"" in play_script
+  assert "--checkpoint_file=$CHECKPOINT_FILE" in play_script
+  assert "--viewer=$VIEWER" in play_script
+  assert "ssh -L 8080:localhost:8080" in play_script
   assert "/mnt/nvme2n1p1" not in combined
 
 

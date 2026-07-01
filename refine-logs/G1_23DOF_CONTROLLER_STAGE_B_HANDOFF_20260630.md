@@ -1,7 +1,7 @@
 # G1 23DoF Controller Stage B Handoff
 
 **日期**: 2026-06-30
-**状态**: Stage B VelocityBalancedFlat multi-seed running; mature controller evidence pending
+**状态**: Stage B VelocityBalancedFlat multi-seed complete; `model_9000.pt` selected for R007j smoke; mature controller evidence pending
 
 ## 目的
 
@@ -14,9 +14,9 @@
 
 | Seed | GPU | tmux session | Run name | Task | 状态 |
 |---:|---:|---|---|---|---|
-| 201 | 5 | `g1vb_pack_s201_20260630T085517Z` | `a800_g1_23dof_velocitybalanced_packedgpu5_seed201_4096env_10001iter_20260630T085517Z` | `Unitree-G1-23Dof-VelocityBalancedFlat` | running |
-| 202 | 5 | `g1vb_pack_s202_20260630T085517Z` | `a800_g1_23dof_velocitybalanced_packedgpu5_seed202_4096env_10001iter_20260630T085517Z` | `Unitree-G1-23Dof-VelocityBalancedFlat` | running |
-| 203 | 5 | `g1vb_pack_s203_20260630T085517Z` | `a800_g1_23dof_velocitybalanced_packedgpu5_seed203_4096env_10001iter_20260630T085517Z` | `Unitree-G1-23Dof-VelocityBalancedFlat` | running |
+| 201 | 5 | `g1vb_pack_s201_20260630T085517Z` | `a800_g1_23dof_velocitybalanced_packedgpu5_seed201_4096env_10001iter_20260630T085517Z` | `Unitree-G1-23Dof-VelocityBalancedFlat` | completed |
+| 202 | 5 | `g1vb_pack_s202_20260630T085517Z` | `a800_g1_23dof_velocitybalanced_packedgpu5_seed202_4096env_10001iter_20260630T085517Z` | `Unitree-G1-23Dof-VelocityBalancedFlat` | completed; selected `model_9000.pt` candidate |
+| 203 | 5 | `g1vb_pack_s203_20260630T085517Z` | `a800_g1_23dof_velocitybalanced_packedgpu5_seed203_4096env_10001iter_20260630T085517Z` | `Unitree-G1-23Dof-VelocityBalancedFlat` | completed |
 
 ## Superseded Early Jobs
 
@@ -59,20 +59,37 @@
 - [x] 2026-06-30 08:56 UTC: packed GPU 5 runs 已进入 learning iteration `3/10001`，GPU 5 memory/util 约 `7550 MiB / 100%`，无 OOM；early warm-up metrics reward 约 `-11.07` 到 `-10.40`，fell_over 约 `35.08-37.71`，当前 decision 为 `CONTINUE`。
 - [x] 2026-06-30 09:00 UTC: packed GPU 5 runs 到 iteration `54/10001`，GPU 5 memory/util 约 `7550 MiB / 100%`，GPU `1/2/3` 已释放；无 OOM，当前 decision 为 `CONTINUE`。
 
+## Completion Check
+
+- [x] 2026-07-01: packed GPU 5 seeds `201/202/203` 均完成到 `Learning iteration 10000/10001`。
+- [x] 最终 mean reward 约 `49.33/49.65/50.50`，`fell_over=0.0000`。
+- [x] 三个 runs 均输出 `model_10000.pt` 和 `policy.onnx`，并保持在 ignored `third_party/unitree_rl_mjlab/logs/`。
+- [x] 最终 `policy.onnx` shape 已验证为 `obs [1,80] -> actions [1,23]`。
+- [x] 旧 GPU `1/2/3` early runs 已标记 superseded，不计入 mature evidence。
+- [x] 晨检验收：`refine-logs/G1_23DOF_CONTROLLER_STAGE_B_ACCEPTANCE_20260701.md`。
+
 ## Post-Training Eval Queue
 
 - [x] 2026-06-30 08:43 UTC: 启动 `g1vb_eval_after_train_20260630T084308Z` tmux watcher；08:55 UTC 随旧三卡 run 一起停止，状态为 superseded。
 - [x] watcher 入口：`scripts/run_unitree_g1_23dof_stage_b_eval_queue.sh`。
 - [x] 2026-06-30 08:56 UTC: 启动 packed watcher `g1vb_pack_eval_after_train_20260630T085653Z`，等待 packed GPU 5 runs 的 `model_10000.pt` 和训练 tmux 结束后，再用 GPU list `5 5 5` 分批跑 command-grid eval。
 - [x] watcher 记录：ignored `runs/unitree_g1_23dof_eval_queue/stage_b_eval_queue_20260630T085653Z.log`；08:56 UTC 确认仍在等待 `model_10000.pt`，没有提前 eval。
-- [ ] watcher 完成 Stage B checkpoints `model_250.pt` 到 `model_10000.pt` 的三 seed command-grid eval，并写入 ignored `runs/unitree_g1_23dof_eval/`。
+- [x] 2026-07-01 补跑 eval queue `runs/unitree_g1_23dof_eval_queue/stage_b_eval_queue_20260701T012312Z.log`，完成 Stage B checkpoints 的三 seed command-grid eval。
+- [x] Eval 写入 ignored `runs/unitree_g1_23dof_eval/*VelocityBalancedFlat*packedgpu5*seed*.json`，共 39 个 JSON，覆盖 13 checkpoints x 3 seeds。
+- [x] 当前 selected candidate 是 seed `202` run 的 `model_9000.pt`；三 seed 聚合 forward fast `done_fraction=0.0`、mean forward displacement 约 `9.184m`、mean abs lateral 约 `0.203m`、velocity error 约 `0.116`、yaw error 约 `0.080`。
+
+## Play Sanity
+
+- [x] 直接入口已补充为 `scripts/run_unitree_g1_23dof_play.sh`，由 `scripts/unitree_play_mamba_wrapper.py` 注册 repo-local profile 后调用上游 `scripts/play.py`。
+- [x] 用户 2026-07-01 在 Viser 中观察 `model_9000.pt` 效果还不错，走直线部分符合当前目测要求。
+- [ ] Viser play sanity 不替代 project-local `stand_ready` / `safe_stop` / `track_velocity` smoke。
 
 ## Acceptance Checks
 
-- [ ] 每个 run 完成到 `Learning iteration 10000/10001`。
-- [ ] 每个 run 输出 `model_*.pt` 和 `policy.onnx`，并保持在 ignored submodule logs。
-- [ ] 关键 checkpoints 跑 `scripts/eval_unitree_g1_23dof_command_grid.py`。
-- [ ] 选择 best checkpoint 时同时看 fixed-forward lateral drift、yaw error、velocity error、done fraction 和 yaw/lateral command stability。
-- [ ] 若任一 run OOM 或早停，记录为 failed，不计入 mature controller evidence。
+- [x] 每个 run 完成到 `Learning iteration 10000/10001`。
+- [x] 每个 run 输出 `model_*.pt` 和 `policy.onnx`，并保持在 ignored submodule logs。
+- [x] 关键 checkpoints 跑 `scripts/eval_unitree_g1_23dof_command_grid.py`。
+- [x] 选择 best checkpoint 时同时看 fixed-forward lateral drift、yaw error、velocity error、done fraction 和 yaw/lateral command stability。
+- [x] 若任一 run OOM 或早停，记录为 failed，不计入 mature controller evidence。本轮 authoritative packed GPU 5 runs 未记录 OOM，旧三卡 early runs 标记 superseded。
 - [x] Stage B 只产生通用 velocity controller candidate，不直接作为 mature controller evidence。
 - [ ] 通过 command-grid eval 和 controller smoke 前不推进 Gate C。
